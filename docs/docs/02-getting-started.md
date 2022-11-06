@@ -74,23 +74,7 @@ After starting Apache Tomcat (e.g. using the `TOMCAT_HOME/bin/startup.sh` or `TO
 
 #### Building your own Docker image
 
-Here's a starting point if you would like to build your own Docker image:
-
-
-```
-FROM tomcat:9.0.65-jre17-temurin-jammy
-
-RUN set -eux; \
-apt-get update; \
-apt-get install -y --no-install-recommends graphviz
-
-ADD structurizr-onpremises.war /usr/local/tomcat/webapps/ROOT.war
-
-ENV CATALINA_OPTS="-Xms512M -Xmx512M"
-EXPOSE 8080
-
-CMD ["catalina.sh", "run"]
-```
+There is a [Dockerfile](https://github.com/structurizr/onpremises/blob/main/Dockerfile) in the GitHub repo that can be used as a starting point if you'd like to build your own Docker image.
 
 ### Using the Structurizr on-premises installation
 
