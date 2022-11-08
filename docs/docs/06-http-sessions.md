@@ -5,7 +5,7 @@ There are two variants for HTTP session storage.
 ### Local server
 
 By default, HTTP sessions are stored locally, in memory, on the server that created them. This works for a single server installation, but may not work for a high-availability installation,
-particularly where multiple instances are deployed behind a load balancer that is delivering requests using a round-robin algorithm. If "session pinning" is not an option, you can choose
+particularly where multiple instances are deployed behind a load balancer that is delivering requests using a round-robin algorithm. If "sticky sessions" or "session pinning" is not an option, you can choose
 to have HTTP session information stored in a Redis database instead.
 
 ### Redis database
