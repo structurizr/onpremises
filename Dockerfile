@@ -1,4 +1,4 @@
-FROM tomcat:9.0.68-jre17-temurin-jammy
+FROM tomcat:9.0.70-jre17-temurin-jammy
 
 RUN set -eux; \
 	apt-get update; \
