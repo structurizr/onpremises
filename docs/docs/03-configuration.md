@@ -29,6 +29,7 @@ Changing these parameters requires a restart of the on-premises installation.
 | `structurizr.safeMode` | Whether HTML should be filtered from workspace content; `true` (default) or `false`. |
 | `structurizr.data` | The name of the data storage implementation to use: `file` (default) or `aws-s3` (see [Amazon Web Services S3](06-data-storage#amazon-web-services-s3) for more details). |
 | `structurizr.search` | The name of the search implementation to use: `lucene` (default), `none`, or `elasticsearch` (see [Elasticsearch](06-data-storage#elasticsearch) for more details). |
+| `structurizr.maxWorkspaceVersions` | The number of workspace versions to retain when using file-based data storage (default; `30`). |
 
 ### HTTPS
 
