@@ -128,8 +128,13 @@ To configure SAML integration:
 - Map the IdP username to a SAML attribute named `http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress`
 - Map the IdP roles/groups to a SAML attribute named `http://schemas.xmlsoap.org/claims/Group`
 
-
 If you make any changes to the SAML configuration, you will need to restart the on-premises installation.
+
+#### Max authentication age
+
+By default, Spring Security checks that you've been authenticated with your IdP within the past 2 hours (7200 seconds).
+If this value is too low, you can override it via a property named `structurizr.saml.maxAuthenticationAge` in your `structurizr.properties` file (the value is the number of seconds, e.g. 86400 seconds for 24 hours).
+
 Here are some guides that show how to integrate with different identity providers.
 
 #### Auth0
