@@ -1,5 +1,7 @@
 package com.structurizr.onpremises.domain;
 
+import com.structurizr.onpremises.util.Configuration;
+
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TimeZone;
@@ -82,6 +84,10 @@ public final class User {
         }
 
         return false;
+    }
+
+    public boolean isAdmin() {
+        return Configuration.getInstance().getAdminUsersAndRoles().isEmpty() || isUserOrRole(Configuration.getInstance().getAdminUsersAndRoles());
     }
 
     public String getTimeZone() {

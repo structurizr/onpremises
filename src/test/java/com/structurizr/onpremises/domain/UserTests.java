@@ -1,5 +1,6 @@
 package com.structurizr.onpremises.domain;
 
+import com.structurizr.onpremises.util.Configuration;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -127,6 +128,29 @@ public class UserTests {
 
         // 4. regex match on role - true
         assertTrue(user.isUserOrRole(Collections.singleton("^group1-.*$")));
+    }
+
+    @Test
+    public void isAdmin() {
+        Set<String> roles = new HashSet<>();
+        roles.add("role1");
+        user = new User("user@example.com", roles, AuthenticationMethod.LOCAL);
+
+        Configuration.getInstance().setAdminUsersAndRoles(new String[0]);
+        assertTrue(user.isAdmin()); // no admin users/roles set, so everybody is an admin
+
+        Configuration.getInstance().setAdminUsersAndRoles(new String[] { "user@google.com" });
+        assertFalse(user.isAdmin()); // not a named user
+
+        Configuration.getInstance().setAdminUsersAndRoles(new String[] { "user@example.com" });
+        assertTrue(user.isAdmin()); // a named user
+
+        Configuration.getInstance().setAdminUsersAndRoles(new String[] { "role1" });
+        assertTrue(user.isAdmin()); // a named role
+
+        Configuration.getInstance().setAdminUsersAndRoles(new String[] { "role2" });
+        assertFalse(user.isAdmin()); // not a named role
+
     }
 
 }
