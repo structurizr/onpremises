@@ -7,7 +7,7 @@ The Structurizr on-premises installation is a standalone version of Structurizr 
 The on-premises installation is a Java EE/Spring MVC web application, packaged as a .war file, for deployment into any compatible Java EE server, such as Apache Tomcat.
 For ease of deployment, by default, all data is stored on the local file system. Optionally, data can be stored on Amazon S3, and search indexes on an Elasticsearch cluster.
 
-- [Documentation](https://structurizr.com/share/18571/documentation)
+- [Documentation](https://structurizr.com/share/18571/documentation) ([source](docs))
 - [Issue tracker](https://github.com/structurizr/onpremises/issues)
 
 ## Important note
