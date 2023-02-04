@@ -1,0 +1,42 @@
+<beans:beans
+        xmlns="http://www.springframework.org/schema/security"
+        xmlns:beans="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+            http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+            http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+        "
+>
+
+    <beans:bean id="csrfSecurityRequestMatcher" class="com.structurizr.onpremises.web.security.CsrfSecurityRequestMatcher" />
+
+    <http>
+        <form-login login-page="/signin"
+                    default-target-url="/dashboard"
+                    authentication-success-handler-ref="authenticationSuccessHandler"
+                    authentication-failure-handler-ref="authenticationFailureHandler" />
+        <logout logout-success-url="/" invalidate-session="true" delete-cookies="JSESSIONID" />
+
+        <headers>
+            <frame-options disabled="true" />
+        </headers>
+
+        <csrf request-matcher-ref="csrfSecurityRequestMatcher" />
+
+        <!-- comment this out if you don't want to use Spring's remember me functionality -->
+        <!-- (you can also change the key if you like; it's used to hash information in the resulting client-side cookie) -->
+        <remember-me key="BnWANqCT5mdgbkqHmz2UfrWXhwiPlm"/>
+    </http>
+
+    <!--
+        This is a simple implementation of a Spring UserDetailsService where usernames and passwords (hashed with bcrypt)
+        are stored in a file called "structurizr.users" in the Structurizr data directory.
+    -->
+    <beans:bean id="userDetailsService" class="com.structurizr.onpremises.web.security.FileBasedUserDetailsService" />
+    <authentication-manager>
+        <authentication-provider user-service-ref="userDetailsService">
+            <password-encoder ref="bcryptEncoder" />
+        </authentication-provider>
+    </authentication-manager>
+
+</beans:beans>

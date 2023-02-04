@@ -1,0 +1,29 @@
+    </div>
+
+    <c:if test="${showFooter eq true}">
+    <div id="footer">
+        <div class="container">
+            <p>
+                <a href="https://structurizr.com/help/on-premises" target="_blank">On-premises installation</a>
+                |
+                <a href="https://c4model.com" target="_blank">C4 model</a>
+                |
+                <a href="https://structurizr.com/help" target="_blank">Help and Support</a>
+
+                <c:if test="${authenticated}">
+                |
+                <a href="/user/profile">User profile</a>
+                |
+                <a href="/signout">Sign out</a>
+                </c:if>
+
+                <br />
+                <a href="https://structurizr.com/help/changelog" target="_blank"><span id="buildNumber">Build ${version.buildNumber} - changelog</span></a> <!-- <fmt:formatDate value="${version.buildTimestamp}" pattern="EEE dd MMM yyyy HH:mm z" /> --> |
+                Copyright &copy; Structurizr Limited
+            </p>
+        </div>
+    </div>
+    </c:if>
+
+    </body>
+</html>

@@ -1,0 +1,13 @@
+<beans
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:task="http://www.springframework.org/schema/task"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <bean name="propertyConfiguration" class="com.structurizr.onpremises.util.PropertyPlaceholderConfigurer" />
+
+    <import resource="classpath*:**/component.xml" />
+    <task:annotation-driven />
+
+    <import resource="applicationContext-session-${structurizr.session}.xml" />
+
+</beans>

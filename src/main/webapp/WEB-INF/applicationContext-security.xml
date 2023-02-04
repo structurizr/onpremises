@@ -1,0 +1,12 @@
+<beans
+        xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+    <bean name="bcryptEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />
+    <bean id="authenticationSuccessHandler" class="com.structurizr.onpremises.web.security.AuthenticationSuccessHandler" />
+    <bean id="authenticationFailureHandler" class="com.structurizr.onpremises.web.security.AuthenticationFailureHandler" />
+
+    <import resource="applicationContext-security-${structurizr.authentication}.xml" />
+
+</beans>
