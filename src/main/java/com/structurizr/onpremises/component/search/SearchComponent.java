@@ -20,10 +20,10 @@ public interface SearchComponent {
 
     boolean isEnabled();
 
-    void index(Workspace workspace);
+    void index(Workspace workspace) throws SearchComponentException;
 
-    List<SearchResult> search(String query, String type, Set<Long> workspaceIds);
+    List<SearchResult> search(String query, String type, Set<Long> workspaceIds) throws SearchComponentException;
 
-    void delete(long workspaceId);
+    void delete(long workspaceId) throws SearchComponentException;
 
 }
