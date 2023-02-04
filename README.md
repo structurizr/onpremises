@@ -9,3 +9,7 @@ For ease of deployment, by default, all data is stored on the local file system.
 
 - [Documentation](https://structurizr.com/share/18571/documentation)
 - [Issue tracker](https://github.com/structurizr/onpremises/issues)
+
+## Important note
+
+This repo is incomplete. Open sourcing Structurizr is a work in progress, and should be completed Q1-Q2 2023.
