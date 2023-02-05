@@ -8,7 +8,6 @@ import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.Version;
 import com.structurizr.onpremises.web.security.SecurityUtils;
-import com.structurizr.onpremises.web.workspace.WorkspaceController;
 import com.structurizr.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,7 +20,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.TimeZone;
 
 public abstract class AbstractController {
 
