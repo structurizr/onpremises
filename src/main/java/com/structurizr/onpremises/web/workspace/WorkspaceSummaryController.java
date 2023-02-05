@@ -1,8 +1,6 @@
 package com.structurizr.onpremises.web.workspace;
 
 import com.structurizr.onpremises.util.Configuration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -13,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class WorkspaceSummaryController extends AbstractWorkspaceController {
-
-    private static Log log = LogFactory.getLog(WorkspaceSummaryController.class);
 
     private static final String VIEW = "workspace-summary";
 
