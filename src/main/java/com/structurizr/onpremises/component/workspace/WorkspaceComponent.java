@@ -30,7 +30,7 @@ public interface WorkspaceComponent {
 
     void putWorkspace(long workspaceId, String json) throws WorkspaceComponentException;
 
-    List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, int maxVersions);
+    List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, int maxVersions) throws WorkspaceComponentException;
 
     boolean lockWorkspace(long workspaceId, String username, String agent) throws WorkspaceComponentException;
 

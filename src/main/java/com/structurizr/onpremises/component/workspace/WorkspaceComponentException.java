@@ -1,6 +1,6 @@
 package com.structurizr.onpremises.component.workspace;
 
-public class WorkspaceComponentException extends Exception {
+public class WorkspaceComponentException extends RuntimeException {
 
     public WorkspaceComponentException(String message) {
         super(message);

@@ -373,7 +373,9 @@ public class WorkspaceMetaData {
             properties.setProperty(DESCRIPTION_PROPERTY, "");
         }
 
-        properties.setProperty(VERSION_PROPERTY, this.getVersion());
+        if (this.getVersion() != null) {
+            properties.setProperty(VERSION_PROPERTY, this.getVersion());
+        }
 
         properties.setProperty(CLIENT_SIDE_ENCRYPTED_PROPERTY, "" + this.isClientEncrypted());
 
@@ -408,7 +410,7 @@ public class WorkspaceMetaData {
         properties.setProperty(API_KEY_PROPERTY, this.getApiKey());
         properties.setProperty(API_SECRET_PROPERTY, this.getApiSecret());
 
-        if (this.getSharingToken() != null) {
+        if (!StringUtils.isNullOrEmpty(getSharingToken())) {
             properties.setProperty(SHARING_TOKEN_PROPERTY, this.getSharingToken());
         }
 
