@@ -42,10 +42,10 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
         String dataStorageImplementationName = Configuration.getInstance().getDataStorageImplementationName();
 
         if (AMAZON_WEB_SERVICES_S3.equals(dataStorageImplementationName)) {
-            String accessKeyId = Configuration.getConfigurationParameter(AmazonWebServicesS3WorkspaceDao.ACCESS_KEY_ID_PROPERTY, "");
-            String secretAccessKey = Configuration.getConfigurationParameter(AmazonWebServicesS3WorkspaceDao.SECRET_ACCESS_KEY_PROPERTY, "");
-            String region = Configuration.getConfigurationParameter(AmazonWebServicesS3WorkspaceDao.REGION_PROPERTY, "");
-            String bucketName = Configuration.getConfigurationParameter(AmazonWebServicesS3WorkspaceDao.BUCKET_NAME_PROPERTY, "");
+            String accessKeyId = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3WorkspaceDao.ACCESS_KEY_ID_PROPERTY, "");
+            String secretAccessKey = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3WorkspaceDao.SECRET_ACCESS_KEY_PROPERTY, "");
+            String region = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3WorkspaceDao.REGION_PROPERTY, "");
+            String bucketName = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3WorkspaceDao.BUCKET_NAME_PROPERTY, "");
 
             this.workspaceDao = new AmazonWebServicesS3WorkspaceDao(accessKeyId, secretAccessKey, region, bucketName);
         } else {

@@ -6,13 +6,12 @@ import java.util.Properties;
 
 public final class PropertyPlaceholderConfigurer extends org.springframework.beans.factory.config.PropertyPlaceholderConfigurer {
 
-    private static final String STRUCTURIZR_PROPERTIES_FILENAME = "structurizr.properties";
     private static final String STRUCTURIZR_DATA_DIRECTORY_PROPERTY_NAME = "structurizr.dataDirectory";
 
     public PropertyPlaceholderConfigurer() throws Exception {
         Properties properties = new Properties();
         File dataDirectory = Configuration.getInstance().getDataDirectory();
-        File propertiesFile = new File(dataDirectory, STRUCTURIZR_PROPERTIES_FILENAME);
+        File propertiesFile = new File(dataDirectory, StructurizrProperties.FILENAME);
         if (propertiesFile.exists()) {
             properties.load(new FileReader(propertiesFile));
         }
