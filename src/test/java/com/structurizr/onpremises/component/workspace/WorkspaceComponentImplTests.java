@@ -7,6 +7,7 @@ import com.structurizr.encryption.EncryptedWorkspace;
 import com.structurizr.encryption.EncryptionLocation;
 import com.structurizr.encryption.EncryptionStrategy;
 import com.structurizr.io.json.EncryptedJsonWriter;
+import com.structurizr.onpremises.domain.AuthenticationMethod;
 import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.util.DateUtils;
 import com.structurizr.util.WorkspaceUtils;
@@ -32,6 +33,63 @@ public class WorkspaceComponentImplTests {
 
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
         assertSame(workspaces, workspaceComponent.getWorkspaces());
+    }
+
+    @Test
+    public void getWorkspaces_WhenUnauthenticated() {
+        WorkspaceMetaData workspace1 = new WorkspaceMetaData(1); // private workspace
+        workspace1.addWriteUser("user1");
+        WorkspaceMetaData workspace2 = new WorkspaceMetaData(2); // private workspace
+        workspace2.addWriteUser("user2");
+        WorkspaceMetaData workspace3 = new WorkspaceMetaData(3); // open workspace
+
+        WorkspaceDao dao = new MockWorkspaceDao() {
+            @Override
+            public Collection<WorkspaceMetaData> getWorkspaces() {
+                return Arrays.asList(
+                        workspace1, workspace2, workspace3
+                );
+            }
+        };
+
+        WorkspaceComponentImpl workspaceComponent = new WorkspaceComponentImpl(dao, "");
+        Collection<WorkspaceMetaData> workspaces = workspaceComponent.getWorkspaces(null);
+
+        assertEquals(1, workspaces.size());
+        assertFalse(workspaces.stream().anyMatch(w -> w.getId() == 1)); // private workspace
+        assertFalse(workspaces.stream().anyMatch(w -> w.getId() == 2)); // private workspace
+        assertTrue(workspaces.stream().anyMatch(w -> w.getId() == 3)); // open workspace
+    }
+
+    @Test
+    public void getWorkspaces_WhenAuthenticated() {
+        WorkspaceMetaData workspace1 = new WorkspaceMetaData(1); // private workspace, read/write access
+        workspace1.addWriteUser("user1");
+        WorkspaceMetaData workspace2 = new WorkspaceMetaData(2); // private workspace, read-only access
+        workspace2.addWriteUser("user2");
+        workspace2.addReadUser("user1");
+        WorkspaceMetaData workspace3 = new WorkspaceMetaData(3); // open workspace
+        WorkspaceMetaData workspace4 = new WorkspaceMetaData(3); // private workspace, no access
+        workspace4.addWriteUser("user4");
+
+        WorkspaceDao dao = new MockWorkspaceDao() {
+            @Override
+            public Collection<WorkspaceMetaData> getWorkspaces() {
+                return Arrays.asList(
+                        workspace1, workspace2, workspace3, workspace4
+                );
+            }
+        };
+
+        WorkspaceComponentImpl workspaceComponent = new WorkspaceComponentImpl(dao, "");
+        User user = new User("user1", new HashSet<>(), AuthenticationMethod.LOCAL);
+        Collection<WorkspaceMetaData> workspaces = workspaceComponent.getWorkspaces(user);
+
+        assertEquals(3, workspaces.size());
+        assertTrue(workspaces.stream().anyMatch(w -> w.getId() == 1)); // private workspace, read/write access
+        assertTrue(workspaces.stream().anyMatch(w -> w.getId() == 2)); // private workspace, read-only access
+        assertTrue(workspaces.stream().anyMatch(w -> w.getId() == 3)); // open workspace
+        assertFalse(workspaces.stream().anyMatch(w -> w.getId() == 4)); // private workspace, no access
     }
 
     @Test

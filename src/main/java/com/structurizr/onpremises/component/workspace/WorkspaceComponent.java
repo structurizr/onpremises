@@ -18,6 +18,8 @@ public interface WorkspaceComponent {
 
     Collection<WorkspaceMetaData> getWorkspaces() throws WorkspaceComponentException;
 
+    Collection<WorkspaceMetaData> getWorkspaces(User user) throws WorkspaceComponentException;
+
     WorkspaceMetaData getWorkspaceMetaData(long workspaceId) throws WorkspaceComponentException;
 
     void putWorkspaceMetaData(WorkspaceMetaData workspaceMetaData) throws WorkspaceComponentException;

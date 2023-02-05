@@ -9,13 +9,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.HashSet;
 import java.util.Set;
 
-public class TestUtils {
+public class ControllerTestsBase {
 
-    public static void clearUser() {
+    protected void clearUser() {
         SecurityContextHolder.getContext().setAuthentication(null);
     }
 
-    public static void setUser(String username, String... roleNames) {
+    protected void setUser(String username, String... roleNames) {
         Set<Role> roles = new HashSet<>();
         for (String roleName : roleNames) {
             roles.add(new Role(roleName));

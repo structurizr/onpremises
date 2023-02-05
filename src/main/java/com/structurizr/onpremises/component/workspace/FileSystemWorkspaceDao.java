@@ -189,21 +189,23 @@ class FileSystemWorkspaceDao extends AbstractWorkspaceDao {
 
         try {
             File workspaceDirectory = getPathToWorkspace(workspaceId);
-            File[] files = workspaceDirectory.listFiles((dir, name) -> name.matches(WORKSPACE_VERSION_JSON_FILENAME_REGEX));
+            if (workspaceDirectory.exists()) {
+                File[] files = workspaceDirectory.listFiles((dir, name) -> name.matches(WORKSPACE_VERSION_JSON_FILENAME_REGEX));
 
-            if (files != null) {
-                Arrays.sort(files, (f1, f2) -> f2.getName().compareTo(f1.getName()));
+                if (files != null) {
+                    Arrays.sort(files, (f1, f2) -> f2.getName().compareTo(f1.getName()));
 
-                for (int i = 0; i < Math.min(maxVersions, files.length); i++) {
-                    File file = files[i];
-                    String versionId = file.getName().substring(file.getName().indexOf('-')+1, file.getName().indexOf('.'));
-                    Date versionDate = sdf.parse(versionId);
-                    versions.add(new WorkspaceVersion(versionId, versionDate));
+                    for (int i = 0; i < Math.min(maxVersions, files.length); i++) {
+                        File file = files[i];
+                        String versionId = file.getName().substring(file.getName().indexOf('-') + 1, file.getName().indexOf('.'));
+                        Date versionDate = sdf.parse(versionId);
+                        versions.add(new WorkspaceVersion(versionId, versionDate));
+                    }
                 }
-            }
 
-            if (versions.size() > 0) {
-                versions.get(0).clearVersionId();
+                if (versions.size() > 0) {
+                    versions.get(0).clearVersionId();
+                }
             }
         } catch (Exception ioe) {
             log.error(ioe);

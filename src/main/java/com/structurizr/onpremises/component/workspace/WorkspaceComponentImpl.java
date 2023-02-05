@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -63,6 +64,47 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
     @Override
     public Collection<WorkspaceMetaData> getWorkspaces() throws WorkspaceComponentException {
         return workspaceDao.getWorkspaces();
+    }
+
+    @Override
+    public Collection<WorkspaceMetaData> getWorkspaces(User user) throws WorkspaceComponentException {
+        Collection<WorkspaceMetaData> workspaces = new ArrayList<>();
+
+        try {
+            workspaces = getWorkspaces();
+        } catch (WorkspaceComponentException e) {
+            log.error(e);
+        }
+
+        List<WorkspaceMetaData> filteredWorkspaces = new ArrayList<>();
+
+        if (user == null) {
+            for (WorkspaceMetaData workspace : workspaces) {
+                if (workspace.isOpen()) {
+                    // the workspace is public, so anybody can see it
+                    workspace.setEditable(false);
+                    filteredWorkspaces.add(workspace);
+                }
+            }
+        } else {
+            for (WorkspaceMetaData workspace : workspaces) {
+                if (workspace.isOpen()) {
+                    // the workspace is public, so anybody can see it
+                    workspace.setEditable(true);
+                    filteredWorkspaces.add(workspace);
+                } else if (workspace.isWriteUser(user)) {
+                    // the user has read-write access to the workspace
+                    workspace.setEditable(true);
+                    filteredWorkspaces.add(workspace);
+                } else if (workspace.isReadUser(user)) {
+                    // the user has read-only access to the workspace
+                    workspace.setEditable(false);
+                    filteredWorkspaces.add(workspace);
+                }
+            }
+        }
+
+        return filteredWorkspaces;
     }
 
     @Override

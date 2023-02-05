@@ -1,6 +1,7 @@
 package com.structurizr.onpremises.web.home;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
+import com.structurizr.onpremises.web.ControllerTestsBase;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,11 +10,9 @@ import org.springframework.ui.ModelMap;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static com.structurizr.onpremises.web.TestUtils.clearUser;
-import static com.structurizr.onpremises.web.TestUtils.setUser;
 import static org.junit.Assert.*;
 
-public class HomePageControllerTests {
+public class HomePageControllerTests extends ControllerTestsBase {
 
     private HomePageController controller;
     private MockWorkspaceComponent workspaceComponent;

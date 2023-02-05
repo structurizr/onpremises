@@ -40,7 +40,7 @@ public class HomePageController extends AbstractController {
     }
 
     private String show(ModelMap model, String sort) {
-        List<WorkspaceMetaData> workspaces = new ArrayList<>(getWorkspaces());
+        List<WorkspaceMetaData> workspaces = new ArrayList<>(workspaceComponent.getWorkspaces(getUser()));
 
         sort = HtmlUtils.filterHtml(sort);
         if (!StringUtils.isNullOrEmpty(sort) && sort.trim().equals(SORT_DATE)) {

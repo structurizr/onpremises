@@ -2,8 +2,6 @@ package com.structurizr.onpremises.web;
 
 import com.structurizr.onpremises.component.search.SearchComponent;
 import com.structurizr.onpremises.component.workspace.WorkspaceComponent;
-import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
-import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.Version;
@@ -20,9 +18,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.TimeZone;
 
 public abstract class AbstractController {
@@ -100,59 +95,6 @@ public abstract class AbstractController {
         } else {
             return authentication.isAuthenticated();
         }
-    }
-
-    protected final Collection<WorkspaceMetaData> getWorkspaces() {
-        Collection<WorkspaceMetaData> workspaces = new ArrayList<>();
-
-        try {
-            workspaces = workspaceComponent.getWorkspaces();
-        } catch (WorkspaceComponentException e) {
-            log.error(e);
-        }
-
-        List<WorkspaceMetaData> filteredWorkspaces = new ArrayList<>();
-        User user = getUser();
-
-        if (!isAuthenticated()) {
-            for (WorkspaceMetaData workspace : workspaces) {
-                if (workspace.isOpen()) {
-                    // the workspace is public, so anybody can see it
-                    workspace.setEditable(false);
-                    filteredWorkspaces.add(workspace);
-                }
-            }
-        } else {
-            for (WorkspaceMetaData workspace : workspaces) {
-                if (workspace.isOpen()) {
-                    // the workspace is public, so anybody can see it
-                    workspace.setEditable(isAuthenticated());
-                    filteredWorkspaces.add(workspace);
-                } else if (workspace.isWriteUser(user)) {
-                    // the user has read-write access to the workspace
-                    workspace.setEditable(true);
-                    filteredWorkspaces.add(workspace);
-                } else if (workspace.isReadUser(user)) {
-                    // the user has read-only access to the workspace
-                    workspace.setEditable(false);
-                    filteredWorkspaces.add(workspace);
-                }
-            }
-        }
-
-        return filteredWorkspaces;
-    }
-
-    protected final WorkspaceMetaData getWorkspace(long workspaceId) {
-        Collection<WorkspaceMetaData> workspaces = getWorkspaces();
-
-        for (WorkspaceMetaData workspace : workspaces) {
-            if (workspace.getId() == workspaceId) {
-                return workspace;
-            }
-        }
-
-        return null;
     }
 
 }

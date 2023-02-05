@@ -5,6 +5,10 @@ public final class UserType {
     public UserType() {
     }
 
+    public boolean isAllowedToShareWorkspacesWithLink() {
+        return true;
+    }
+
     public boolean isAllowedToUseImageEmbed() {
         return false;
     }

@@ -20,6 +20,11 @@ public abstract class MockWorkspaceComponent implements WorkspaceComponent {
     }
 
     @Override
+    public Collection<WorkspaceMetaData> getWorkspaces(User user) throws WorkspaceComponentException {
+        return null;
+    }
+
+    @Override
     public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
         return null;
     }
