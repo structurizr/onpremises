@@ -136,6 +136,7 @@ public class UserTests {
         roles.add("role1");
         user = new User("user@example.com", roles, AuthenticationMethod.LOCAL);
 
+        Configuration.init();
         Configuration.getInstance().setAdminUsersAndRoles(new String[0]);
         assertTrue(user.isAdmin()); // no admin users/roles set, so everybody is an admin
 
