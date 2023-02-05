@@ -6,7 +6,7 @@ import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.component.workspace.WorkspaceVersion;
 import com.structurizr.onpremises.domain.Image;
 import com.structurizr.onpremises.domain.User;
-import com.structurizr.onpremises.util.InputStreamAndContentLength;
+import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 
 import java.io.File;
 import java.util.Collection;

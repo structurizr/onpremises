@@ -2,12 +2,16 @@ package com.structurizr.onpremises.web;
 
 import com.structurizr.onpremises.component.search.SearchComponent;
 import com.structurizr.onpremises.component.workspace.WorkspaceComponent;
+import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.Version;
 import com.structurizr.onpremises.web.security.SecurityUtils;
+import com.structurizr.onpremises.web.workspace.WorkspaceController;
 import com.structurizr.util.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,12 +21,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.TimeZone;
+import java.util.*;
 
 public abstract class AbstractController {
+
+    private static Log log = LogFactory.getLog(AbstractController.class);
 
     protected WorkspaceComponent workspaceComponent;
     protected SearchComponent searchComponent;
@@ -98,7 +101,14 @@ public abstract class AbstractController {
     }
 
     protected final Collection<WorkspaceMetaData> getWorkspaces() {
-        Collection<WorkspaceMetaData> workspaces = workspaceComponent.getWorkspaces();
+        Collection<WorkspaceMetaData> workspaces = new ArrayList<>();
+
+        try {
+            workspaces = workspaceComponent.getWorkspaces();
+        } catch (WorkspaceComponentException e) {
+            log.error(e);
+        }
+
         List<WorkspaceMetaData> filteredWorkspaces = new ArrayList<>();
         User user = getUser();
 
