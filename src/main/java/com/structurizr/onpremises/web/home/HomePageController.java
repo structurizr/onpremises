@@ -1,6 +1,7 @@
 package com.structurizr.onpremises.web.home;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
+import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.HtmlUtils;
 import com.structurizr.onpremises.web.AbstractController;
 import com.structurizr.util.StringUtils;
@@ -28,6 +29,7 @@ public class HomePageController extends AbstractController {
             return showDashboardPage(sort, model);
         } else {
             model.addAttribute("urlPrefix", "/share");
+            model.addAttribute("showAdminFeatures", false);
             return show(model, sort);
         }
     }
@@ -36,6 +38,8 @@ public class HomePageController extends AbstractController {
     @PreAuthorize("isAuthenticated()")
     public String showDashboardPage(@RequestParam(required = false) String sort, ModelMap model) {
         model.addAttribute("urlPrefix", "/workspace");
+        model.addAttribute("showAdminFeatures", Configuration.getInstance().getAdminUsersAndRoles().isEmpty() || getUser().isAdmin());
+
         return show(model, sort);
     }
 

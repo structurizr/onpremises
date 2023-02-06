@@ -87,7 +87,7 @@ public final class User {
     }
 
     public boolean isAdmin() {
-        return Configuration.getInstance().getAdminUsersAndRoles().isEmpty() || isUserOrRole(Configuration.getInstance().getAdminUsersAndRoles());
+        return isUserOrRole(Configuration.getInstance().getAdminUsersAndRoles());
     }
 
     public String getTimeZone() {

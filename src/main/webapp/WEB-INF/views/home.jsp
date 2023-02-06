@@ -43,7 +43,7 @@
                             We recommend that a workspace contains the model, views, and documentation for a single software system - see <a href="https://structurizr.com/help/usage-recommendations" target="_blank">Usage recommendations</a> for more details.
                         </p>
 
-                        <c:if test="${user.admin}">
+                        <c:if test="${showAdminFeatures}">
                             <div class="workspaceSummary centered">
                                 <div style="margin-top: 5px">
                                     New workspace

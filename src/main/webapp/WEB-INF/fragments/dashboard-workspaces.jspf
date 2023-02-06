@@ -35,7 +35,7 @@
             </div>
         </c:forEach>
 
-        <c:if test="${authenticated && user.admin}">
+        <c:if test="${showAdminFeatures}">
             <div class="workspaceSummary centered">
                 <div style="margin-top: 5px">
                     New workspace

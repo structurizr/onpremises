@@ -138,7 +138,7 @@ public class UserTests {
 
         Configuration.init();
         Configuration.getInstance().setAdminUsersAndRoles(new String[0]);
-        assertTrue(user.isAdmin()); // no admin users/roles set, so everybody is an admin
+        assertFalse(user.isAdmin());
 
         Configuration.getInstance().setAdminUsersAndRoles(new String[] { "user@google.com" });
         assertFalse(user.isAdmin()); // not a named user
