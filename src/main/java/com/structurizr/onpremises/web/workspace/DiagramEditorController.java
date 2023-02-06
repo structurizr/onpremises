@@ -40,4 +40,43 @@ public class DiagramEditorController extends AbstractWorkspaceController {
         return showAuthenticatedView(VIEW, workspaceMetaData, version, model, false, true);
     }
 
+    //                // if the owner can share workspaces, let's attempt to lock the workspace if needed
+//                if (DSL_EDITOR_VIEW.equals(view) || DIAGRAM_EDITOR_VIEW.equals(view)) {
+//                    String usernameToLockWith = user.getUsername();
+//
+//                    boolean locked = false;
+//
+//                    try {
+//                        workspaceComponent.lockWorkspace(workspaceId, usernameToLockWith, STRUCTURIZR_WEB_AGENT);
+//                    } catch (WorkspaceComponentException e) {
+//                        log.error(e);
+//                    }
+//
+//                    if (!locked) {
+//                        if (workspaceMetaData.isLocked()) {
+//                            model.addAttribute("showHeader", true);
+//                            model.addAttribute("showFooter", true);
+//                            addCommonAttributes(model, "Workspace locked", true);
+//                            model.addAttribute("workspace", workspaceMetaData);
+//
+//                            return "workspace-locked";
+//                        } else {
+//                            workspaceMetaData.setEditable(false);
+//                            model.addAttribute("showHeader", true);
+//                            model.addAttribute("showFooter", true);
+//                            addCommonAttributes(model, "Workspace could not be locked", true);
+//                            model.addAttribute("workspace", workspaceMetaData);
+//
+//                            return "workspace-could-not-be-locked";
+//                        }
+//                    } else {
+//                        workspaceMetaData.setLockedUser(usernameToLockWith);
+//                        workspaceMetaData.setLockedAgent(STRUCTURIZR_WEB_AGENT);
+//                        workspaceMetaData.setLockedDate(new Date());
+//                    }
+//                } else if (DIAGRAM_VIEW.equals(view)) {
+//                    model.addAttribute("includeEditButton", true);
+//                }
+
+
 }

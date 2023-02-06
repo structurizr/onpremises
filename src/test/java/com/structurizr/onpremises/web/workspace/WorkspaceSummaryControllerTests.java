@@ -77,6 +77,7 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
         assertEquals("/share/1", model.getAttribute("urlPrefix"));
+        assertEquals("/share/1/images/", model.getAttribute("thumbnailUrl"));
     }
 
     @Test
@@ -152,6 +153,7 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
         assertEquals("/share/1/token", model.getAttribute("urlPrefix"));
+        assertEquals("/share/1/token/images/", model.getAttribute("thumbnailUrl"));
     }
 
     @Test
@@ -211,6 +213,7 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
         assertTrue(workspaceMetaData.isEditable());
         assertNull(model.getAttribute("workspaceAsJson"));
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
+        assertEquals("/workspace/1/images/", model.getAttribute("thumbnailUrl"));
     }
 
     @Test
@@ -236,6 +239,7 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
         assertTrue(workspaceMetaData.isEditable());
         assertNull(model.getAttribute("workspaceAsJson"));
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
+        assertEquals("/workspace/1/images/", model.getAttribute("thumbnailUrl"));
     }
 
     @Test
@@ -260,6 +264,7 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
+        assertEquals("/workspace/1/images/", model.getAttribute("thumbnailUrl"));
     }
 
 }

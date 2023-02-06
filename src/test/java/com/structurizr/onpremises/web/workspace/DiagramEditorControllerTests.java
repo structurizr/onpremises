@@ -81,6 +81,7 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
         assertTrue(workspaceMetaData.isEditable());
         assertNull(model.getAttribute("workspaceAsJson"));
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
+        assertEquals("/workspace/1/images/", model.getAttribute("thumbnailUrl"));
     }
 
     @Test
@@ -106,6 +107,7 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
         assertTrue(workspaceMetaData.isEditable());
         assertNull(model.getAttribute("workspaceAsJson"));
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
+        assertEquals("/workspace/1/images/", model.getAttribute("thumbnailUrl"));
     }
 
     @Test
