@@ -1,5 +1,6 @@
 package com.structurizr.onpremises.web.workspace;
 
+import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.util.HtmlUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -53,12 +54,19 @@ public class DiagramViewerController extends AbstractWorkspaceController {
             @RequestParam(required = false) String perspective,
             ModelMap model
     ) {
+        WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(workspaceId);
+        if (workspaceMetaData == null) {
+            return show404Page(model);
+        }
+
         model.addAttribute("publishThumbnails", true);
         model.addAttribute("quickNavigationPath", "diagrams");
         model.addAttribute("perspective", HtmlUtils.filterHtml(perspective));
-        model.addAttribute("includeEditButton", true);
 
-        return showAuthenticatedView(VIEW, workspaceId, version, model, false, false);
+        boolean editable = workspaceMetaData.isOpen() || workspaceMetaData.isWriteUser(getUser());
+        model.addAttribute("includeEditButton", editable);
+
+        return showAuthenticatedView(VIEW, workspaceMetaData, version, model, false, false);
     }
 
 }

@@ -210,6 +210,7 @@ public class DiagramViewerControllerTests extends ControllerTestsBase {
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
+        assertEquals(true, model.getAttribute("includeEditButton"));
     }
 
     @Test
@@ -234,6 +235,7 @@ public class DiagramViewerControllerTests extends ControllerTestsBase {
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
+        assertEquals(true, model.getAttribute("includeEditButton"));
     }
 
     @Test
@@ -258,6 +260,7 @@ public class DiagramViewerControllerTests extends ControllerTestsBase {
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
+        assertEquals(false, model.getAttribute("includeEditButton"));
     }
 
 }

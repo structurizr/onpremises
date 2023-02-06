@@ -1,5 +1,6 @@
 package com.structurizr.onpremises.web.workspace;
 
+import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.util.Configuration;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -44,9 +45,16 @@ public class WorkspaceSummaryController extends AbstractWorkspaceController {
             @RequestParam(required = false) String version,
             ModelMap model
     ) {
+        WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(workspaceId);
+        if (workspaceMetaData == null) {
+            return show404Page(model);
+        }
+
         model.addAttribute("versions", workspaceComponent.getWorkspaceVersions(workspaceId, Configuration.getInstance().getMaxWorkspaceVersions()));
 
-        return showAuthenticatedView(VIEW, workspaceId, version, model, true, true);
+        boolean editable = workspaceMetaData.isOpen() || workspaceMetaData.isWriteUser(getUser());
+
+        return showAuthenticatedView(VIEW, workspaceMetaData, version, model, true, editable);
     }
 
 }

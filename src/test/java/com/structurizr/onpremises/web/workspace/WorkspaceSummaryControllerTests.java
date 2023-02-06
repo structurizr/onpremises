@@ -208,7 +208,8 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
         String view = controller.showAuthenticatedWorkspaceSummary(1, "version", model);
         assertEquals("workspace-summary", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
-        assertNull( model.getAttribute("workspaceAsJson"));
+        assertTrue(workspaceMetaData.isEditable());
+        assertNull(model.getAttribute("workspaceAsJson"));
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
     }
 
@@ -232,7 +233,8 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
         String view = controller.showAuthenticatedWorkspaceSummary(1, "version", model);
         assertEquals("workspace-summary", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
-        assertNull( model.getAttribute("workspaceAsJson"));
+        assertTrue(workspaceMetaData.isEditable());
+        assertNull(model.getAttribute("workspaceAsJson"));
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
     }
 
