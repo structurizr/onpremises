@@ -1,0 +1,61 @@
+<div class="section">
+    <div class="centered">
+        <c:if test="${numberOfWorkspaces > 3}">
+            <div style="color: #444444; font-size: 11px;">
+                <a href="?sort=name" style="color: #444444;<c:if test="${sort eq 'name'}"> font-weight: bold;</c:if>">Name</a>
+                <img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/sort-down.svg" class="icon-sm" />
+                <a href="?sort=date" style="color: #444444;<c:if test="${sort eq 'date'}"> font-weight: bold;</c:if>">Date</a>
+            </div>
+        </c:if>
+        <c:forEach var="workspace" items="${workspaces}" varStatus="status">
+            <div class="workspaceSummary centered <c:if test="${not workspace.active}">inactive</c:if>">
+                <div>
+                    <a href="${urlPrefix}/${workspace.id}"><c:out value="${workspace.name}" escapeXml="true" /></a>
+                </div>
+
+                <div style="margin-top: 5px">
+                    <c:if test="${workspace.open}">
+                        <a href="/share/${workspace.id}" target="_blank"><span><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/unlock.svg" class="icon-sm" alt="Public workspace" /></span></a>
+                    </c:if>
+                    <c:if test="${workspace.shareable}">
+                        <a href="/share/${workspace.id}/${workspace.sharingToken}" target="_blank"><span><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/link.svg" class="icon-sm" alt="Sharing link enabled" /></span></a>
+                    </c:if>
+                    <c:if test="${workspace.clientEncrypted}">
+                        <span><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/file-earmark-lock.svg" class="icon-sm" alt="Client-side encrypted workspace" /></span>
+                    </c:if>
+                </div>
+
+                <div style="margin-top: 10px; margin-bottom: 10px; font-size: 11px">
+                    <c:out value="${workspace.description}" escapeXml="true" />
+                </div>
+
+                <div class="workspaceThumbnail">
+                    <a href="${urlPrefix}/${workspace.id}"><img src="${urlPrefix}/${workspace.id}/images/thumbnail.png" alt="Thumbnail" class="img-responsive" onerror="this.onerror = null; this.src='/static/img/thumbnail-not-available.png';" /></a>
+                </div>
+            </div>
+        </c:forEach>
+
+        <c:if test="${authenticated && user.admin}">
+            <div class="workspaceSummary centered">
+                <div style="margin-top: 5px">
+                    New workspace
+                </div>
+
+                <br /><br /><br />
+
+                <div>
+                    <div class="workspaceThumbnail" style="padding-top: 30px">
+                        <a href="/workspace/create"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/folder-plus.svg" class="icon-xxl" /></a>
+                    </div>
+                </div>
+            </div>
+        </c:if>
+
+    </div>
+</div>
+
+<script>
+    <c:forEach var="workspace" items="${workspaces}">
+    quickNavigation.addItem('${workspace.id} - <c:out value="${workspace.name}" escapeXml="true" />', '${urlPrefix}/${workspace.id}');
+    </c:forEach>
+</script>
