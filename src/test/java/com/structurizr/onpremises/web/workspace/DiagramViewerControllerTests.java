@@ -163,6 +163,7 @@ public class DiagramViewerControllerTests extends ControllerTestsBase {
             }
         });
 
+        setUser("user@example.com");
         String view = controller.showAuthenticatedDiagramViewer(1, "version", "perspective", model);
         assertEquals("404", view);
     }
@@ -203,6 +204,7 @@ public class DiagramViewerControllerTests extends ControllerTestsBase {
             }
         });
 
+        setUser("user@example.com");
         String view = controller.showAuthenticatedDiagramViewer(1, "version", "perspective", model);
         assertEquals("diagrams", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));

@@ -1,6 +1,7 @@
 package com.structurizr.onpremises.web.home;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
+import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.web.ControllerTestsBase;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
 import org.junit.Before;
@@ -9,13 +10,14 @@ import org.springframework.ui.ModelMap;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class HomePageControllerTests extends ControllerTestsBase {
 
     private HomePageController controller;
-    private MockWorkspaceComponent workspaceComponent;
     private ModelMap model;
 
     @Before
@@ -27,26 +29,20 @@ public class HomePageControllerTests extends ControllerTestsBase {
 
     @Test
     public void showHomePage_WhenUnauthenticated() {
-        WorkspaceMetaData workspace1 = new WorkspaceMetaData(1); // private workspace
-        workspace1.addWriteUser("user");
-        WorkspaceMetaData workspace2 = new WorkspaceMetaData(2); // open workspace
+        WorkspaceMetaData workspace1 = new WorkspaceMetaData(1);
 
-        workspaceComponent = new com.structurizr.onpremises.web.MockWorkspaceComponent() {
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override
-            public Collection<WorkspaceMetaData> getWorkspaces() {
-                return Arrays.asList(
-                        workspace1, workspace2
-                );
+            public Collection<WorkspaceMetaData> getWorkspaces(User user) {
+                return List.of(workspace1);
             }
-        };
-        controller.setWorkspaceComponent(workspaceComponent);
+        });
         clearUser();
 
         String result = controller.showHomePage("", model);
 
         assertEquals(1, model.getAttribute("numberOfWorkspaces"));
-        assertFalse(((Collection)model.getAttribute("workspaces")).contains(workspace1)); // private workspace
-        assertTrue(((Collection)model.getAttribute("workspaces")).contains(workspace2)); // open workspace
+        assertTrue(((Collection)model.getAttribute("workspaces")).contains(workspace1));
         assertEquals("/share", model.getAttribute("urlPrefix"));
         assertEquals("home", result);
     }
@@ -54,25 +50,19 @@ public class HomePageControllerTests extends ControllerTestsBase {
     @Test
     public void showHomePage_WhenAuthenticated() {
         WorkspaceMetaData workspace1 = new WorkspaceMetaData(1); // private workspace
-        workspace1.addWriteUser("user");
-        WorkspaceMetaData workspace2 = new WorkspaceMetaData(2); // open workspace
 
-        workspaceComponent = new com.structurizr.onpremises.web.MockWorkspaceComponent() {
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override
-            public Collection<WorkspaceMetaData> getWorkspaces() {
-                return Arrays.asList(
-                        workspace1, workspace2
-                );
+            public Collection<WorkspaceMetaData> getWorkspaces(User user) {
+                return List.of(workspace1);
             }
-        };
-        controller.setWorkspaceComponent(workspaceComponent);
+        });
         setUser("user");
 
         String result = controller.showHomePage("", model);
 
-        assertEquals(2, model.getAttribute("numberOfWorkspaces"));
-        assertTrue(((Collection)model.getAttribute("workspaces")).contains(workspace1)); // private workspace
-        assertTrue(((Collection)model.getAttribute("workspaces")).contains(workspace2)); // open workspace
+        assertEquals(1, model.getAttribute("numberOfWorkspaces"));
+        assertTrue(((Collection)model.getAttribute("workspaces")).contains(workspace1));
         assertEquals("/workspace", model.getAttribute("urlPrefix"));
         assertEquals("home", result);
     }

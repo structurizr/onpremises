@@ -163,6 +163,7 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
             }
         });
 
+        setUser("user@example.com");
         String view = controller.showAuthenticatedWorkspaceSummary(1, "version", model);
         assertEquals("404", view);
     }
@@ -203,6 +204,7 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
             }
         });
 
+        setUser("user@example.com");
         String view = controller.showAuthenticatedWorkspaceSummary(1, "version", model);
         assertEquals("workspace-summary", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
