@@ -10,6 +10,44 @@ For ease of deployment, by default, all data is stored on the local file system.
 - [Documentation](https://structurizr.com/share/18571/documentation) ([source](docs))
 - [Issue tracker](https://github.com/structurizr/onpremises/issues)
 
+## Building from source
+
+- Note 1: The HTML, JS, CSS, JSP, etc files are in a separate [structurizr/ui](https://github.com/structurizr/ui) repo because they are shared with the cloud service and Structurizr Lite.
+- Note 2: Building and running from source has only been tested with Java 17.
+
+To build from source:
+
+```
+git clone https://github.com/structurizr/onpremises.git structurizr-onpremises
+git clone https://github.com/structurizr/ui.git structurizr-ui
+cd structurizr-onpremises
+./ui.sh
+./gradlew build
+```
+
+If successful, you will see a file named `structurizr-onpremises.war` in `build/libs`.
+
 ## Important note
 
 This repo is incomplete. Open sourcing Structurizr is a work in progress, and should be completed Q1-Q2 2023.
+
+- ✅ Diagram viewer
+- ✅ Diagram editor
+- ✅ Documentation
+- ✅ Decisions
+- ✅ Graph view
+- ❌ Other explorations
+- ✅ iframe embeds (embed code not yet available from diagram viewer)
+- ❌ DSL editor
+- ❌ Workspace locking
+- ❌ Diagram reviews
+- ✅ Data storage: file
+- ✅ Data storage: AWS S3
+- ✅ Search: Apache Lucene
+- ✅ Search: Elasticsearch
+- ✅ Authentication: username/password
+- ✅ Authentication: LDAP
+- ✅ Authentication: SAML
+- ✅ User profile page
+- ✅ Session storage: local
+- ✅ Session storage: Redis
