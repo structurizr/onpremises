@@ -54,8 +54,12 @@ public abstract class AbstractController {
 
     protected void addCommonAttributes(ModelMap model, String pageTitle, boolean showHeaderAndFooter) {
         model.addAttribute("timeZone", TimeZone.getDefault().getID());
-        model.addAttribute("showHeader", showHeaderAndFooter);
-        model.addAttribute("showFooter", showHeaderAndFooter);
+        if (model.getAttribute("showHeader") == null) {
+            model.addAttribute("showHeader", showHeaderAndFooter);
+        }
+        if (model.getAttribute("showFooter") == null) {
+            model.addAttribute("showFooter", showHeaderAndFooter);
+        }
         model.addAttribute("version", new Version());
         model.addAttribute("authenticated", isAuthenticated());
         model.addAttribute("user", getUser());
