@@ -25,5 +25,13 @@
     </div>
     </c:if>
 
+    <script nonce="${scriptNonce}">
+        window.onerror = function (msg, url, lineNo, columnNo, error) {
+            console.log(msg);
+            console.log(url + ':' + lineNo + ':' + columnNo);
+            console.log(error);
+        };
+    </script>
+
     </body>
 </html>
