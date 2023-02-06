@@ -45,24 +45,6 @@
             </div>
             </c:if>
 
-            <div class="navigationItem">
-            <c:choose>
-                <c:when test="${workspace.ownerUserType.free}">
-                    <a href="/products#comparison" target="_blank"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/cart-x.svg" class="icon-sm" /> Paid features</a>
-                </c:when>
-                <c:otherwise>
-                    <a href="/products#comparison" target="_blank"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/cart-check.svg" class="icon-sm" /> Paid features</a>
-                </c:otherwise>
-            </c:choose>
-            </div>
-
-            <div class="navigationItem">
-                <a href="${urlPrefix}/users"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/person.svg" class="icon-sm" /> ${workspace.role.name}</a>
-            </div>
-
-            <div class="navigationItemSeparator"></div>
-            </c:if>
-
             <c:if test="${workspace.clientEncrypted}">
             <div class="navigationItem">
                 <img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/file-earmark-lock.svg" class="icon-sm" /> Client-side encrypted
