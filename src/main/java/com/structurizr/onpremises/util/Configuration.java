@@ -83,7 +83,7 @@ public class Configuration extends ConfigLookup {
         return new HashSet<>(adminUsersAndRoles);
     }
 
-    public void setAdminUsersAndRoles(String[] usersAndRoles) {
+    public void setAdminUsersAndRoles(String... usersAndRoles) {
         adminUsersAndRoles = new HashSet<>();
         if (usersAndRoles != null) {
             for (String userOrRole : usersAndRoles) {
