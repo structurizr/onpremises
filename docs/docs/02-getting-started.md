@@ -33,7 +33,7 @@ docker run -it --rm -p 8080:8080 -v /Users/simon/structurizr:/usr/local/structur
 
 To use the Java EE version, you'll need:
 
-- Java 11+ (required)
+- Java 17+ (required)
 - A Java EE compatible web/application server (required, e.g. [Apache Tomcat 9.x](https://tomcat.apache.org/download-90.cgi) ... please note that Tomcat 10.x and other Jakarta EE servers are not supported)
 - [Graphviz](https://graphviz.org/download/) (optional if you want to use automatic layout)
 
