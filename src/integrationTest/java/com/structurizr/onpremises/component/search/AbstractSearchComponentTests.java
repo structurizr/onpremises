@@ -248,5 +248,4 @@ Foo
         assertEquals("/decisions/A/B#1", results.get(0).getUrl());
     }
 
-
 }
