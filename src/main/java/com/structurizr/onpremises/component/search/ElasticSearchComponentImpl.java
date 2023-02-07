@@ -23,8 +23,6 @@ import org.apache.http.nio.entity.NStringEntity;
 import org.apache.http.util.EntityUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.lucene.document.StoredField;
-import org.apache.lucene.index.IndexWriter;
 import org.elasticsearch.client.*;
 
 import java.text.DecimalFormat;
@@ -78,7 +76,7 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
 
             Document document = new Document();
             document.setUrl("");
-            document.setWorkspace(makeWorkspaceIdUnique(workspace.getId()));
+            document.setWorkspace(toString(workspace.getId()));
             document.setType(DocumentType.WORKSPACE);
             document.setName(workspace.getName());
             document.setDescription(workspace.getDescription());
@@ -124,8 +122,8 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
 
     private void index(Workspace workspace, View view) throws Exception {
         Document document = new Document();
-        document.setUrl("/diagrams#" + view.getKey());
-        document.setWorkspace(makeWorkspaceIdUnique(workspace.getId()));
+        document.setUrl(DIAGRAMS_PATH + "#" + view.getKey());
+        document.setWorkspace(toString(workspace.getId()));
         document.setType(DocumentType.DIAGRAM);
         document.setName(view.getName());
         document.setDescription(view.getDescription());
@@ -292,8 +290,8 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
     private void indexDocumentationSection(String title, String content, int sectionNumber, Workspace workspace, Element element) throws Exception {
         Document document = new Document();
 
-        document.setUrl("/documentation" + calculateUrlForSection(element, sectionNumber));
-        document.setWorkspace(makeWorkspaceIdUnique(workspace.getId()));
+        document.setUrl(DOCUMENTATION_PATH + calculateUrlForSection(element, sectionNumber));
+        document.setWorkspace(toString(workspace.getId()));
         document.setType(DocumentType.DOCUMENTATION);
 
         if (element == null) {
@@ -327,8 +325,8 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
     private void indexDecision(Workspace workspace, Element element, Decision decision) throws Exception {
         Document document = new Document();
 
-        document.setUrl("/decisions" + calculateUrlForDecision(element, decision));
-        document.setWorkspace(makeWorkspaceIdUnique(workspace.getId()));
+        document.setUrl(DECISIONS_PATH + calculateUrlForDecision(element, decision));
+        document.setWorkspace(toString(workspace.getId()));
         document.setType(DocumentType.DECISION);
 
         if (element == null) {
@@ -354,7 +352,7 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
             }
 
             Request request = new Request(method, url);
-            request.addParameter("q", WORKSPACE_KEY + ":" + makeWorkspaceIdUnique(workspaceId));
+            request.addParameter("q", WORKSPACE_KEY + ":" + toString(workspaceId));
 
             restLowLevelClient.performRequest(request);
         } catch (Exception e) {
@@ -373,12 +371,6 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
         }
 
         return buf.toString();
-    }
-
-    private String makeWorkspaceIdUnique(long workspaceId) {
-        // 1 -> 0000000000000001 ... this is done so that we can search for specific IDs, rather than all including '1'
-        NumberFormat format = new DecimalFormat("0000000000000000");
-        return format.format(workspaceId);
     }
 
     private String filterMarkup(String source) {
@@ -568,7 +560,7 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
 
         StringBuilder buf = new StringBuilder();
         for (Long workspaceId : workspaceIds) {
-            buf.append("{\"term\": {\"workspace\": \"" + makeWorkspaceIdUnique(workspaceId) + "\"}},");
+            buf.append("{\"term\": {\"workspace\": \"" + toString(workspaceId) + "\"}},");
         }
 
         request = request.replace("$WORKSPACES$", buf.toString().substring(0, buf.length() - 1));

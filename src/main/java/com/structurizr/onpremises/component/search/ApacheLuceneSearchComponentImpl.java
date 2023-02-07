@@ -44,10 +44,6 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
     private static final Log log = LogFactory.getLog(ApacheLuceneSearchComponentImpl.class);
     private static final String INDEX_DIRECTORY_NAME = "index";
 
-    private static final String DOCUMENTATION_PATH = "/documentation";
-    private static final String DIAGRAMS_PATH = "/diagrams";
-    private static final String DECISIONS_PATH = "/decisions";
-
     private static final String URL_KEY = "url";
     private static final String WORKSPACE_KEY = "workspace";
     private static final String NAME_KEY = "name";
@@ -448,11 +444,6 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
     @Override
     public boolean isEnabled() {
         return true;
-    }
-
-    private String toString(long workspaceId) {
-        NumberFormat format = new DecimalFormat("0000000000000000");
-        return format.format(workspaceId);
     }
 
 }

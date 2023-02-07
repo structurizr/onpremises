@@ -7,6 +7,8 @@ import com.structurizr.model.SoftwareSystem;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 abstract class AbstractSearchComponentImpl implements SearchComponent {
 
@@ -48,6 +50,12 @@ abstract class AbstractSearchComponentImpl implements SearchComponent {
         url = url + "#" + decision.getId();
 
         return url;
+    }
+
+    protected String toString(long workspaceId) {
+        // 1 -> 0000000000000001 ... this is done so that we can search for specific IDs, rather than all including '1'
+        NumberFormat format = new DecimalFormat("0000000000000000");
+        return format.format(workspaceId);
     }
 
 }
