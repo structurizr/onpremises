@@ -6,13 +6,14 @@ import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 import com.structurizr.onpremises.web.ControllerTestsBase;
 import com.structurizr.onpremises.web.MockHttpServletResponse;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.core.io.Resource;
 
 import java.io.ByteArrayInputStream;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ImageControllerTests extends ControllerTestsBase {
 
@@ -20,7 +21,7 @@ public class ImageControllerTests extends ControllerTestsBase {
     private MockHttpServletResponse response;
     private static final InputStreamAndContentLength IMAGE = new InputStreamAndContentLength(new ByteArrayInputStream(new byte[1234]), 1234);
 
-    @Before
+    @BeforeEach
     public void setUp() {
         controller = new ImageController();
         response = new MockHttpServletResponse();

@@ -4,18 +4,19 @@ import com.structurizr.onpremises.component.workspace.WorkspaceComponentExceptio
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.web.ControllerTestsBase;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.ui.ModelMap;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ShareWorkspaceControllerTests extends ControllerTestsBase {
 
     private ShareWorkspaceController controller;
     private ModelMap model;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         controller = new ShareWorkspaceController();
         model = new ModelMap();

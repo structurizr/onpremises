@@ -5,9 +5,11 @@ import com.structurizr.onpremises.domain.AuthenticationMethod;
 import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.util.DateUtils;
 import com.structurizr.util.WorkspaceUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -15,14 +17,15 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class WorkspaceComponentTests {
 
     private static final File DATA_DIRECTORY = new File("./build/WorkspaceComponentTests");
     private WorkspaceComponent workspaceComponent;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         deleteDirectory(DATA_DIRECTORY);
 
@@ -89,7 +92,7 @@ public class WorkspaceComponentTests {
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         deleteDirectory(DATA_DIRECTORY);
     }

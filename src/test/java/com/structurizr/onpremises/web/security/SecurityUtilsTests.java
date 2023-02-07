@@ -2,7 +2,7 @@ package com.structurizr.onpremises.web.security;
 
 import com.structurizr.onpremises.domain.Role;
 import com.structurizr.onpremises.domain.User;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.opensaml.saml2.core.impl.AssertionBuilder;
 import org.opensaml.saml2.core.impl.NameIDBuilder;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,8 +14,8 @@ import org.springframework.security.saml.SAMLCredential;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SecurityUtilsTests {
 

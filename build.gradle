@@ -11,6 +11,32 @@ repositories {
 	mavenCentral()
 }
 
+testing {
+	suites {
+		test {
+			useJUnitJupiter()
+		}
+
+		integrationTest(JvmTestSuite) {
+			dependencies {
+				implementation project()
+			}
+
+			targets {
+				all {
+					testTask.configure {
+						shouldRunAfter(test)
+					}
+				}
+			}
+		}
+	}
+}
+
+tasks.named('check') {
+	dependsOn(testing.suites.integrationTest)
+}
+
 dependencies {
 
 	implementation 'com.structurizr:structurizr-dsl:1.24.0'
@@ -41,9 +67,6 @@ dependencies {
 
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.134'
 	implementation 'com.amazonaws:aws-java-sdk-sts:1.12.134'
-
-	// testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
-	testImplementation 'junit:junit:4.13.1'
 }
 
 war {
@@ -70,18 +93,7 @@ task explodedWar(type: Sync) {
 	with war
 }
 
-sourceSets {
-	componentTest {
-		compileClasspath += sourceSets.main.output
-		runtimeClasspath += sourceSets.main.output
-	}
-}
-
 configurations {
-	componentTestImplementation.extendsFrom implementation
-	icomponentTestImplementationtRuntimeOnly.extendsFrom runtimeOnly
-}
-
-dependencies {
-	componentTestImplementation 'junit:junit:4.13.1'
+	integrationTestImplementation.extendsFrom testImplementation
+	integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
 }

@@ -23,10 +23,10 @@ import org.apache.http.nio.entity.NStringEntity;
 import org.apache.http.util.EntityUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.lucene.document.StoredField;
+import org.apache.lucene.index.IndexWriter;
 import org.elasticsearch.client.*;
 
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
@@ -108,12 +108,13 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
                 index(workspace, view);
             }
 
-            index(workspace, null, workspace.getDocumentation());
+            indexDocumentationAndDecisions(workspace, null, workspace.getDocumentation());
+
             for (SoftwareSystem softwareSystem : workspace.getModel().getSoftwareSystems()) {
-                index(workspace, softwareSystem, softwareSystem.getDocumentation());
+                indexDocumentationAndDecisions(workspace, softwareSystem, softwareSystem.getDocumentation());
 
                 for (Container container : softwareSystem.getContainers()) {
-                    index(workspace, container, container.getDocumentation());
+                    indexDocumentationAndDecisions(workspace, container, container.getDocumentation());
                 }
             }
         } catch (Exception e) {
@@ -249,55 +250,91 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
         return content.toString();
     }
 
-    private void index(Workspace workspace, Element element, Documentation documentation) throws Exception {
+    private void indexDocumentationAndDecisions(Workspace workspace, Element element, Documentation documentation) throws Exception {
         if (documentation != null) {
+            StringBuilder documentationContent = new StringBuilder();
             for (Section section : documentation.getSections()) {
-                index(workspace, element, section);
+                documentationContent.append(section.getContent());
+                documentationContent.append(NEWLINE);
             }
+            indexDocumentation(workspace, element, documentationContent.toString());
 
             for (Decision decision : documentation.getDecisions()) {
-                index(workspace, element, decision);
+                indexDecision(workspace, element, decision);
             }
         }
     }
 
-    private void index(Workspace workspace, Element element, Section section) throws Exception {
+    private void indexDocumentation(Workspace workspace, Element element, String documentationContent) throws Exception {
+        // split the entire documentation content up into sections, each of which is defined by a ## or == heading.
+        String title = "";
+        StringBuilder content = new StringBuilder();
+        String[] lines = documentationContent.split(NEWLINE);
+        int sectionNumber = 0;
+
+        for (String line : lines) {
+            if (line.startsWith(MARKDOWN_SECTION_HEADING) || line.startsWith(ASCIIDOC_SECTION_HEADING)) {
+                indexDocumentationSection(title, content.toString(), sectionNumber, workspace, element);
+                title = line.substring(MARKDOWN_SECTION_HEADING.length()-1).trim();
+                content = new StringBuilder();
+                sectionNumber++;
+            } else {
+                content.append(line);
+                content.append(NEWLINE);
+            }
+        }
+
+        if (content.length() > 0) {
+            indexDocumentationSection(title, content.toString(), sectionNumber, workspace, element);
+        }
+    }
+
+    private void indexDocumentationSection(String title, String content, int sectionNumber, Workspace workspace, Element element) throws Exception {
         Document document = new Document();
 
-        document.setUrl("/documentation" + calculateUrl(element, section));
+        document.setUrl("/documentation" + calculateUrlForSection(element, sectionNumber));
         document.setWorkspace(makeWorkspaceIdUnique(workspace.getId()));
         document.setType(DocumentType.DOCUMENTATION);
+
         if (element == null) {
-            document.setName(section.getTitle());
+            if (!StringUtils.isNullOrEmpty(title)) {
+                document.setName(workspace.getName() + " - " + title);
+            } else {
+                document.setName(workspace.getName());
+            }
         } else {
-            document.setName(element.getName() + " - " + section.getTitle());
+            if (!StringUtils.isNullOrEmpty(title)) {
+                document.setName(element.getName() + " - " + title);
+            } else {
+                document.setName(element.getName());
+            }
         }
 
         String snippet = "";
-        if (section.getContent() != null) {
-            if (section.getContent().length() > SNIPPET_LENGTH) {
-                snippet = section.getContent().substring(0, SNIPPET_LENGTH) + "...";
+        if (content != null) {
+            if (content.length() > SNIPPET_LENGTH) {
+                snippet = content.substring(0, SNIPPET_LENGTH) + "...";
             } else {
-                snippet = section.getContent();
+                snippet = content;
             }
         }
         document.setDescription(filterMarkup(snippet));
-        document.setContent(appendAll(section.getTitle(), section.getContent()));
+        document.setContent(appendAll(title, content));
 
         sendIndexRequest(document);
     }
 
-    private void index(Workspace workspace, Element element, Decision decision) throws Exception {
+    private void indexDecision(Workspace workspace, Element element, Decision decision) throws Exception {
         Document document = new Document();
 
-        document.setUrl("/decisions/" + calculateUrl(element, decision));
+        document.setUrl("/decisions" + calculateUrlForDecision(element, decision));
         document.setWorkspace(makeWorkspaceIdUnique(workspace.getId()));
         document.setType(DocumentType.DECISION);
 
         if (element == null) {
-            document.setName(decision.getId() + ". " + decision.getTitle());
+            document.setName(workspace.getName() + " - " + decision.getId() + ". " + decision.getTitle());
         } else {
-            document.setName(decision.getId() + ". " + element.getName() + " - " + decision.getTitle());
+            document.setName(element.getName() + " - " + decision.getId() + ". " + decision.getTitle());
         }
 
         document.setDescription(decision.getStatus());

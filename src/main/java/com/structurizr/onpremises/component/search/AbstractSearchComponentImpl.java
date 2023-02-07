@@ -1,36 +1,53 @@
 package com.structurizr.onpremises.component.search;
 
 import com.structurizr.documentation.Decision;
-import com.structurizr.documentation.Section;
+import com.structurizr.model.Container;
 import com.structurizr.model.Element;
+import com.structurizr.model.SoftwareSystem;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
 abstract class AbstractSearchComponentImpl implements SearchComponent {
 
+    protected static final String DOCUMENTATION_PATH = "/documentation";
+    protected static final String DIAGRAMS_PATH = "/diagrams";
+    protected static final String DECISIONS_PATH = "/decisions";
+
+    protected static final String MARKDOWN_SECTION_HEADING = "## ";
+    protected static final String ASCIIDOC_SECTION_HEADING = "== ";
+    protected static final String NEWLINE = "\n";
+
     protected String urlEncode(String value) throws Exception {
         return URLEncoder.encode(value, StandardCharsets.UTF_8.toString()).replaceAll("\\+", "%20");
     }
 
-    protected String calculateUrl(Element element, Section section) throws Exception {
-        if (element == null) {
-            return "#" + section.getOrder();
-        } else {
-            while (element.getParent() != null) {
-                element = element.getParent();
-            }
-
-            return urlEncode(element.getName()) + "#" + section.getOrder();
+    protected String calculateUrlForSection(Element element, int sectionNumber) throws Exception {
+        String url = "";
+        if (element instanceof Container) {
+            url = "/" + urlEncode(element.getParent().getName()) + "/" + urlEncode(element.getName());
+        } else if (element instanceof SoftwareSystem) {
+            url = "/" + urlEncode(element.getName());
         }
+
+        if (sectionNumber > 0) {
+            url = url + "#" + sectionNumber;
+        }
+
+        return url;
     }
 
-    protected String calculateUrl(Element element, Decision decision) throws Exception {
-        if (element == null) {
-            return "#" + urlEncode("" + decision.getId());
-        } else {
-            return urlEncode(element.getName()) + "#" + urlEncode(decision.getId());
+    protected String calculateUrlForDecision(Element element, Decision decision) throws Exception {
+        String url = "";
+        if (element instanceof Container) {
+            url = "/" + urlEncode(element.getParent().getName()) + "/" + urlEncode(element.getName());
+        } else if (element instanceof SoftwareSystem) {
+            url = "/" + urlEncode(element.getName());
         }
+
+        url = url + "#" + decision.getId();
+
+        return url;
     }
 
 }

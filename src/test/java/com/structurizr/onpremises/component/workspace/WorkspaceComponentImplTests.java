@@ -11,12 +11,12 @@ import com.structurizr.onpremises.domain.AuthenticationMethod;
 import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.util.DateUtils;
 import com.structurizr.util.WorkspaceUtils;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.StringWriter;
 import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class WorkspaceComponentImplTests {
 

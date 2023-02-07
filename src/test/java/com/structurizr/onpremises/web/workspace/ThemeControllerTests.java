@@ -8,11 +8,12 @@ import com.structurizr.onpremises.web.ControllerTestsBase;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
 import com.structurizr.util.WorkspaceUtils;
 import com.structurizr.view.Shape;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.ui.ModelMap;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ThemeControllerTests extends ControllerTestsBase {
 
@@ -20,7 +21,7 @@ public class ThemeControllerTests extends ControllerTestsBase {
     private ModelMap model;
     private String workspaceJson = "";
 
-    @Before
+    @BeforeEach
     public void setUp() {
         controller = new ThemeController();
         model = new ModelMap();

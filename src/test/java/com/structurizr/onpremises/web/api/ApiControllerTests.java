@@ -7,13 +7,14 @@ import com.structurizr.onpremises.web.MockHttpServletRequest;
 import com.structurizr.onpremises.web.MockHttpServletResponse;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
 import com.structurizr.util.WorkspaceUtils;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.Base64;
 import java.util.Date;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ApiControllerTests {
 
@@ -21,7 +22,7 @@ public class ApiControllerTests {
     private final MockHttpServletRequest request = new MockHttpServletRequest();
     private final MockHttpServletResponse response = new MockHttpServletResponse();
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         controller = new ApiController();
     }

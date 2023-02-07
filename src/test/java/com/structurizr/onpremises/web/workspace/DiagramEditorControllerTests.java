@@ -5,18 +5,19 @@ import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.web.ControllerTestsBase;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.ui.ModelMap;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DiagramEditorControllerTests extends ControllerTestsBase {
 
     private DiagramEditorController controller;
     private ModelMap model;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         controller = new DiagramEditorController();
         model = new ModelMap();

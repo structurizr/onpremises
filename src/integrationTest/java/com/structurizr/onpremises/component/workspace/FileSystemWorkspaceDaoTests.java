@@ -1,21 +1,24 @@
 package com.structurizr.onpremises.component.workspace;
 
 import com.structurizr.onpremises.util.DateUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 public class FileSystemWorkspaceDaoTests {
 
     private static final File DATA_DIRECTORY = new File("./build/FileSystemWorkspaceDaoTests");
 
-    @Before
+    @BeforeEach
     public void setUp() {
         deleteDirectory(DATA_DIRECTORY);
     }
@@ -62,7 +65,7 @@ public class FileSystemWorkspaceDaoTests {
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         deleteDirectory(DATA_DIRECTORY);
     }
