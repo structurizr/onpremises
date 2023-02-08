@@ -1,0 +1,208 @@
+package com.structurizr.onpremises.web.workspace;
+
+import com.structurizr.onpremises.component.workspace.WorkspaceLockResponse;
+import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
+import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.util.DateUtils;
+import com.structurizr.onpremises.web.ControllerTestsBase;
+import com.structurizr.onpremises.web.MockWorkspaceComponent;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.ui.ModelMap;
+
+import java.text.SimpleDateFormat;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class LockControllerTests extends ControllerTestsBase {
+
+    private LockController controller;
+    private ModelMap model;
+
+    @BeforeEach
+    public void setUp() {
+        controller = new LockController();
+        model = new ModelMap();
+        Configuration.init();
+        clearUser();
+    }
+
+    @Test
+    public void lockWorkspace_ReturnsAFailureResponse_WhenTheWorkspaceDoesNotExist() {
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return null;
+            }
+        });
+
+        setUser("user@example.com");
+        WorkspaceLockResponse response = controller.lockWorkspace(1, "apiKey", "agent");
+        assertFalse(response.isSuccess());
+        assertFalse(response.isLocked());
+    }
+
+    @Test
+    public void lockWorkspace_ReturnsAFailureResponse_WhenTheApiKeyIsIncorrect() {
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        workspaceMetaData.setApiKey("1234567890");
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMetaData;
+            }
+        });
+
+        WorkspaceLockResponse response = controller.lockWorkspace(1, "0987654321", "agent");
+        assertFalse(response.isSuccess());
+        assertFalse(response.isLocked());
+        assertEquals("The workspace could not be locked - please save your workspace and refresh the page.", response.getMessage());
+    }
+
+    @Test
+    public void lockWorkspace_LocksTheWorkspace_WhenTheApiKeyIsCorrectAndTheWorkspaceIsNotLocked() {
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        workspaceMetaData.setApiKey("apiKey");
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMetaData;
+            }
+
+            @Override
+            public boolean lockWorkspace(long workspaceId, String username, String agent) {
+                workspaceMetaData.addLock(username, agent);
+                return true;
+            }
+        });
+
+        setUser("user@example.com");
+        WorkspaceLockResponse response = controller.lockWorkspace(1, "apiKey", "agent");
+        assertTrue(response.isSuccess());
+        assertTrue(response.isLocked());
+        assertTrue(workspaceMetaData.isLocked());
+        assertEquals("user@example.com", workspaceMetaData.getLockedUser());
+        assertEquals("agent", workspaceMetaData.getLockedAgent());
+    }
+
+    @Test
+    public void lockWorkspace_ReturnsAFailureResponse_WhenTheWorkspaceIsAlreadyLockedBySomebodyElse() {
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        workspaceMetaData.setApiKey("apiKey");
+        workspaceMetaData.addLock("user1@example.com", "agent");
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMetaData;
+            }
+
+            @Override
+            public boolean lockWorkspace(long workspaceId, String username, String agent) {
+                return false;
+            }
+        });
+
+        setUser("user2@example.com");
+        WorkspaceLockResponse response = controller.lockWorkspace(1, "apiKey", "agent");
+        assertFalse(response.isSuccess());
+        assertTrue(response.isLocked());
+        assertEquals(String.format("The workspace could not be locked; it was locked by user1@example.com using agent at %s.", new SimpleDateFormat(DateUtils.USER_FRIENDLY_DATE_FORMAT).format(workspaceMetaData.getLockedDate())), response.getMessage());
+        assertTrue(workspaceMetaData.isLocked());
+        assertEquals("user1@example.com", workspaceMetaData.getLockedUser());
+        assertEquals("agent", workspaceMetaData.getLockedAgent());
+    }
+
+    @Test
+    public void unlockWorkspace_ReturnsThe404Page_WhenTheWorkspaceDoesNotExist() {
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return null;
+            }
+        });
+
+        setUser("user@example.com");
+        String view = controller.unlockWorkspace(1, model);
+        assertEquals("404", view);
+    }
+
+    @Test
+    public void unlockWorkspace_ReturnsThe404Page_WhenTheUserDoesNotHaveAccess() {
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        workspaceMetaData.addWriteUser("user2@example.com");
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMetaData;
+            }
+        });
+
+        setUser("user1@example.com");
+        String view = controller.unlockWorkspace(1, model);
+        assertEquals("404", view);
+    }
+
+    @Test
+    public void unlockWorkspace_UnlocksTheWorkspace_WhenTheWorkspaceIsPublic()  {
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        workspaceMetaData.addLock("user@example.com", "agent");
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMetaData;
+            }
+
+            @Override
+            public boolean unlockWorkspace(long workspaceId) {
+                workspaceMetaData.clearLock();
+                return true;
+            }
+        });
+
+        setUser("user@example.com");
+        String view = controller.unlockWorkspace(1, model);
+        assertEquals("redirect:/workspace/1", view);
+        assertFalse(workspaceMetaData.isLocked());
+    }
+
+    @Test
+    public void unlockWorkspace_UnlocksTheWorkspace_WhenTheUserHasWriteAccess()  {
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        workspaceMetaData.addWriteUser("user@example.com");
+        workspaceMetaData.addLock("user@example.com", "agent");
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMetaData;
+            }
+
+            @Override
+            public boolean unlockWorkspace(long workspaceId) {
+                workspaceMetaData.clearLock();
+                return true;
+            }
+        });
+
+        setUser("user@example.com");
+        String view = controller.unlockWorkspace(1, model);
+        assertEquals("redirect:/workspace/1", view);
+        assertFalse(workspaceMetaData.isLocked());
+    }
+
+    @Test
+    public void unlockWorkspace_ReturnsThe404Page_WhenTheUserHasReadAccess()  {
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        workspaceMetaData.addReadUser("user@example.com");
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMetaData;
+            }
+        });
+
+        setUser("user@example.com");
+        String view = controller.unlockWorkspace(1, model);
+        assertEquals("404", view);
+    }
+
+}

@@ -15,6 +15,7 @@ public class DateUtils {
 
     public static final String UTC_TIME_ZONE = "UTC";
     public static final String ISO_DATE_TIME_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+    public static final String USER_FRIENDLY_DATE_FORMAT = "EEE dd MMM yyyy HH:mm z";
 
     public static Calendar getCalendar() {
         return Calendar.getInstance(TimeZone.getTimeZone(UTC_TIME_ZONE));

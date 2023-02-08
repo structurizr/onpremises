@@ -7,8 +7,6 @@ import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.Version;
 import com.structurizr.onpremises.web.security.SecurityUtils;
 import com.structurizr.util.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,8 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.TimeZone;
 
 public abstract class AbstractController {
-
-    private static Log log = LogFactory.getLog(AbstractController.class);
 
     protected WorkspaceComponent workspaceComponent;
     protected SearchComponent searchComponent;

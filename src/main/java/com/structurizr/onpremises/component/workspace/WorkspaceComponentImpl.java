@@ -34,7 +34,6 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
     private static final Log log = LogFactory.getLog(WorkspaceComponentImpl.class);
     private static final String ENCRYPTION_STRATEGY_STRING = "encryptionStrategy";
     private static final String CIPHERTEXT_STRING = "ciphertext";
-    private static final String USER_FRIENDLY_DATE_FORMAT = "EEE dd MMM yyyy HH:mm z";
 
     private final WorkspaceDao workspaceDao;
     private final String encryptionPassphrase;
@@ -258,7 +257,7 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
 
             // check the revision
             if (workspaceMetaData.getRevision() > currentRevision) {
-                SimpleDateFormat sdf = new SimpleDateFormat(USER_FRIENDLY_DATE_FORMAT);
+                SimpleDateFormat sdf = new SimpleDateFormat(DateUtils.USER_FRIENDLY_DATE_FORMAT);
                 throw new WorkspaceComponentException("The workspace could not be saved because a newer version has been created by " + workspaceMetaData.getLastModifiedUser() + " at " + sdf.format(workspaceMetaData.getLastModifiedDate()) + ".");
             }
 
@@ -266,7 +265,7 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
 
             // check the workspace lock
             if (workspaceMetaData.isLocked() && !workspaceMetaData.isLockedBy(workspaceToBeStored.getLastModifiedUser())) {
-                SimpleDateFormat sdf = new SimpleDateFormat(USER_FRIENDLY_DATE_FORMAT);
+                SimpleDateFormat sdf = new SimpleDateFormat(DateUtils.USER_FRIENDLY_DATE_FORMAT);
                 throw new WorkspaceComponentException("The workspace could not be saved because the workspace was locked by " + workspaceMetaData.getLockedUser() + " at " + sdf.format(workspaceMetaData.getLockedDate()) + ".");
             }
 
