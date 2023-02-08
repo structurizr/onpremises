@@ -73,6 +73,12 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
             public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
                 return "json";
             }
+
+            @Override
+            public boolean lockWorkspace(long workspaceId, String username, String agent) {
+                workspaceMetaData.addLock(username, agent);
+                return true;
+            }
         });
 
         setUser("user@example.com");
@@ -83,6 +89,9 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
         assertNull(model.getAttribute("workspaceAsJson"));
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
         assertEquals("/workspace/1/images/", model.getAttribute("thumbnailUrl"));
+        assertTrue(workspaceMetaData.isLocked());
+        assertEquals("user@example.com", workspaceMetaData.getLockedUser());
+        assertEquals("structurizr-onpremises", workspaceMetaData.getLockedAgent());
     }
 
     @Test
@@ -99,6 +108,12 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
             public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
                 return "json";
             }
+
+            @Override
+            public boolean lockWorkspace(long workspaceId, String username, String agent) {
+                workspaceMetaData.addLock(username, agent);
+                return true;
+            }
         });
 
         setUser("user1@example.com");
@@ -109,6 +124,9 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
         assertNull(model.getAttribute("workspaceAsJson"));
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
         assertEquals("/workspace/1/images/", model.getAttribute("thumbnailUrl"));
+        assertTrue(workspaceMetaData.isLocked());
+        assertEquals("user1@example.com", workspaceMetaData.getLockedUser());
+        assertEquals("structurizr-onpremises", workspaceMetaData.getLockedAgent());
     }
 
     @Test
