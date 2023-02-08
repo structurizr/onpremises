@@ -39,7 +39,7 @@ This repo is incomplete. Open sourcing Structurizr is a work in progress, and sh
 - ❌ Other explorations
 - ✅ iframe embeds (embed code not yet available from diagram viewer)
 - ❌ DSL editor
-- ❌ Workspace locking
+- ✅ Workspace locking
 - ❌ Diagram reviews
 - ✅ Data storage: file
 - ✅ Data storage: AWS S3
