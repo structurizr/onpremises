@@ -49,5 +49,7 @@ This repo is incomplete. Open sourcing Structurizr is a work in progress, and sh
 - ✅ Authentication: LDAP
 - ✅ Authentication: SAML
 - ✅ User profile page
+- ✅ Workspace settings page
+- ✅ Workspace users page
 - ✅ Session storage: local
 - ✅ Session storage: Redis

@@ -38,7 +38,7 @@
         <br />
 
         <c:choose>
-            <c:when test="${editable}">
+            <c:when test="${workspace.editable}">
             <form action="/workspace/${workspace.id}/users" method="post">
 
                 <div class="row">
