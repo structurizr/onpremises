@@ -14,7 +14,7 @@ public final class UserType {
     }
 
     public boolean isAllowedToLockWorkspaces() {
-        return false;
+        return true;
     }
 
 }
