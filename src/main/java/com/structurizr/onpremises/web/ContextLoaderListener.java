@@ -106,6 +106,7 @@ public class ContextLoaderListener implements ServletContextListener {
             log.info("Data storage: " + Configuration.getInstance().getDataStorageImplementationName());
             log.info("Search: " + Configuration.getInstance().getSearchImplementationName());
             log.info("dot: " + Configuration.getInstance().isGraphvizEnabled());
+            log.info("DSL editor: " + Configuration.getInstance().isDslEditorEnabled());
 
             log.info("***********************************************************************************");
             log.info("MIT License");
