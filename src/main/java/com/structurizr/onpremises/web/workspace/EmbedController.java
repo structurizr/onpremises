@@ -38,7 +38,7 @@ public class EmbedController extends AbstractController {
 
         WorkspaceMetaData workspace = workspaceComponent.getWorkspaceMetaData(workspaceId);
         if (workspace == null) {
-            return show404Page(model);
+            return "404";
         }
 
         if (workspace.isOpen()) {
@@ -51,7 +51,7 @@ public class EmbedController extends AbstractController {
             return showEmbed(workspaceId, version, diagramIdentifier, diagramSelector, iframe, health, perspective, model);
         }
 
-        return show404Page(model);
+        return "404";
     }
 
     @RequestMapping(value = "/embed/{workspaceId}/{token}", method = RequestMethod.GET)
@@ -76,7 +76,7 @@ public class EmbedController extends AbstractController {
             return showEmbed(workspaceId, version, diagramIdentifier, diagramSelector, iframe, health, perspective, model);
         }
 
-        return show404Page(model);
+        return "404";
     }
 
     private String showEmbed(
