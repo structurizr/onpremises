@@ -26,6 +26,17 @@ cd structurizr-onpremises
 ```
 
 If successful, you will see a file named `structurizr-onpremises.war` in `build/libs`.
+To then build a Docker image:
+
+```
+docker build . -t mytag
+```
+
+And to start a Docker container from this image (replace `/path/to/dataDirectory`):
+
+```
+docker run -it --rm -p 8080:8080 -v /path/to/dataDirectory:/usr/local/structurizr mytag
+```
 
 ## Important note
 
