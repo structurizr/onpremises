@@ -37,10 +37,9 @@ This repo is incomplete. Open sourcing Structurizr is a work in progress, and sh
 - ✅ Decisions
 - ✅ Graph view
 - ❌ Other explorations
-- ✅ iframe embeds (embed code not yet available from diagram viewer)
+- ✅ iframe embeds
 - ✅ DSL editor
 - ✅ Workspace locking
-- ❌ Diagram reviews
 - ✅ Data storage: file
 - ✅ Data storage: AWS S3
 - ✅ Search: Apache Lucene
@@ -53,3 +52,4 @@ This repo is incomplete. Open sourcing Structurizr is a work in progress, and sh
 - ✅ Workspace users page
 - ✅ Session storage: local
 - ✅ Session storage: Redis
+- ❌ Diagram reviews
