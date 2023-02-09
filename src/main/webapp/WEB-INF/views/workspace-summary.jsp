@@ -71,7 +71,7 @@
             <div class="navigationItemSeparator"></div>
             </c:if>
             
-            <c:if test="${fn:startsWith(urlPrefix, '/workspace')}">
+            <c:if test="${fn:startsWith(urlPrefix, '/workspace') && structurizrConfiguration.dslEditorEnabled}">
             <div class="navigationItem dslEditorNavigation">
                 <a href="${urlPrefix}/dsl${urlSuffix}"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/code-slash.svg" class="icon-sm" /> DSL editor</a>
             </div>

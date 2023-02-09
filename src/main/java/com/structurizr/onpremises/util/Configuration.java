@@ -17,6 +17,7 @@ public class Configuration extends ConfigLookup {
     private String encryptionPassphrase;
 
     private boolean graphvizEnabled = false;
+    private boolean dslEditorEnabled = false;
 
     private static Configuration INSTANCE;
 
@@ -28,6 +29,7 @@ public class Configuration extends ConfigLookup {
         setDataDirectory(new File(getDataDirectoryLocation()));
         setEncryptionPassphrase(getConfigurationParameter("structurizr.encryption", "STRUCTURIZR_ENCRYPTION", StructurizrProperties.ENCRYPTION_PASSPHRASE_PROPERTY, null));
         setWebUrl(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.URL_PROPERTY, ""));
+        setDslEditorEnabled(Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.DSL_EDITOR_PROPERTY, "false")));
 
         String commaSeparatedUsersAndRoles = getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.ADMIN_USERS_AND_ROLES_PROPERTY, "");
         if (!StringUtils.isNullOrEmpty(commaSeparatedUsersAndRoles)) {
@@ -118,6 +120,14 @@ public class Configuration extends ConfigLookup {
 
     void setGraphvizEnabled(boolean graphvizEnabled) {
         this.graphvizEnabled = graphvizEnabled;
+    }
+
+    public boolean isDslEditorEnabled() {
+        return dslEditorEnabled;
+    }
+
+    public void setDslEditorEnabled(boolean dslEditorEnabled) {
+        this.dslEditorEnabled = dslEditorEnabled;
     }
 
     public File getDataDirectory() {

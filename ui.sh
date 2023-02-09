@@ -10,6 +10,8 @@ mkdir $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static
 # JavaScript
 mkdir $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static/js
 cp $STRUCTURIZR_UI_DIR/src/js/* $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static/js
+mkdir $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static/js/ace
+cp $STRUCTURIZR_UI_DIR/src/js/ace/* $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static/js/ace
 
 # CSS
 mkdir $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static/css
@@ -39,6 +41,8 @@ mkdir $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/WEB-INF/fragments/diagrams
 cp $STRUCTURIZR_UI_DIR/src/fragments/diagrams/* $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/WEB-INF/fragments/diagrams
 mkdir $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/WEB-INF/fragments/decisions
 cp $STRUCTURIZR_UI_DIR/src/fragments/decisions/* $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/WEB-INF/fragments/decisions
+mkdir $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/WEB-INF/fragments/dsl
+cp $STRUCTURIZR_UI_DIR/src/fragments/dsl/* $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/WEB-INF/fragments/dsl
 
 # JSP
 cp $STRUCTURIZR_UI_DIR/src/jsp/* $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/WEB-INF/views

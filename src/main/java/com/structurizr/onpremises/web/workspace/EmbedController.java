@@ -5,6 +5,7 @@ import com.structurizr.onpremises.util.HtmlUtils;
 import com.structurizr.onpremises.util.JsonUtils;
 import com.structurizr.onpremises.web.AbstractController;
 import com.structurizr.util.StringUtils;
+import com.structurizr.view.PaperSize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -182,6 +183,10 @@ public class EmbedController extends AbstractController {
                 model.addAttribute("publishThumbnails", true);
             } else {
                 model.addAttribute("publishThumbnails", false);
+            }
+
+            if (workspaceMetaData.isEditable()) {
+                model.addAttribute("paperSizes", PaperSize.getOrderedPaperSizes());
             }
 
             model.addAttribute("showToolbar", editable);

@@ -13,6 +13,7 @@ public class StructurizrProperties {
     public static final String ENCRYPTION_PASSPHRASE_PROPERTY = "structurizr.encryption";
     public static final String ADMIN_USERS_AND_ROLES_PROPERTY = "structurizr.admin";
     public static final String MAX_WORKSPACE_VERSIONS_PROPERTY = "structurizr.maxWorkspaceVersions";
+    public static final String DSL_EDITOR_PROPERTY = "structurizr.dslEditor";
 
     public static final String DEFAULT_AUTHENTICATION_VARIANT = "file";
     public static final String DEFAULT_SESSION_VARIANT = "local";

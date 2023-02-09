@@ -1,6 +1,7 @@
 package com.structurizr.onpremises.web.workspace;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
+import com.structurizr.view.PaperSize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class DiagramEditorController extends AbstractWorkspaceController {
+public class DiagramEditorController extends AbstractWorkspaceEditorController {
 
     private static final String VIEW = "diagrams";
 
@@ -28,37 +29,17 @@ public class DiagramEditorController extends AbstractWorkspaceController {
 
         model.addAttribute("publishThumbnails", true);
         model.addAttribute("quickNavigationPath", "diagram-editor");
+        model.addAttribute("paperSizes", PaperSize.getOrderedPaperSizes());
 
         if (!workspaceMetaData.isOpen() && !workspaceMetaData.isWriteUser(getUser())) {
             if (workspaceMetaData.isReadUser(getUser())) {
-                return "workspace-is-readonly";
+                return showError("workspace-is-readonly", model);
             } else {
                 return show404Page(model);
             }
         }
 
-        boolean locked = lockWorkspace(workspaceMetaData);
-
-        if (!locked) {
-            if (workspaceMetaData.isLocked()) {
-                model.addAttribute("showHeader", true);
-                model.addAttribute("showFooter", true);
-                addCommonAttributes(model, "Workspace locked", true);
-                model.addAttribute("workspace", workspaceMetaData);
-
-                return "workspace-locked";
-            } else {
-                workspaceMetaData.setEditable(false);
-                model.addAttribute("showHeader", true);
-                model.addAttribute("showFooter", true);
-                addCommonAttributes(model, "Workspace could not be locked", true);
-                model.addAttribute("workspace", workspaceMetaData);
-
-                return "workspace-could-not-be-locked";
-            }
-        } else {
-            return showAuthenticatedView(VIEW, workspaceMetaData, version, model, false, true);
-        }
+        return lockWorkspaceAndShowAuthenticatedView(VIEW, workspaceMetaData, version, model, false);
     }
 
 }

@@ -68,6 +68,12 @@ public abstract class AbstractController {
         }
     }
 
+    protected String showError(String view, ModelMap model) {
+        addCommonAttributes(model, "", true);
+
+        return view;
+    }
+
     protected String show404Page(ModelMap model) {
         addCommonAttributes(model, "Not found", true);
 

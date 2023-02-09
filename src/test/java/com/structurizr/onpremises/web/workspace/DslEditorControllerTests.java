@@ -5,28 +5,37 @@ import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.web.ControllerTestsBase;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ModelMap;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class DiagramEditorControllerTests extends ControllerTestsBase {
+public class DslEditorControllerTests extends ControllerTestsBase {
 
-    private DiagramEditorController controller;
+    private DslEditorController controller;
     private ModelMap model;
 
     @BeforeEach
     public void setUp() {
-        controller = new DiagramEditorController();
+        controller = new DslEditorController();
         model = new ModelMap();
         Configuration.init();
+        Configuration.getInstance().setDslEditorEnabled(true);
         clearUser();
     }
 
     @Test
-    public void showAuthenticatedDiagramEditor_ReturnsThe404Page_WhenTheWorkspaceDoesNotExist() {
+    public void showAuthenticatedDslEditor_ReturnsAnErrorPage_WhenTheDslEditorHasBeenDisabled() {
+        Configuration.getInstance().setDslEditorEnabled(false);
+        setUser("user@example.com");
+        String view = controller.showAuthenticatedDslEditor(1, "version", model);
+        assertEquals("dsl-editor-disabled", view);
+    }
+
+    @Test
+    public void showAuthenticatedDslEditor_ReturnsThe404Page_WhenTheWorkspaceDoesNotExist() {
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override
             public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
@@ -35,12 +44,27 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedDiagramEditor(1, "version", model);
+        String view = controller.showAuthenticatedDslEditor(1, "version", model);
         assertEquals("404", view);
     }
 
     @Test
-    public void showAuthenticatedDiagramEditor_ReturnsThe404Page_WhenTheUserDoesNotHaveAccess() {
+    public void showAuthenticatedDslEditor_ReturnsAnErrorPage_WhenTheWorkspaceIsClientSideEncrypted() {
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        workspaceMetaData.setClientSideEncrypted(true);
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMetaData;
+            }
+        });
+
+        String view = controller.showAuthenticatedDslEditor(1, "version", model);
+        assertEquals("workspace-is-client-side-encrypted", view);
+    }
+
+    @Test
+    public void showAuthenticatedDslEditor_ReturnsThe404Page_WhenTheUserDoesNotHaveAccess() {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         workspaceMetaData.addWriteUser("user2@example.com");
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
@@ -51,12 +75,12 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDiagramEditor(1, "version", model);
+        String view = controller.showAuthenticatedDslEditor(1, "version", model);
         assertEquals("404", view);
     }
 
     @Test
-    public void showAuthenticatedDiagramEditor_ReturnsTheDiagramEditorPage_WhenTheWorkspaceIsPublic()  {
+    public void showAuthenticatedDslEditor_ReturnsTheDslEditorPage_WhenTheWorkspaceIsPublic()  {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override
@@ -77,8 +101,8 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedDiagramEditor(1, "version", model);
-        assertEquals("diagrams", view);
+        String view = controller.showAuthenticatedDslEditor(1, "version", model);
+        assertEquals("dsl-editor", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertTrue(workspaceMetaData.isEditable());
         assertNull(model.getAttribute("workspaceAsJson"));
@@ -90,7 +114,7 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void showAuthenticatedDiagramEditor_ReturnsTheDiagramEditorPage_WhenTheUserHasWriteAccess()  {
+    public void showAuthenticatedDslEditor_ReturnsTheDslEditorPage_WhenTheUserHasWriteAccess()  {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         workspaceMetaData.addWriteUser("user1@example.com");
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
@@ -112,8 +136,8 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDiagramEditor(1, "version", model);
-        assertEquals("diagrams", view);
+        String view = controller.showAuthenticatedDslEditor(1, "version", model);
+        assertEquals("dsl-editor", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertTrue(workspaceMetaData.isEditable());
         assertNull(model.getAttribute("workspaceAsJson"));
@@ -125,7 +149,7 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void showAuthenticatedDiagramEditor_ReturnsAnErrorPage_WhenTheUserHasReadAccess()  {
+    public void showAuthenticatedDslEditor_ReturnsAnErrorPage_WhenTheUserHasReadAccess()  {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         workspaceMetaData.addReadUser("user1@example.com");
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
@@ -141,7 +165,7 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDiagramEditor(1, "version", model);
+        String view = controller.showAuthenticatedDslEditor(1, "version", model);
         assertEquals("workspace-is-readonly", view);
     }
 

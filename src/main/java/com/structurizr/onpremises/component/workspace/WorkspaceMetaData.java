@@ -217,7 +217,7 @@ public class WorkspaceMetaData {
         return this.clientSideEncrypted;
     }
 
-    void setClientSideEncrypted(boolean clientSideEncrypted) {
+    public void setClientSideEncrypted(boolean clientSideEncrypted) {
         this.clientSideEncrypted = clientSideEncrypted;
     }
 
