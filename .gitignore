@@ -6,7 +6,12 @@ docs/workspace.json
 build/*
 .idea/*
 
-src/main/webapp/static/*
+src/main/webapp/static/js/*
+!src/main/webapp/static/js/structurizr-lock.js
+src/main/webapp/static/bootstrap-icons/*
+src/main/webapp/static/css/*
+src/main/webapp/static/html/*
+src/main/webapp/static/img/*
 
 src/main/webapp/WEB-INF/fragments/progress-message.jspf
 src/main/webapp/WEB-INF/fragments/quick-navigation.jspf
