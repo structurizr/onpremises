@@ -47,7 +47,7 @@ This repo is incomplete. Open sourcing Structurizr is a work in progress, and sh
 - ✅ Documentation
 - ✅ Decisions
 - ✅ Graph view
-- ❌ Other explorations
+- ✅ Tree view (static structure and deployment)
 - ✅ iframe embeds
 - ✅ DSL editor
 - ✅ Workspace locking
@@ -63,4 +63,4 @@ This repo is incomplete. Open sourcing Structurizr is a work in progress, and sh
 - ✅ Workspace users page
 - ✅ Session storage: local
 - ✅ Session storage: Redis
-- ❌ Diagram reviews
+- ❌ Diagram reviews (this might become a separate app)

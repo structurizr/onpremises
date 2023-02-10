@@ -34,7 +34,7 @@ public class TreeControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showPublicTree(1, "version", model);
+        String view = controller.showPublicTree(1, "version", "view", model);
         assertEquals("404", view);
     }
 
@@ -54,7 +54,7 @@ public class TreeControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showPublicTree(1, "version", model);
+        String view = controller.showPublicTree(1, "version", "view", model);
         assertEquals("404", view);
     }
 
@@ -73,11 +73,12 @@ public class TreeControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showPublicTree(1, "version", model);
+        String view = controller.showPublicTree(1, "version", "view", model);
         assertEquals("tree", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
         assertEquals("/share/1", model.getAttribute("urlPrefix"));
+        assertEquals("view", model.getAttribute("view"));
     }
 
     @Test
@@ -89,7 +90,7 @@ public class TreeControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showSharedTree(1, "version", "token", model);
+        String view = controller.showSharedTree(1, "version", "view", "token", model);
         assertEquals("404", view);
     }
 
@@ -108,7 +109,7 @@ public class TreeControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showSharedTree(1, "version", "token", model);
+        String view = controller.showSharedTree(1, "version", "view", "token", model);
         assertEquals("404", view);
     }
 
@@ -128,7 +129,7 @@ public class TreeControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showSharedTree(1, "version", "token", model);
+        String view = controller.showSharedTree(1, "version", "view", "token", model);
         assertEquals("404", view);
     }
 
@@ -148,11 +149,12 @@ public class TreeControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showSharedTree(1, "version", "token", model);
+        String view = controller.showSharedTree(1, "version", "view", "token", model);
         assertEquals("tree", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
         assertEquals("/share/1/token", model.getAttribute("urlPrefix"));
+        assertEquals("view", model.getAttribute("view"));
     }
 
     @Test
@@ -165,7 +167,7 @@ public class TreeControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedTree(1, "version", model);
+        String view = controller.showAuthenticatedTree(1, "version", "view", model);
         assertEquals("404", view);
     }
 
@@ -186,7 +188,7 @@ public class TreeControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedTree(1, "version", model);
+        String view = controller.showAuthenticatedTree(1, "version", "view", model);
         assertEquals("404", view);
     }
 
@@ -206,11 +208,12 @@ public class TreeControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedTree(1, "version", model);
+        String view = controller.showAuthenticatedTree(1, "version", "view", model);
         assertEquals("tree", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
+        assertEquals("view", model.getAttribute("view"));
     }
 
     @Test
@@ -230,11 +233,12 @@ public class TreeControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedTree(1, "version", model);
+        String view = controller.showAuthenticatedTree(1, "version", "view", model);
         assertEquals("tree", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
+        assertEquals("view", model.getAttribute("view"));
     }
 
     @Test
@@ -254,11 +258,12 @@ public class TreeControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedTree(1, "version", model);
+        String view = controller.showAuthenticatedTree(1, "version", "view", model);
         assertEquals("tree", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
+        assertEquals("view", model.getAttribute("view"));
     }
 
 }

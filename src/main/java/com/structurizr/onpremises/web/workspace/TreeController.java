@@ -18,8 +18,11 @@ public class TreeController extends AbstractWorkspaceController {
     public String showPublicTree(
             @PathVariable("workspaceId") long workspaceId,
             @RequestParam(required = false) String version,
+            @RequestParam(required = false) String view,
             ModelMap model
     ) {
+        model.addAttribute("view", view);
+
         return showPublicView(VIEW, workspaceId, version, model, true);
     }
 
@@ -27,9 +30,12 @@ public class TreeController extends AbstractWorkspaceController {
     public String showSharedTree(
             @PathVariable("workspaceId") long workspaceId,
             @RequestParam(required = false) String version,
+            @RequestParam(required = false) String view,
             @PathVariable("token") String token,
             ModelMap model
     ) {
+        model.addAttribute("view", view);
+
         return showSharedView(VIEW, workspaceId, token, version, model, true);
     }
 
@@ -38,12 +44,15 @@ public class TreeController extends AbstractWorkspaceController {
     public String showAuthenticatedTree(
             @PathVariable("workspaceId") long workspaceId,
             @RequestParam(required = false) String version,
+            @RequestParam(required = false) String view,
             ModelMap model
     ) {
         WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(workspaceId);
         if (workspaceMetaData == null) {
             return show404Page(model);
         }
+
+        model.addAttribute("view", view);
 
         return showAuthenticatedView(VIEW, workspaceMetaData, version, model, true, false);
     }
