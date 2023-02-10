@@ -88,7 +88,7 @@
                 <a href="${urlPrefix}/decisions${urlSuffix}"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/journal-text.svg" class="icon-sm" /> Decisions</a>
             </div>
             <div id="exploreLink" class="navigationItem hidden">
-                <a href="${urlPrefix}/explore${urlSuffix}"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/diagram-3.svg" class="icon-sm" /> Explore</a>
+                <a href="${urlPrefix}/explore/tree${urlSuffix}"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/diagram-3.svg" class="icon-sm" /> Explore</a>
             </div>
 
             <div id="themeLink" class="navigationItem hidden">
