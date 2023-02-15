@@ -37,30 +37,3 @@ And to start a Docker container from this image (replace `/path/to/dataDirectory
 ```
 docker run -it --rm -p 8080:8080 -v /path/to/dataDirectory:/usr/local/structurizr mytag
 ```
-
-## Important note
-
-This repo is incomplete. Open sourcing Structurizr is a work in progress, and should be completed Q1-Q2 2023.
-
-- ✅ Diagram viewer
-- ✅ Diagram editor
-- ✅ Documentation
-- ✅ Decisions
-- ✅ Graph view
-- ✅ Tree view (static structure and deployment)
-- ✅ iframe embeds
-- ✅ DSL editor
-- ✅ Workspace locking
-- ✅ Data storage: file
-- ✅ Data storage: AWS S3
-- ✅ Search: Apache Lucene
-- ✅ Search: Elasticsearch
-- ✅ Authentication: username/password
-- ✅ Authentication: LDAP
-- ✅ Authentication: SAML
-- ✅ User profile page
-- ✅ Workspace settings page
-- ✅ Workspace users page
-- ✅ Session storage: local
-- ✅ Session storage: Redis
-- ❌ Diagram reviews (this might become a separate app)
