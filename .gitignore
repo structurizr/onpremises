@@ -32,3 +32,5 @@ src/main/webapp/WEB-INF/views/decisions.jsp
 src/main/webapp/WEB-INF/views/documentation.jsp
 src/main/webapp/WEB-INF/views/graph.jsp
 src/main/webapp/WEB-INF/views/tree.jsp
+src/main/webapp/WEB-INF/views/review-create.jsp
+src/main/webapp/WEB-INF/views/review.jsp

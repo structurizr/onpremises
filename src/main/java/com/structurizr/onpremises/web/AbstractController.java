@@ -2,6 +2,7 @@ package com.structurizr.onpremises.web;
 
 import com.structurizr.onpremises.component.search.SearchComponent;
 import com.structurizr.onpremises.component.workspace.WorkspaceComponent;
+import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.Version;
@@ -101,6 +102,11 @@ public abstract class AbstractController {
         } else {
             return authentication.isAuthenticated();
         }
+    }
+
+    protected boolean userCanAccessWorkspace(WorkspaceMetaData workspaceMetaData) {
+        User user = getUser();
+        return workspaceMetaData.isOpen() || workspaceMetaData.isWriteUser(user) || workspaceMetaData.isReadUser(user);
     }
 
 }

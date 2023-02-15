@@ -4,8 +4,8 @@ import java.io.InputStream;
 
 public final class InputStreamAndContentLength {
 
-    private InputStream inputStream;
-    private long contentLength;
+    private final InputStream inputStream;
+    private final long contentLength;
 
     public InputStreamAndContentLength(InputStream inputStream, long contentLength) {
         this.inputStream = inputStream;

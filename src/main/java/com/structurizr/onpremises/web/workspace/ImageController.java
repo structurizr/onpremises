@@ -80,8 +80,7 @@ public class ImageController extends AbstractWorkspaceController {
             return null;
         }
 
-        User user = getUser();
-        if (workspaceMetaData.isOpen() || workspaceMetaData.isWriteUser(user) || workspaceMetaData.isReadUser(user)) {
+        if (userCanAccessWorkspace(workspaceMetaData)) {
             return getImage(workspaceMetaData, diagramKey, response);
         }
 
@@ -142,8 +141,7 @@ public class ImageController extends AbstractWorkspaceController {
             throw new ApiException("404");
         }
 
-        User user = getUser();
-        if (workspaceMetaData.isOpen() || workspaceMetaData.isWriteUser(user) || workspaceMetaData.isReadUser(user)) {
+        if (userCanAccessWorkspace(workspaceMetaData)) {
             try {
                 String base64Image = imageAsBase64EncodedDataUri.split(",")[1];
                 byte[] decodedImage = Base64.getDecoder().decode(base64Image.getBytes(StandardCharsets.UTF_8));

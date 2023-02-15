@@ -28,6 +28,7 @@ public class DiagramEditorController extends AbstractWorkspaceEditorController {
         }
 
         model.addAttribute("publishThumbnails", true);
+        model.addAttribute("createReviews", true);
         model.addAttribute("quickNavigationPath", "diagram-editor");
         model.addAttribute("paperSizes", PaperSize.getOrderedPaperSizes());
 

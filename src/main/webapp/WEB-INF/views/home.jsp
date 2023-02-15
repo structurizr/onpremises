@@ -57,6 +57,20 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="workspaceSummary centered">
+                                <div style="margin-top: 5px">
+                                    New diagram review
+                                </div>
+
+                                <br /><br /><br />
+
+                                <div class="">
+                                    <div class="workspaceThumbnail" style="margin-top: 10px">
+                                        <a href="/user/review/create"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/chat.svg" style="width: 100px; height: 100px"/></a>
+                                    </div>
+                                </div>
+                            </div>
                         </c:if>
                     </div>
                 </div>

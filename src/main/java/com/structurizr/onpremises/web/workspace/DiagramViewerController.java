@@ -60,6 +60,7 @@ public class DiagramViewerController extends AbstractWorkspaceController {
         }
 
         model.addAttribute("publishThumbnails", true);
+        model.addAttribute("createReviews", true);
         model.addAttribute("quickNavigationPath", "diagrams");
         model.addAttribute("perspective", HtmlUtils.filterHtml(perspective));
 

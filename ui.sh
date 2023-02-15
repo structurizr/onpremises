@@ -24,6 +24,8 @@ cp $STRUCTURIZR_UI_DIR/src/css/fonts/* $STRUCTURIZR_ONPREMISES_DIR/src/main/weba
 # Images
 mkdir $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static/img
 cp $STRUCTURIZR_UI_DIR/src/img/* $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static/img
+mkdir $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static/img/review
+cp $STRUCTURIZR_UI_DIR/src/img/review/* $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static/img/review
 
 # Bootstrap icons
 mkdir $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static/bootstrap-icons
