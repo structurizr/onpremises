@@ -93,7 +93,7 @@ class FileSystemReviewDao implements ReviewDao {
     }
 
     public boolean reviewExists(String reviewId) {
-        return getReviewDirectory(reviewId).exists();
+        return new File(getReviewDirectory(reviewId), REVIEW_JSON_FILENAME).exists();
     }
 
     public InputStreamAndContentLength getDiagram(String reviewId, String filename) throws ReviewComponentException {
