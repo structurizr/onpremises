@@ -18,6 +18,9 @@ If unset, the Structurizr data directory location will default to `/usr/local/st
 The following parameters can be set in a text file named `structurizr.properties` in your Structurizr data directory.
 Changing these parameters requires a restart of the on-premises installation.
 
+Values can either be static strings, or references to environment variables
+(e.g. `structurizr.redis.password=${REDIS_PASSWORD}`).
+
 | Name        | Description |
 | ----------- | ----------- |
 | `structurizr.url`      | If you are running the on-premises installation behind a load balancer and/or reverse-proxy (e.g. SSL termination is being handled upstream), or the pages served by the on-premises installation don't look right (e.g. styles are not loading, images are oversized, etc), you will likely need to set this property to explicitly tell the on-premises installation the URL you are using to access it. This should be a full URL, such as `https://structurizr.example.com`.       |

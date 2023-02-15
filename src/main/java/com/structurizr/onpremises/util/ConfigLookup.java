@@ -70,6 +70,15 @@ public class ConfigLookup {
             }
         }
 
+        // translate ${...} into a value from the named environment variable
+        // (this mirrors what Spring does via the property placeholders)
+        if (value != null) {
+            if (value.startsWith("${") && value.endsWith("}")) {
+                String environmentVariableName = value.substring(2, value.length()-1);
+                value = System.getenv(environmentVariableName);
+            }
+        }
+
         if (value == null) {
             value = defaultValue;
         }
