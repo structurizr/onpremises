@@ -20,9 +20,15 @@ import java.util.List;
 
 class ReviewComponentImpl implements ReviewComponent {
 
-    private static Log log = LogFactory.getLog(ReviewComponentImpl.class);
+    private static final Log log = LogFactory.getLog(ReviewComponentImpl.class);
 
-    private ReviewDao reviewDao;
+    private static final String PNG_DATA_URI_PREFIX = "data:image/png;base64,";
+    private static final String JPG_DATA_URI_PREFIX = "data:image/jpeg;base64,";
+    private static final String PNG_FILE_EXTENSION = ".png";
+    private static final String JPG_FILE_EXTENSION = ".jpg";
+    private static final String COMMA = ",";
+
+    private final ReviewDao reviewDao;
 
     ReviewComponentImpl() {
         String dataStorageImplementationName = Configuration.getInstance().getDataStorageImplementationName();
@@ -39,20 +45,24 @@ class ReviewComponentImpl implements ReviewComponent {
         }
     }
 
+    ReviewComponentImpl(ReviewDao dao) {
+        this.reviewDao = dao;
+    }
+
     @Override
     public Review createReview(User user, Long workspaceId, String[] files, ReviewType type) {
         try {
             List<FileTypeAndContent> diagrams = new ArrayList<>();
 
             for (String file : files) {
-                if (file.startsWith("data:image/png;base64,")) {
-                    String base64Image = file.split(",")[1];
+                if (file.startsWith(PNG_DATA_URI_PREFIX)) {
+                    String base64Image = file.split(COMMA)[1];
                     byte[] decodedImage = Base64.getDecoder().decode(base64Image.getBytes(StandardCharsets.UTF_8));
-                    diagrams.add(new FileTypeAndContent(".png", decodedImage));
-                } else if (file.startsWith("data:image/jpeg;base64,")) {
-                    String base64Image = file.split(",")[1];
+                    diagrams.add(new FileTypeAndContent(PNG_FILE_EXTENSION, decodedImage));
+                } else if (file.startsWith(JPG_DATA_URI_PREFIX)) {
+                    String base64Image = file.split(COMMA)[1];
                     byte[] decodedImage = Base64.getDecoder().decode(base64Image.getBytes(StandardCharsets.UTF_8));
-                    diagrams.add(new FileTypeAndContent(".jpg", decodedImage));
+                    diagrams.add(new FileTypeAndContent(JPG_FILE_EXTENSION, decodedImage));
                 }
             }
 
@@ -116,8 +126,8 @@ class ReviewComponentImpl implements ReviewComponent {
         try {
             return reviewDao.getDiagram(reviewId, filename);
         } catch (Exception e) {
-            log.error("Error while trying to get image " + filename + ".png for review with ID " + reviewId, e);
-            throw new ReviewException("Error while trying to get image " + filename + ".png for review with ID " + reviewId);
+            log.error("Error while trying to get image " + filename + " for review with ID " + reviewId, e);
+            throw new ReviewException("Error while trying to get image " + filename + " for review with ID " + reviewId);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.structurizr.onpremises.web.workspace;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
+import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.domain.Message;
 import com.structurizr.onpremises.domain.Messages;
 import com.structurizr.onpremises.domain.User;
@@ -19,6 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 public class ReviewControllerTests extends ControllerTestsBase {
 
@@ -141,6 +143,223 @@ public class ReviewControllerTests extends ControllerTestsBase {
 
         assertEquals("redirect:/review/1234567890", result);
         assertEquals("{\"id\":\"1234567890\",\"userId\":\"user@example.com\",\"workspaceId\":123456,\"type\":\"STRIDE\",\"locked\":false,\"diagrams\":[{\"id\":1,\"url\":\"file1\"},{\"id\":2,\"url\":\"file2\"},{\"id\":3,\"url\":\"file3\"}]}", buf.toString());
+    }
+
+    @Test
+    public void showReview_ReturnsThe404Page_WhenTheReviewDoesNotExist() throws Exception {
+        controller.setReviewComponent(new MockReviewComponent() {
+            @Override
+            public Review getReview(String reviewId) {
+                return null;
+            }
+        });
+
+        String view = controller.showReview("1234567890", model);
+        assertEquals("404", view);
+    }
+
+    @Test
+    public void showReview_ReturnsTheReviewPage_WhenTheReviewIsPublicAndTheUserIsUnauthenticated() throws Exception {
+        final Review review = new Review("1234567890", "user@example.com");
+        review.setWorkspaceId(null);
+
+        controller.setReviewComponent(new MockReviewComponent() {
+            @Override
+            public Review getReview(String reviewId) {
+                return review;
+            }
+        });
+
+        clearUser();
+        String view = controller.showReview("1234567890", model);
+        assertEquals("review", view);
+        assertSame(review, model.getAttribute("review"));
+        assertEquals("eyJpZCI6IjEyMzQ1Njc4OTAiLCJ1c2VySWQiOiJ1c2VyQGV4YW1wbGUuY29tIiwidHlwZSI6IkdlbmVyYWwiLCJsb2NrZWQiOmZhbHNlfQ==", model.getAttribute("reviewAsJson"));
+        assertEquals("", model.getAttribute("reviewer"));
+        assertEquals(false, model.getAttribute("admin"));
+    }
+
+    @Test
+    public void showReview_ReturnsTheReviewPage_WhenTheReviewIsPublicAndTheUserIsAuthenticatedAndNotTheReviewCreator() throws Exception {
+        final Review review = new Review("1234567890", "user1@example.com");
+        review.setWorkspaceId(null);
+
+        controller.setReviewComponent(new MockReviewComponent() {
+            @Override
+            public Review getReview(String reviewId) {
+                return review;
+            }
+        });
+
+        setUser("user2@example.com");
+        String view = controller.showReview("1234567890", model);
+        assertEquals("review", view);
+        assertSame(review, model.getAttribute("review"));
+        assertEquals("eyJpZCI6IjEyMzQ1Njc4OTAiLCJ1c2VySWQiOiJ1c2VyMUBleGFtcGxlLmNvbSIsInR5cGUiOiJHZW5lcmFsIiwibG9ja2VkIjpmYWxzZX0=", model.getAttribute("reviewAsJson"));
+        assertEquals("user2@example.com", model.getAttribute("reviewer"));
+        assertEquals(false, model.getAttribute("admin"));
+    }
+
+    @Test
+    public void showReview_ReturnsTheReviewPage_WhenTheReviewIsPublicAndTheUserIsAuthenticatedAndTheReviewCreator() throws Exception {
+        final Review review = new Review("1234567890", "user1@example.com");
+        review.setWorkspaceId(null);
+
+        controller.setReviewComponent(new MockReviewComponent() {
+            @Override
+            public Review getReview(String reviewId) {
+                return review;
+            }
+        });
+
+        setUser("user1@example.com");
+        String view = controller.showReview("1234567890", model);
+        assertEquals("review", view);
+        assertSame(review, model.getAttribute("review"));
+        assertEquals("eyJpZCI6IjEyMzQ1Njc4OTAiLCJ1c2VySWQiOiJ1c2VyMUBleGFtcGxlLmNvbSIsInR5cGUiOiJHZW5lcmFsIiwibG9ja2VkIjpmYWxzZX0=", model.getAttribute("reviewAsJson"));
+        assertEquals("user1@example.com", model.getAttribute("reviewer"));
+        assertEquals(true, model.getAttribute("admin"));
+    }
+
+    @Test
+    public void showReview_ReturnsTheReviewPage_WhenTheAssociatedWorkspaceIsPublic() throws Exception {
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMetaData;
+            }
+        });
+
+        final Review review = new Review("1234567890", "user1@example.com");
+        review.setWorkspaceId(null);
+
+        controller.setReviewComponent(new MockReviewComponent() {
+            @Override
+            public Review getReview(String reviewId) {
+                return review;
+            }
+        });
+
+        clearUser();
+        String view = controller.showReview("1234567890", model);
+        assertEquals("review", view);
+        assertSame(review, model.getAttribute("review"));
+        assertEquals("eyJpZCI6IjEyMzQ1Njc4OTAiLCJ1c2VySWQiOiJ1c2VyMUBleGFtcGxlLmNvbSIsInR5cGUiOiJHZW5lcmFsIiwibG9ja2VkIjpmYWxzZX0=", model.getAttribute("reviewAsJson"));
+        assertEquals("", model.getAttribute("reviewer"));
+        assertEquals(false, model.getAttribute("admin"));
+    }
+
+    @Test
+    public void showReview_ReturnsThe404Page_WhenTheUserIsUnauthenticatedAndTheAssociatedWorkspaceIsPrivate() throws Exception {
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        workspaceMetaData.addWriteUser("user@example.com");
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMetaData;
+            }
+        });
+
+        final Review review = new Review("1234567890", "user@example.com");
+        review.setWorkspaceId(1L);
+
+        controller.setReviewComponent(new MockReviewComponent() {
+            @Override
+            public Review getReview(String reviewId) {
+                return review;
+            }
+        });
+
+        clearUser();
+        String view = controller.showReview("1234567890", model);
+        assertEquals("404", view);
+    }
+
+    @Test
+    public void showReview_ReturnsThe404Page_WhenTheUserIsAuthenticatedAndDoesNotHaveAccessToTheWorkspace() throws Exception {
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        workspaceMetaData.addWriteUser("user1@example.com");
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMetaData;
+            }
+        });
+
+        final Review review = new Review("1234567890", "user1@example.com");
+        review.setWorkspaceId(1L);
+
+        controller.setReviewComponent(new MockReviewComponent() {
+            @Override
+            public Review getReview(String reviewId) {
+                return review;
+            }
+        });
+
+        setUser("user2@example.com");
+        String view = controller.showReview("1234567890", model);
+        assertEquals("404", view);
+    }
+
+    @Test
+    public void showReview_ReturnsTheReviewPage_WhenTheUserHasReadAccessToTheWorkspace() throws Exception {
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        workspaceMetaData.addReadUser("read@example.com");
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMetaData;
+            }
+        });
+
+        final Review review = new Review("1234567890", "user@example.com");
+        review.setWorkspaceId(1L);
+
+        controller.setReviewComponent(new MockReviewComponent() {
+            @Override
+            public Review getReview(String reviewId) {
+                return review;
+            }
+        });
+
+        setUser("read@example.com");
+        String view = controller.showReview("1234567890", model);
+        assertEquals("review", view);
+        assertSame(review, model.getAttribute("review"));
+        assertEquals("eyJpZCI6IjEyMzQ1Njc4OTAiLCJ1c2VySWQiOiJ1c2VyQGV4YW1wbGUuY29tIiwid29ya3NwYWNlSWQiOjEsInR5cGUiOiJHZW5lcmFsIiwibG9ja2VkIjpmYWxzZX0=", model.getAttribute("reviewAsJson"));
+        assertEquals("read@example.com", model.getAttribute("reviewer"));
+        assertEquals(false, model.getAttribute("admin"));
+    }
+
+    @Test
+    public void showReview_ReturnsTheReviewPage_WhenTheUserHasWriteAccessToTheWorkspace() throws Exception {
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        workspaceMetaData.addWriteUser("write@example.com");
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMetaData;
+            }
+        });
+
+        final Review review = new Review("1234567890", "user@example.com");
+        review.setWorkspaceId(1L);
+
+        controller.setReviewComponent(new MockReviewComponent() {
+            @Override
+            public Review getReview(String reviewId) {
+                return review;
+            }
+        });
+
+        setUser("write@example.com");
+        String view = controller.showReview("1234567890", model);
+        assertEquals("review", view);
+        assertSame(review, model.getAttribute("review"));
+        assertEquals("eyJpZCI6IjEyMzQ1Njc4OTAiLCJ1c2VySWQiOiJ1c2VyQGV4YW1wbGUuY29tIiwid29ya3NwYWNlSWQiOjEsInR5cGUiOiJHZW5lcmFsIiwibG9ja2VkIjpmYWxzZX0=", model.getAttribute("reviewAsJson"));
+        assertEquals("write@example.com", model.getAttribute("reviewer"));
+        assertEquals(false, model.getAttribute("admin"));
     }
 
 }

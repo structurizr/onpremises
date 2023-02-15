@@ -88,20 +88,13 @@ public class ReviewController extends AbstractController {
 
         reviewId = HtmlUtils.filterHtml(reviewId);
         Review review = reviewComponent.getReview(reviewId);
-        if (review == null) {
+        if (!userCanAccessReview(review)) {
             return show404Page(model);
         }
 
-        if (review.getWorkspaceId() != null) {
-            // this is a private review, so let's inherit the security settings of the workspace
-            WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(review.getWorkspaceId());
-            if (workspaceMetaData == null || !userCanAccessWorkspace(workspaceMetaData)) {
-                return show404Page(model);
-            }
-        }
 
         model.addAttribute("review", review);
-        model.addAttribute("reviewAsJson", JsonUtils.escapeJson(Review.toJson(review)));
+        model.addAttribute("reviewAsJson", JsonUtils.base64(Review.toJson(review)));
 
         if (user != null) {
             model.addAttribute("reviewer", user.getName() != null ? user.getName() : "");
@@ -131,16 +124,8 @@ public class ReviewController extends AbstractController {
         }
 
         Review review = reviewComponent.getReview(reviewId);
-        if (review == null) {
+        if (!userCanAccessReview(review)) {
             return show404Page(model);
-        }
-
-        if (review.getWorkspaceId() != null) {
-            // this is a private review, so let's inherit the security settings of the workspace
-            WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(review.getWorkspaceId());
-            if (workspaceMetaData == null || !userCanAccessWorkspace(workspaceMetaData)) {
-                return show404Page(model);
-            }
         }
 
         if (!review.isLocked()) {
@@ -160,18 +145,9 @@ public class ReviewController extends AbstractController {
         filename = HtmlUtils.filterHtml(filename);
 
         Review review = reviewComponent.getReview(reviewId);
-        if (review == null) {
+        if (!userCanAccessReview(review)) {
             response.setStatus(404);
             return null;
-        }
-
-        if (review.getWorkspaceId() != null) {
-            // this is a private review, so let's inherit the security settings of the workspace
-            WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(review.getWorkspaceId());
-            if (workspaceMetaData == null || !userCanAccessWorkspace(workspaceMetaData)) {
-                response.setStatus(404);
-                return null;
-            }
         }
 
         try {
@@ -205,18 +181,9 @@ public class ReviewController extends AbstractController {
         filename = HtmlUtils.filterHtml(filename);
 
         Review review = reviewComponent.getReview(reviewId);
-        if (review == null) {
+        if (!userCanAccessReview(review)) {
             response.setStatus(404);
             return null;
-        }
-
-        if (review.getWorkspaceId() != null) {
-            // this is a private review, so let's inherit the security settings of the workspace
-            WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(review.getWorkspaceId());
-            if (workspaceMetaData == null || !userCanAccessWorkspace(workspaceMetaData)) {
-                response.setStatus(404);
-                return null;
-            }
         }
 
         try {
@@ -244,12 +211,10 @@ public class ReviewController extends AbstractController {
     public String lockReview(@PathVariable String reviewId) {
         reviewId = HtmlUtils.filterHtml(reviewId);
         Review review = reviewComponent.getReview(reviewId);
+        User user = getUser();
 
-        if (review != null) {
-            User user = getUser();
-            if (user != null && user.getUsername().equals(review.getUserId())) {
-                reviewComponent.lockReview(reviewId);
-            }
+        if (review != null && user != null && user.getUsername().equals(review.getUserId())) {
+            reviewComponent.lockReview(reviewId);
         }
 
         return "redirect:/review/" + reviewId;
@@ -259,15 +224,29 @@ public class ReviewController extends AbstractController {
     public String unlockReview(@PathVariable String reviewId) {
         reviewId = HtmlUtils.filterHtml(reviewId);
         Review review = reviewComponent.getReview(reviewId);
+        User user = getUser();
 
-        if (review != null) {
-            User user = getUser();
-            if (user != null && user.getUsername().equals(review.getUserId())) {
-                reviewComponent.unlockReview(reviewId);
-            }
+        if (review != null && user != null && user.getUsername().equals(review.getUserId())) {
+            reviewComponent.unlockReview(reviewId);
         }
 
         return "redirect:/review/" + reviewId;
+    }
+
+    private boolean userCanAccessReview(Review review) {
+        if (review == null) {
+            return false;
+        }
+
+        if (review.getWorkspaceId() != null) {
+            // this is a private review, so let's inherit the security settings of the workspace
+            WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(review.getWorkspaceId());
+            if (workspaceMetaData == null || !userCanAccessWorkspace(workspaceMetaData)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
 }
