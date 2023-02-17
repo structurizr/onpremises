@@ -133,10 +133,10 @@ public class WorkspaceMetaDataTests {
     }
 
     @Test
-    public void test_isLocked_ReturnsFalse_WhenTheWorkspaceWasLockedOverFiveMinutesAgo() {
+    public void test_isLocked_ReturnsFalse_WhenTheWorkspaceWasLockedOverTwoMinutesAgo() {
         WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         workspaceMetaData.setLockedUser("user");
-        workspaceMetaData.setLockedDate(DateUtils.getXMinutesAgo(6));
+        workspaceMetaData.setLockedDate(DateUtils.getXMinutesAgo(3));
 
         assertFalse(workspaceMetaData.isLocked());
     }

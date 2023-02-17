@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class WorkspaceMetaData {
 
-    public static final int LOCK_TIMEOUT_IN_MINUTES = 3;
+    public static final int LOCK_TIMEOUT_IN_MINUTES = 2;
     
     static final String NAME_PROPERTY = "name";
     static final String DESCRIPTION_PROPERTY = "description";
