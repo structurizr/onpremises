@@ -147,7 +147,14 @@
                     keySize: 128,
                     passphrase: passphrase1
                 });
-                structurizr.saveWorkspace(true);
+                structurizr.saveWorkspace(function() {
+                    const indexOfVersionParameter = window.location.href.indexOf('?version=');
+                    if (indexOfVersionParameter > -1) {
+                        window.location.href = window.location.href.substr(0, indexOfVersionParameter);
+                    } else {
+                        location.reload();
+                    }
+                });
             } else {
                 alert('Passphrases do not match - please try again.');
             }
@@ -157,7 +164,14 @@
     function removeClientSideEncryption() {
         if (confirm('Are you sure you want to remove client-side encryption?')) {
             structurizrEncryptionStrategy = undefined;
-            structurizr.saveWorkspace(true);
+            structurizr.saveWorkspace(function() {
+                const indexOfVersionParameter = window.location.href.indexOf('?version=');
+                if (indexOfVersionParameter > -1) {
+                    window.location.href = window.location.href.substr(0, indexOfVersionParameter);
+                } else {
+                    location.reload();
+                }
+            });
         }
     }
 </script>
