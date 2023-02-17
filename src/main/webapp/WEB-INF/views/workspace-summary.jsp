@@ -116,11 +116,11 @@
                 <a href="${urlPrefix}/settings"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/gear.svg" class="icon-sm" /> Settings</a>
             </div>
 
-<%--            <c:if test="${workspace.editable eq true and workspace.locked eq true}">--%>
-<%--            <div class="navigationItem">--%>
-<%--                <a href="" onclick="unlockWorkspace(event)"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/unlock.svg" class="icon-sm" /> Unlock</a>--%>
-<%--            </div>--%>
-<%--            </c:if>--%>
+            <c:if test="${workspace.editable eq true and workspace.locked eq true}">
+            <div class="navigationItem">
+                <a href="" onclick="unlockWorkspace(event)"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/unlock.svg" class="icon-sm" /> Unlock</a>
+            </div>
+            </c:if>
 
             <div class="navigationItem">
                 <a href="${urlPrefix}/users"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/people.svg" class="icon-sm" /> Users</a>
