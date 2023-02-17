@@ -440,21 +440,32 @@
                 console.log(err);
             }
 
-            structurizr.saveWorkspace(false);
+            structurizr.saveWorkspace(function(response) {
+                if (response.success === true) {
+                    progressMessage.hide();
 
-            $('#saveButton').prop('disabled', true);
-            $('#saveButton').removeClass('btn-danger');
-            unsavedChanges = false;
-            editor.session.getUndoManager().markClean();
-        }
+                    $('#saveButton').prop('disabled', true);
+                    $('#saveButton').removeClass('btn-danger');
+                    unsavedChanges = false;
+                    editor.session.getUndoManager().markClean();
 
-        try {
-            const embeddedDiagramEditor = document.getElementById('diagramEditorIframe');
-            if (embeddedDiagramEditor && embeddedDiagramEditor.contentWindow && structurizr.workspace.hasViews()) {
-                embeddedDiagramEditor.contentWindow.refreshThumbnail();
-            }
-        } catch (err) {
-            console.log(err);
+                    try {
+                        const embeddedDiagramEditor = document.getElementById('diagramEditorIframe');
+                        if (embeddedDiagramEditor && embeddedDiagramEditor.contentWindow && structurizr.workspace.hasViews()) {
+                            embeddedDiagramEditor.contentWindow.refreshThumbnail();
+                        }
+                    } catch (err) {
+                        console.log(err);
+                    }
+                } else {
+                    if (response.message) {
+                        console.log(response.message);
+                        if (progressMessage) {
+                            progressMessage.show(response.message);
+                        }
+                    }
+                }
+            });
         }
     }
 
