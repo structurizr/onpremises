@@ -7,7 +7,6 @@ build/*
 .idea/*
 
 src/main/webapp/static/js/*
-!src/main/webapp/static/js/structurizr-lock.js
 src/main/webapp/static/bootstrap-icons/*
 src/main/webapp/static/css/*
 src/main/webapp/static/html/*
