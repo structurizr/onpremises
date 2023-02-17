@@ -1,4 +1,4 @@
-structurizr.Lock = function(workspaceId, apiKey, agent) {
+structurizr.Lock = function(workspaceId, agent) {
 
     const url = '/workspace/' + workspaceId +'/lock';
     const interval = 1000 * 60; // one minute
@@ -9,7 +9,7 @@ structurizr.Lock = function(workspaceId, apiKey, agent) {
         $.ajax({
             url: url,
             type: "POST",
-            data: 'apiKey=' + encodeURIComponent(apiKey) + '&agent=' + encodeURIComponent(agent),
+            data: 'agent=' + encodeURIComponent(agent),
             cache: false
         })
         .done(function(data, textStatus, jqXHR) {

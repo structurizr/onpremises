@@ -163,6 +163,10 @@
         return beforeunload();
     });
 
+    $(window).on("unload", function() {
+        navigator.sendBeacon('/workspace/${workspace.id}/unlock?agent=${userAgent}');
+    });
+
     function workspaceLoaded() {
         if (structurizr.workspace.getProperty('structurizr.dslEditor') === 'false') {
             alert('The browser-based DSL editor has been disabled for this workspace - please use the Structurizr CLI or Structurizr Lite instead.');
@@ -467,7 +471,7 @@
     }
 
     <c:if test="${workspace.editable && workspace.ownerUserType.allowedToLockWorkspaces && not empty workspace.apiKey}">
-    new structurizr.Lock(${workspace.id}, '${workspace.apiKey}', 'structurizr-onpremises/${version.buildNumber}');
+    new structurizr.Lock(${workspace.id}, '${userAgent}');
     </c:if>
 </script>
 

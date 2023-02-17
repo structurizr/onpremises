@@ -116,6 +116,12 @@
                 <a href="${urlPrefix}/settings"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/gear.svg" class="icon-sm" /> Settings</a>
             </div>
 
+<%--            <c:if test="${workspace.editable eq true and workspace.locked eq true}">--%>
+<%--            <div class="navigationItem">--%>
+<%--                <a href="" onclick="unlockWorkspace(event)"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/unlock.svg" class="icon-sm" /> Unlock</a>--%>
+<%--            </div>--%>
+<%--            </c:if>--%>
+
             <div class="navigationItem">
                 <a href="${urlPrefix}/users"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/people.svg" class="icon-sm" /> Users</a>
             </div>
@@ -143,12 +149,6 @@
                     |
                     Size: <fmt:formatNumber minFractionDigits="2" maxFractionDigits="2" value="${workspace.sizeInMegaBytes}" /> MB
                     </c:if>
-                    </c:if>
-
-                    <c:if test="${workspace.editable eq true and workspace.locked eq true}">
-                        <br />
-                        Locked: <fmt:formatDate value="${workspace.lockedDate}" pattern="EEE dd MMM yyyy HH:mm:ss z" timeZone="${user.timeZone}" /> by ${workspace.lockedUser} using ${workspace.lockedAgent}
-                        (<a href="" onclick="unlockWorkspace(event)">unlock</a>)
                     </c:if>
                 </p>
 

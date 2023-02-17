@@ -110,7 +110,7 @@ public class DslEditorControllerTests extends ControllerTestsBase {
         assertEquals("/workspace/1/images/", model.getAttribute("thumbnailUrl"));
         assertTrue(workspaceMetaData.isLocked());
         assertEquals("user@example.com", workspaceMetaData.getLockedUser());
-        assertEquals("structurizr-onpremises", workspaceMetaData.getLockedAgent());
+        assertTrue(workspaceMetaData.getLockedAgent().startsWith("structurizr-onpremises/dsl-editor/"));
     }
 
     @Test
@@ -145,7 +145,7 @@ public class DslEditorControllerTests extends ControllerTestsBase {
         assertEquals("/workspace/1/images/", model.getAttribute("thumbnailUrl"));
         assertTrue(workspaceMetaData.isLocked());
         assertEquals("user1@example.com", workspaceMetaData.getLockedUser());
-        assertEquals("structurizr-onpremises", workspaceMetaData.getLockedAgent());
+        assertTrue(workspaceMetaData.getLockedAgent().startsWith("structurizr-onpremises/dsl-editor/"));
     }
 
     @Test

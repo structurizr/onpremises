@@ -24,7 +24,6 @@ public class LockController extends AbstractWorkspaceController {
     @ResponseBody
     public WorkspaceLockResponse lockWorkspace(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = true) String apiKey,
             @RequestParam(required = true) String agent
     ) {
         WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(workspaceId);
@@ -34,7 +33,7 @@ public class LockController extends AbstractWorkspaceController {
 
         User user = getUser();
 
-        if (workspaceMetaData.getApiKey().equals(apiKey)) {
+        if (!workspaceMetaData.isLocked() || workspaceMetaData.isLockedBy(user.getUsername(), agent)) {
             try {
                 if (workspaceComponent.lockWorkspace(workspaceId, user.getUsername(), agent)) {
                     return new WorkspaceLockResponse(true, true);
@@ -46,7 +45,7 @@ public class LockController extends AbstractWorkspaceController {
 
         // not locked - refresh the metadata and try to figure out why
         workspaceMetaData = workspaceComponent.getWorkspaceMetaData(workspaceId);
-        if (workspaceMetaData.isLocked() && !workspaceMetaData.isLockedBy(user.getUsername())) {
+        if (workspaceMetaData.isLocked() && !workspaceMetaData.isLockedBy(user.getUsername(), agent)) {
             // locked by somebody else
             SimpleDateFormat sdf = new SimpleDateFormat(DateUtils.USER_FRIENDLY_DATE_FORMAT);
 
@@ -55,6 +54,27 @@ public class LockController extends AbstractWorkspaceController {
             // other problem :-)
             return new WorkspaceLockResponse(false, workspaceMetaData.isLocked(), "The workspace could not be locked - please save your workspace and refresh the page.");
         }
+    }
+
+    @RequestMapping(value = "/workspace/{workspaceId}/unlock", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
+    @ResponseBody
+    public WorkspaceLockResponse unlockWorkspace(
+            @PathVariable("workspaceId") long workspaceId,
+            @RequestParam(required = true) String agent
+    ) {
+        WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(workspaceId);
+        if (workspaceMetaData == null) {
+            return new WorkspaceLockResponse(false, false);
+        }
+
+        User user = getUser();
+
+        if (workspaceMetaData.isLockedBy(user.getUsername(), agent)) {
+            workspaceComponent.unlockWorkspace(workspaceId);
+            return new WorkspaceLockResponse(true, false);
+        }
+
+        return new WorkspaceLockResponse(false, workspaceMetaData.isLocked());
     }
 
     @RequestMapping(value = "/workspace/{workspaceId}/unlock", method = RequestMethod.GET)

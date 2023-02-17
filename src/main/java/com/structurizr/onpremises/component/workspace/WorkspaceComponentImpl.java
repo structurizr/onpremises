@@ -264,7 +264,7 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
             workspaceMetaData.setSize(jsonToBeStored.length());
 
             // check the workspace lock
-            if (workspaceMetaData.isLocked() && !workspaceMetaData.isLockedBy(workspaceToBeStored.getLastModifiedUser())) {
+            if (workspaceMetaData.isLocked() && !workspaceMetaData.isLockedBy(workspaceToBeStored.getLastModifiedUser(), workspaceToBeStored.getLastModifiedAgent())) {
                 SimpleDateFormat sdf = new SimpleDateFormat(DateUtils.USER_FRIENDLY_DATE_FORMAT);
                 throw new WorkspaceComponentException("The workspace could not be saved because the workspace was locked by " + workspaceMetaData.getLockedUser() + " at " + sdf.format(workspaceMetaData.getLockedDate()) + ".");
             }
@@ -311,7 +311,7 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
     @Override
     public boolean lockWorkspace(long workspaceId, String username, String agent) throws WorkspaceComponentException {
         WorkspaceMetaData workspaceMetaData = getWorkspaceMetaData(workspaceId);
-        if (!workspaceMetaData.isLocked() || workspaceMetaData.isLockedBy(username)) {
+        if (!workspaceMetaData.isLocked() || workspaceMetaData.isLockedBy(username, agent)) {
             workspaceMetaData.addLock(username, agent);
 
             try {

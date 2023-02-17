@@ -177,8 +177,8 @@ public class WorkspaceMetaData {
         return !StringUtils.isNullOrEmpty(lockedUser) && !DateUtils.isOlderThanXMinutes(lockedDate, LOCK_TIMEOUT_IN_MINUTES);
     }
 
-    public boolean isLockedBy(String user) {
-        return isLocked() && lockedUser.equals(user);
+    public boolean isLockedBy(String user, String agent) {
+        return isLocked() && lockedUser.equals(user) && lockedAgent.equals(agent);
     }
 
     public long getSize() {

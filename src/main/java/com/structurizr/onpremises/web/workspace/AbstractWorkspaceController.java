@@ -20,7 +20,6 @@ public abstract class AbstractWorkspaceController extends AbstractController {
 
     protected static final String URL_PREFIX = "urlPrefix";
     protected static final String URL_SUFFIX = "urlSuffix";
-    private static final String AGENT = "structurizr-onpremises";
 
     protected final String showPublicView(String view, long workspaceId, String version, ModelMap model, boolean showHeaderAndFooter) {
         version = HtmlUtils.filterHtml(version);
@@ -145,16 +144,6 @@ public abstract class AbstractWorkspaceController extends AbstractController {
             log.error(e);
             return "500";
         }
-    }
-
-    protected boolean lockWorkspace(WorkspaceMetaData workspaceMetaData) {
-        try {
-            return workspaceComponent.lockWorkspace(workspaceMetaData.getId(), getUser().getUsername(), AGENT);
-        } catch (WorkspaceComponentException e) {
-            log.error(e);
-        }
-
-        return false;
     }
 
 }

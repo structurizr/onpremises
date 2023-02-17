@@ -37,32 +37,14 @@ public class LockControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        WorkspaceLockResponse response = controller.lockWorkspace(1, "apiKey", "agent");
+        WorkspaceLockResponse response = controller.lockWorkspace(1, "agent");
         assertFalse(response.isSuccess());
         assertFalse(response.isLocked());
     }
 
     @Test
-    public void lockWorkspace_ReturnsAFailureResponse_WhenTheApiKeyIsIncorrect() {
+    public void lockWorkspace_LocksTheWorkspace_WhenTheWorkspaceIsNotLocked() {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
-        workspaceMetaData.setApiKey("1234567890");
-        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
-            @Override
-            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
-                return workspaceMetaData;
-            }
-        });
-
-        WorkspaceLockResponse response = controller.lockWorkspace(1, "0987654321", "agent");
-        assertFalse(response.isSuccess());
-        assertFalse(response.isLocked());
-        assertEquals("The workspace could not be locked - please save your workspace and refresh the page.", response.getMessage());
-    }
-
-    @Test
-    public void lockWorkspace_LocksTheWorkspace_WhenTheApiKeyIsCorrectAndTheWorkspaceIsNotLocked() {
-        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
-        workspaceMetaData.setApiKey("apiKey");
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override
             public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
@@ -77,7 +59,7 @@ public class LockControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        WorkspaceLockResponse response = controller.lockWorkspace(1, "apiKey", "agent");
+        WorkspaceLockResponse response = controller.lockWorkspace(1, "agent");
         assertTrue(response.isSuccess());
         assertTrue(response.isLocked());
         assertTrue(workspaceMetaData.isLocked());
@@ -86,9 +68,34 @@ public class LockControllerTests extends ControllerTestsBase {
     }
 
     @Test
+    public void lockWorkspace_ReturnsAFailureResponse_WhenTheWorkspaceIsAlreadyLockedByAnotherAgent() {
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        workspaceMetaData.addLock("user1@example.com", "agent1");
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMetaData;
+            }
+
+            @Override
+            public boolean lockWorkspace(long workspaceId, String username, String agent) {
+                return false;
+            }
+        });
+
+        setUser("user1@example.com");
+        WorkspaceLockResponse response = controller.lockWorkspace(1, "agent2");
+        assertFalse(response.isSuccess());
+        assertTrue(response.isLocked());
+        assertEquals(String.format("The workspace could not be locked; it was locked by user1@example.com using agent1 at %s.", new SimpleDateFormat(DateUtils.USER_FRIENDLY_DATE_FORMAT).format(workspaceMetaData.getLockedDate())), response.getMessage());
+        assertTrue(workspaceMetaData.isLocked());
+        assertEquals("user1@example.com", workspaceMetaData.getLockedUser());
+        assertEquals("agent1", workspaceMetaData.getLockedAgent());
+    }
+
+    @Test
     public void lockWorkspace_ReturnsAFailureResponse_WhenTheWorkspaceIsAlreadyLockedBySomebodyElse() {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
-        workspaceMetaData.setApiKey("apiKey");
         workspaceMetaData.addLock("user1@example.com", "agent");
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override
@@ -103,7 +110,7 @@ public class LockControllerTests extends ControllerTestsBase {
         });
 
         setUser("user2@example.com");
-        WorkspaceLockResponse response = controller.lockWorkspace(1, "apiKey", "agent");
+        WorkspaceLockResponse response = controller.lockWorkspace(1, "agent");
         assertFalse(response.isSuccess());
         assertTrue(response.isLocked());
         assertEquals(String.format("The workspace could not be locked; it was locked by user1@example.com using agent at %s.", new SimpleDateFormat(DateUtils.USER_FRIENDLY_DATE_FORMAT).format(workspaceMetaData.getLockedDate())), response.getMessage());

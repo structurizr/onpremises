@@ -126,7 +126,7 @@ public class WorkspaceMetaDataTests {
     @Test
     public void test_isLocked_ReturnsTrue_WhenTheWorkspaceIsLocked() {
         WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
-        workspaceMetaData.setLockedUser("simon");
+        workspaceMetaData.setLockedUser("user");
         workspaceMetaData.setLockedDate(new Date());
 
         assertTrue(workspaceMetaData.isLocked());
@@ -135,7 +135,7 @@ public class WorkspaceMetaDataTests {
     @Test
     public void test_isLocked_ReturnsFalse_WhenTheWorkspaceWasLockedOverFiveMinutesAgo() {
         WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
-        workspaceMetaData.setLockedUser("simon");
+        workspaceMetaData.setLockedUser("user");
         workspaceMetaData.setLockedDate(DateUtils.getXMinutesAgo(6));
 
         assertFalse(workspaceMetaData.isLocked());
@@ -146,25 +146,37 @@ public class WorkspaceMetaDataTests {
         WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         workspaceMetaData.setLockedUser(null);
         workspaceMetaData.setLockedDate(null);
-        assertFalse(workspaceMetaData.isLockedBy("simon"));
+        assertFalse(workspaceMetaData.isLockedBy("user", "agent"));
     }
 
     @Test
-    public void test_isLockedBy_ReturnsTrue_WhenTheWorkspaceIsLockedByTheSpecifiedUser() {
+    public void test_isLockedBy_ReturnsTrue_WhenTheWorkspaceIsLockedByTheSpecifiedUserAndAgent() {
         WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
-        workspaceMetaData.setLockedUser("simon");
+        workspaceMetaData.setLockedUser("user");
+        workspaceMetaData.setLockedAgent("agent");
         workspaceMetaData.setLockedDate(new Date());
 
-        assertTrue(workspaceMetaData.isLockedBy("simon"));
+        assertTrue(workspaceMetaData.isLockedBy("user", "agent"));
+    }
+
+    @Test
+    public void test_isLockedBy_ReturnsFalse_WhenTheWorkspaceIsNotLockedByTheSpecifiedUserAndAgent() {
+        WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        workspaceMetaData.setLockedUser("user1");
+        workspaceMetaData.setLockedAgent("agent1");
+        workspaceMetaData.setLockedDate(new Date());
+
+        assertFalse(workspaceMetaData.isLockedBy("user1", "agent2"));
     }
 
     @Test
     public void test_isLockedBy_ReturnsFalse_WhenTheWorkspaceIsNotLockedByTheSpecifiedUser() {
         WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
-        workspaceMetaData.setLockedUser("simon");
+        workspaceMetaData.setLockedUser("user1");
+        workspaceMetaData.setLockedAgent("agent1");
         workspaceMetaData.setLockedDate(new Date());
 
-        assertFalse(workspaceMetaData.isLockedBy("kirstie"));
+        assertFalse(workspaceMetaData.isLockedBy("user2", "agent2"));
     }
 
     @Test
