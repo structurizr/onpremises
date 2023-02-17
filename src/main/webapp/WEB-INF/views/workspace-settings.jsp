@@ -49,7 +49,7 @@
                         <p class="small">
                             Workspace ID: <span id="workspace${workspace.id}Id" style="font-family: 'Courier New', Courier, monospace; cursor: pointer" onclick="structurizr.util.selectText('workspace${workspace.id}Id')">${workspace.id}</span>
                             <br />
-                            API URL: <span id="workspace${workspace.id}ApiUrl" style="font-family: 'Courier New', Courier, monospace; cursor: pointer" onclick="structurizr.util.selectText('workspace${workspace.id}ApiUrl')"><span class="baseUrl"></span>${structurizrConfiguration.apiUrl}</span>
+                            API URL: <span id="workspace${workspace.id}ApiUrl" style="font-family: 'Courier New', Courier, monospace; cursor: pointer" onclick="structurizr.util.selectText('workspace${workspace.id}ApiUrl')"><span class="baseUrl"></span>/api</span>
                             <br />
                             API key:
                             <span id="workspace${workspace.id}ApiKey" style="font-family: 'Courier New', Courier, monospace; cursor: pointer" onclick="structurizr.util.selectText('workspace${workspace.id}ApiKey')">${workspace.apiKey}</span>
@@ -61,7 +61,7 @@
                         <p class="small">
                             Structurizr CLI parameters <span class="smaller">(<a href="https://github.com/structurizr/cli/blob/master/docs/push.md" target="_blank">help</a>)</span>
                             <br />
-                        <pre id="workspace${workspace.id}Cli" style="font-family: 'Courier New', Courier, monospace; cursor: pointer; text-align: left" onclick="structurizr.util.selectText('workspace${workspace.id}Cli')">-url <span class="baseUrl"></span>${structurizrConfiguration.apiUrl} -id ${workspace.id} -key ${workspace.apiKey} -secret ${workspace.apiSecret}</pre>
+                        <pre id="workspace${workspace.id}Cli" style="font-family: 'Courier New', Courier, monospace; cursor: pointer; text-align: left" onclick="structurizr.util.selectText('workspace${workspace.id}Cli')">-url <span class="baseUrl"></span>/api -id ${workspace.id} -key ${workspace.apiKey} -secret ${workspace.apiSecret}</pre>
                         </p>
                     </c:if>
                 </div>
