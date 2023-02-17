@@ -353,7 +353,14 @@
     function revertToLoadedVersion() {
         if (confirm('Are you sure you want to revert to this version?')) {
             structurizrApiClient.resetRevision();
-            Structurizr.saveWorkspace(true);
+            structurizr.saveWorkspace(function() {
+                const indexOfVersionParameter = window.location.href.indexOf('?version=');
+                if (indexOfVersionParameter > -1) {
+                    window.location.href = window.location.href.substr(0, indexOfVersionParameter);
+                } else {
+                    location.reload();
+                }
+            });
         }
     }
 
