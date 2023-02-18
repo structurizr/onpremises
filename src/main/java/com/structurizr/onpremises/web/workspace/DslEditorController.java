@@ -1,7 +1,6 @@
 package com.structurizr.onpremises.web.workspace;
 
 import com.structurizr.Workspace;
-import com.structurizr.dsl.DslBridge;
 import com.structurizr.dsl.DslUtils;
 import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.dsl.StructurizrDslParserException;
