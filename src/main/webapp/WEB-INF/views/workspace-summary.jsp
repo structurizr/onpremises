@@ -291,6 +291,10 @@
 
                 if (count <= maxNumberOfViews) {
                     html += '<div class="centered" style="display: inline-block; margin: 10px 10px 40px 10px; max-width: ' + thumbnailSize + 'px;">';
+
+                    if (view.type === structurizr.constants.IMAGE_VIEW_TYPE) {
+                        html += '  <a href="' + url + '"><img src="' + view.content + '" class="img-thumbnail" width="' + thumbnailSize + 'px" style="margin-bottom: 10px" onerror="this.onerror = null; this.src=\'/static/img/thumbnail-not-available.png\';" /></a>';
+                    } else {
                     <c:choose>
                     <c:when test="${not empty param.version}">
                     html += '  <a href="' + url + '"><img src="/static/img/thumbnail-not-available.png" class="thumbnail" width="' + thumbnailSize + 'px" style="margin-bottom: 10px" /></a>';
@@ -299,6 +303,8 @@
                     html += '  <a href="' + url + '"><img src="${thumbnailUrl}' + structurizr.util.escapeHtml(view.key) + '-thumbnail.png" class="thumbnail" width="' + thumbnailSize + 'px" style="margin-bottom: 10px" onerror="this.onerror = null; this.src=\'/static/img/thumbnail-not-available.png\';" /></a>';
                     </c:otherwise>
                     </c:choose>
+                    }
+
                     html += '  <div class="smaller">';
                     html += '    <a href="' + url + '">' + title + '</a><br />';
                     html += '    #' + structurizr.util.escapeHtml(view.key) + '';
