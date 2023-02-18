@@ -278,11 +278,7 @@
             var maxNumberOfViews = 10;
             var count = 1;
             var views = structurizr.workspace.getViews();
-            var thumbnailSize = 200;
-            if (views.length > 10) {
-                thumbnailSize = 150;
-            }
-
+            const thumbnailSize = 200;
             var html = '';
 
             views.forEach(function(view) {
@@ -290,17 +286,17 @@
                 var title = structurizr.util.escapeHtml(structurizr.ui.getTitleForView(view));
 
                 if (count <= maxNumberOfViews) {
-                    html += '<div class="centered" style="display: inline-block; margin: 10px 10px 40px 10px; max-width: ' + thumbnailSize + 'px;">';
+                    html += '<div class="centered" style="display: inline-block; margin: 10px 10px 40px 10px; width: ' + thumbnailSize + 'px;">';
 
                     if (view.type === structurizr.constants.IMAGE_VIEW_TYPE) {
-                        html += '  <a href="' + url + '"><img src="' + view.content + '" class="img-thumbnail" width="' + thumbnailSize + 'px" style="margin-bottom: 10px" onerror="this.onerror = null; this.src=\'/static/img/thumbnail-not-available.png\';" /></a>';
+                        html += '  <a href="' + url + '"><img src="' + view.content + '" class="img-thumbnail" style="margin-bottom: 10px; max-height: ' + thumbnailSize + 'px" onerror="this.onerror = null; this.src=\'/static/img/thumbnail-not-available.png\';" /></a>';
                     } else {
                     <c:choose>
                     <c:when test="${not empty param.version}">
-                    html += '  <a href="' + url + '"><img src="/static/img/thumbnail-not-available.png" class="thumbnail" width="' + thumbnailSize + 'px" style="margin-bottom: 10px" /></a>';
+                    html += '  <a href="' + url + '"><img src="/static/img/thumbnail-not-available.png" class="img-thumbnail" style="margin-bottom: 10px" /></a>';
                     </c:when>
                     <c:otherwise>
-                    html += '  <a href="' + url + '"><img src="${thumbnailUrl}' + structurizr.util.escapeHtml(view.key) + '-thumbnail.png" class="thumbnail" width="' + thumbnailSize + 'px" style="margin-bottom: 10px" onerror="this.onerror = null; this.src=\'/static/img/thumbnail-not-available.png\';" /></a>';
+                    html += '  <a href="' + url + '"><img src="${thumbnailUrl}' + structurizr.util.escapeHtml(view.key) + '-thumbnail.png" class="img-thumbnail" style="margin-bottom: 10px; max-height: ' + thumbnailSize + 'px" onerror="this.onerror = null; this.src=\'/static/img/thumbnail-not-available.png\';" /></a>';
                     </c:otherwise>
                     </c:choose>
                     }
