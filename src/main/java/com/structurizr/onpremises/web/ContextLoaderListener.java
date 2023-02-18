@@ -1,8 +1,8 @@
 package com.structurizr.onpremises.web;
 
 import com.structurizr.Workspace;
-import com.structurizr.documentation.importer.DefaultDocumentationImporter;
 import com.structurizr.dsl.StructurizrDslParser;
+import com.structurizr.importer.documentation.DefaultDocumentationImporter;
 import com.structurizr.onpremises.util.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -92,7 +92,7 @@ public class ContextLoaderListener implements ServletContextListener {
             }
 
             try {
-                log.info(" - structurizr-documentation: v" + Class.forName(DefaultDocumentationImporter.class.getCanonicalName()).getPackage().getImplementationVersion());
+                log.info(" - structurizr-import: v" + Class.forName(DefaultDocumentationImporter.class.getCanonicalName()).getPackage().getImplementationVersion());
             } catch (Exception e) {
                 e.printStackTrace();
             }

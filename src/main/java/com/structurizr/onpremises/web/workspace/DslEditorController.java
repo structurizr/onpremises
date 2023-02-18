@@ -120,7 +120,7 @@ public class DslEditorController extends AbstractWorkspaceEditorController {
         parser.parse(dsl);
 
         Workspace workspace = parser.getWorkspace();
-        DslBridge.setDsl(workspace, dsl);
+        DslUtils.setDsl(workspace, dsl);
 
         // add default views if no views are explicitly defined
         if (!workspace.getModel().isEmpty() && workspace.getViews().isEmpty()) {

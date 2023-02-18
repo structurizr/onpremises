@@ -8,9 +8,7 @@ import com.structurizr.documentation.Documentation;
 import com.structurizr.documentation.Section;
 import com.structurizr.model.*;
 import com.structurizr.util.StringUtils;
-import com.structurizr.view.ElementView;
-import com.structurizr.view.RelationshipView;
-import com.structurizr.view.View;
+import com.structurizr.view.*;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -84,25 +82,25 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
 
             sendIndexRequest(document);
 
-            for (View view : workspace.getViews().getCustomViews()) {
+            for (CustomView view : workspace.getViews().getCustomViews()) {
                 index(workspace, view);
             }
-            for (View view : workspace.getViews().getSystemLandscapeViews()) {
+            for (SystemLandscapeView view : workspace.getViews().getSystemLandscapeViews()) {
                 index(workspace, view);
             }
-            for (View view : workspace.getViews().getSystemContextViews()) {
+            for (SystemContextView view : workspace.getViews().getSystemContextViews()) {
                 index(workspace, view);
             }
-            for (View view : workspace.getViews().getContainerViews()) {
+            for (ContainerView view : workspace.getViews().getContainerViews()) {
                 index(workspace, view);
             }
-            for (View view : workspace.getViews().getComponentViews()) {
+            for (ComponentView view : workspace.getViews().getComponentViews()) {
                 index(workspace, view);
             }
-            for (View view : workspace.getViews().getDynamicViews()) {
+            for (DynamicView view : workspace.getViews().getDynamicViews()) {
                 index(workspace, view);
             }
-            for (View view : workspace.getViews().getDeploymentViews()) {
+            for (DeploymentView view : workspace.getViews().getDeploymentViews()) {
                 index(workspace, view);
             }
 
@@ -120,7 +118,7 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
         }
     }
 
-    private void index(Workspace workspace, View view) throws Exception {
+    private void index(Workspace workspace, ModelView view) throws Exception {
         Document document = new Document();
         document.setUrl(DIAGRAMS_PATH + "#" + view.getKey());
         document.setWorkspace(toString(workspace.getId()));
