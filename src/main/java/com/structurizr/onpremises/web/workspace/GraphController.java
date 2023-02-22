@@ -19,7 +19,7 @@ public class GraphController extends AbstractWorkspaceController {
     public String showPublicGraph(
             @PathVariable("workspaceId") long workspaceId,
             @RequestParam(required = false) String version,
-            @RequestParam(required = true) String view,
+            @RequestParam(required = false) String view,
             ModelMap model
     ) {
         model.addAttribute("view", view);
@@ -31,7 +31,7 @@ public class GraphController extends AbstractWorkspaceController {
     public String showSharedGraph(
             @PathVariable("workspaceId") long workspaceId,
             @RequestParam(required = false) String version,
-            @RequestParam(required = true) String view,
+            @RequestParam(required = false) String view,
             @PathVariable("token") String token,
             ModelMap model
     ) {
@@ -45,7 +45,7 @@ public class GraphController extends AbstractWorkspaceController {
     public String showAuthenticatedGraph(
             @PathVariable("workspaceId") long workspaceId,
             @RequestParam(required = false) String version,
-            @RequestParam(required = true) String view,
+            @RequestParam(required = false) String view,
             ModelMap model
     ) {
         WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(workspaceId);
