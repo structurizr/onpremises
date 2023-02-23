@@ -28,7 +28,7 @@ Each line in this file should be in the following format:
 
 ### LDAP
 
-A form-based login with integration to your LDAP server is supported, and our customers have successfully integrated the on-premises installation with FreeIPA and Microsoft Active Directory (via the LDAP binding). To configure LDAP integration:
+A form-based login with integration to an LDAP server is supported, and this has been used successfully with FreeIPA and Microsoft Active Directory (via the LDAP binding). To configure LDAP integration:
 
 - Add `structurizr.authentication=ldap` to your `structurizr.properties` file.
 - Create a file named `ldap.xml` in your Structurizr data directory, based upon the following template. If you make any changes to this LDAP configuration file, you will need to restart the on-premises installation.
@@ -116,8 +116,8 @@ You will need to change the following values in the example below:
 
 ### SAML 2.0
 
-Single sign-on is supported via SAML 2.0 integration with your Identity Provider.
-We have customers using this in conjunction with Auth0, Okta, Keycloak, PingFederate, and Microsoft Azure Active Directory.
+Single sign-on is supported via SAML 2.0 integration with an Identity Provider.
+There are teams using this in conjunction with Auth0, Okta, Keycloak, PingFederate, and Microsoft Azure Active Directory.
 To configure SAML integration:
 
 - Add `structurizr.authentication=saml` to your `structurizr.properties` file.
@@ -150,6 +150,8 @@ Here are some basic instructions for integration with Auth0. In this example, th
 #### Azure Active Directory
 
 Here are some basic instructions for integration with Azure Active Directory. In this example, the Structurizr on-premises installation was running at `http://localhost:7080`.
+See [SSO :: 500 Error after initial authentication](https://github.com/structurizr/onpremises/issues/8) if your SAML integration stops working after a short period of time.
+You may need to change the [max authentication age](#max-authentication-age).
 
 | Step | Description |
 | ---- | ----------- |

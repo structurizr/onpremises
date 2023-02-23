@@ -53,9 +53,9 @@ Delete the following if they exist:
 
 #### Download/copy the on-premises installation file
 
-Download the [https://static.structurizr.com/download/structurizr-onpremises.war](https://static.structurizr.com/download/structurizr-onpremises.war),
+Download the `structurizr-onpremises-xxxx.war` file from [https://structurizr.com/help/on-premises](https://structurizr.com/help/on-premises),
 move it to the `TOMCAT_HOME/webapps` directory,
-and rename it to `ROOT.war` (the on-premises installation must be installed as the root web application).
+and rename it to `ROOT.war` (the on-premises installation must be installed as the root web application, and is not designed to work otherwise).
 
 #### Configuration
 
@@ -66,7 +66,6 @@ with a value of the full path to your Structurizr data directory. For example:
 ```
 export STRUCTURIZR_DATA_DIRECTORY=/Users/simon/structurizr
 ```
-
 
 #### Start Apache Tomcat
 
@@ -79,5 +78,4 @@ There is a [Dockerfile](https://github.com/structurizr/onpremises/blob/main/Dock
 ### Using the Structurizr on-premises installation
 
 If deployment was successful, navigating to [http://localhost:8080](http://localhost:8080) should open the Structurizr on-premises installation.
-You will see the end user license agreement, which you will need to accept, before the on-premises installation home page is displayed.
 You can then sign in using the default credentials (`structurizr` and `password`).

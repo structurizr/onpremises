@@ -1,6 +1,9 @@
 ## Troubleshooting
 
 Here are some common problems, and how to resolve them.
+If your problem isn't listed here, please browse [the issues on the GitHub repo](https://github.com/structurizr/onpremises/issues).
+
+### Installation
 
 #### The home page loads, but doesn't look right
 
@@ -13,6 +16,8 @@ The on-premises installation needs to be run as the root/default web application
 For Apache Tomcat, this means the web application named `ROOT`, running at `/`.
 It is not possible to run the on-premises installation with an alternative context (e.g. `/structurizr-onpremises`).
 
+### Diagrams
+
 #### Embedded diagrams don't load
 
 If you have installed the on-premises installation behind a reverse proxy,
@@ -22,6 +27,8 @@ The following headers may need to be disabled in your reverse proxy if they are 
 
 - [X-Frame-Options](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options)
 - [Content-Security-Policy](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy)
+
+### Reviews
 
 #### Diagram reviews fail to be created
 

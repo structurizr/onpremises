@@ -1,6 +1,9 @@
 ## FAQ
 
-Here are answers to some frequently asked questions. If you don't see an answer you are looking for, please get in touch.
+Here are answers to some frequently asked questions. If you don't see an answer you are looking for,
+please [open a new discussion on the GitHub repo](https://github.com/structurizr/onpremises/discussions).
+
+### Installation
 
 #### What are the minimum hardware requirements?
 

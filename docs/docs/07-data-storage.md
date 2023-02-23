@@ -34,7 +34,7 @@ The default configuration uses Apache Lucene for search functionality, storing s
 This is sufficient for a single server installation, but Apache Lucene's search indexes are not designed for concurrent access from multiple processes.
 To run the Structurizr on-premises installation across multiple servers, for high availability, you'll need to use Elasticsearch instead.
 You can use a local Elasticsearch installation, or a service provided by a cloud provider.
-We recommend version 6.8.10 and above.
+Version 6.8.10 and above is recommended.
 
 ![](embed:Deployment-Example2)
 
