@@ -131,7 +131,7 @@ public class EmbedController extends AbstractController {
     }
 
     @RequestMapping(value = "/embed", method = RequestMethod.GET)
-    public String embedAndLoadWorkspaceFromParent(@RequestParam(required = false, defaultValue = "0") long workspace,
+    public String embedFromParent(@RequestParam(required = false, defaultValue = "0") long workspace,
                                   @RequestParam(required = false) String type,
                                   @RequestParam(required = false) String view,
                                   @RequestParam(required = false) String perspective,
@@ -173,7 +173,12 @@ public class EmbedController extends AbstractController {
 
         if ("graph".equals(type)) {
             model.addAttribute("view", view);
-            return "explore-graph";
+
+            return "graph";
+        } else if ("tree".equals(type)) {
+            model.addAttribute("view", view);
+
+            return "tree";
         } else {
             if (!StringUtils.isNullOrEmpty(view)) {
                 model.addAttribute("diagramIdentifier", view);
