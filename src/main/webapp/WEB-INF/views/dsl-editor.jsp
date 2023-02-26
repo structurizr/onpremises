@@ -226,7 +226,7 @@
         if (listOfViews.length > 0) {
             for (var i = 0; i < listOfViews.length; i++) {
                 const view = listOfViews[i];
-                viewsList.append('<option value="' + structurizr.util.escapeHtml(view.key) + '">' + structurizr.util.escapeHtml(structurizr.ui.getTitleForView(view)) + '</option>');
+                viewsList.append('<option value="' + structurizr.util.escapeHtml(view.key) + '">' + structurizr.util.escapeHtml(structurizr.ui.getTitleForView(view)) + ' (#' + view.key + ')</option>');
             }
 
             if (viewInFocus === undefined || viewInFocus === '') {
