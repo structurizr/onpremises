@@ -18,6 +18,7 @@ public class Configuration extends ConfigLookup {
 
     private boolean graphvizEnabled = false;
     private boolean dslEditorEnabled = false;
+    private boolean safeMode = true;
 
     private static Configuration INSTANCE;
 
@@ -30,6 +31,7 @@ public class Configuration extends ConfigLookup {
         setEncryptionPassphrase(getConfigurationParameter("structurizr.encryption", "STRUCTURIZR_ENCRYPTION", StructurizrProperties.ENCRYPTION_PASSPHRASE_PROPERTY, null));
         setWebUrl(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.URL_PROPERTY, ""));
         setDslEditorEnabled(Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.DSL_EDITOR_PROPERTY, "false")));
+        setSafeMode(Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAFE_MODE_PROPERTY, "true")));
 
         String commaSeparatedUsersAndRoles = getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.ADMIN_USERS_AND_ROLES_PROPERTY, "");
         if (!StringUtils.isNullOrEmpty(commaSeparatedUsersAndRoles)) {
@@ -120,6 +122,14 @@ public class Configuration extends ConfigLookup {
 
     void setGraphvizEnabled(boolean graphvizEnabled) {
         this.graphvizEnabled = graphvizEnabled;
+    }
+
+    public boolean isSafeMode() {
+        return safeMode;
+    }
+
+    public void setSafeMode(boolean safeMode) {
+        this.safeMode = safeMode;
     }
 
     public boolean isDslEditorEnabled() {
