@@ -95,9 +95,9 @@
                 <a href="${urlPrefix}/theme${urlSuffix}" target="_blank"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/palette.svg" class="icon-sm" /> Theme</a>
             </div>
 
-<%--            <div id="imagesLink" class="navigationItem hidden">--%>
-<%--                <a href="${urlPrefix}/images"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/filetype-png.svg" class="icon-sm" /> Published images</a>--%>
-<%--            </div>--%>
+            <div id="imagesLink" class="navigationItem hidden">
+                <a href="${urlPrefix}/images"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/filetype-png.svg" class="icon-sm" /> Published images</a>
+            </div>
 
             <div id="exportJsonLinkNavItem" class="navigationItem">
                 <a id="exportJsonLink" href=""><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/filetype-json.svg" class="icon-sm" /> Export JSON</a>
