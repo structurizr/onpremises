@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.model.*;
 import com.structurizr.onpremises.domain.review.Review;
 import com.structurizr.onpremises.domain.review.Session;
 import com.structurizr.onpremises.domain.InputStreamAndContentLength;
+import com.structurizr.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StreamUtils;
@@ -51,10 +52,18 @@ class AmazonWebServicesS3ReviewDao implements ReviewDao {
     }
 
     private AmazonS3 createAmazonS3Client() {
-        BasicAWSCredentials creds = new BasicAWSCredentials(accessKeyId, secretAccessKey);
-        AmazonS3 s3 = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(creds)).withRegion(region).build();
-
-        return s3;
+        if (!StringUtils.isNullOrEmpty(accessKeyId) && !StringUtils.isNullOrEmpty(secretAccessKey)) {
+            log.debug("Creating AWS client with credentials from structurizr.properties file");
+            BasicAWSCredentials credentials = new BasicAWSCredentials(accessKeyId, secretAccessKey);
+            return AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials)).withRegion(region).build();
+        } else {
+            log.debug("Creating AWS client with default credentials provider chain");
+            if (!StringUtils.isNullOrEmpty(region)) {
+                return AmazonS3ClientBuilder.standard().withRegion(region).build();
+            } else {
+                return AmazonS3ClientBuilder.standard().build();
+            }
+        }
     }
 
     @Override
