@@ -279,6 +279,13 @@
                 try {
                     document.getElementById('diagramEditorIframe').contentWindow.structurizr.scripting = undefined;
                     document.getElementById('diagramEditorIframe').contentWindow.structurizr.diagram.onWorkspaceChanged(workspaceChanged);
+                    document.getElementById('diagramEditorIframe').contentWindow.structurizr.diagram.onViewChanged(function(view) {
+                        document.getElementById('diagramEditorIframe').contentWindow.viewChanged(view);
+
+                        if (document.getElementById('viewsList').value !== view) {
+                            document.getElementById('viewsList').value = view;
+                        }
+                    });
                 } catch (e) {
                 }
             }, 2000);
