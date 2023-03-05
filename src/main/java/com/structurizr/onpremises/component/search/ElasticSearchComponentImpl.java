@@ -111,6 +111,10 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
 
                 for (Container container : softwareSystem.getContainers()) {
                     indexDocumentationAndDecisions(workspace, container, container.getDocumentation());
+
+                    for (Component component : container.getComponents()) {
+                        indexDocumentationAndDecisions(workspace, component, component.getDocumentation());
+                    }
                 }
             }
         } catch (Exception e) {

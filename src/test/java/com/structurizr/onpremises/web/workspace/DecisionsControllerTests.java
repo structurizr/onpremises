@@ -268,17 +268,22 @@ public class DecisionsControllerTests extends ControllerTestsBase {
 
     @Test
     public void toScope_ForWorkspace() {
-        assertEquals("*", controller.toScope(null, null));
+        assertEquals("*", controller.toScope(null, null, null));
     }
 
     @Test
     public void toScope_ForSoftwareSystem() {
-        assertEquals("A", controller.toScope("A", null));
+        assertEquals("A", controller.toScope("A", null, null));
     }
 
     @Test
     public void toScope_ForContainer() {
-        assertEquals("A/B", controller.toScope("A", "B"));
+        assertEquals("A/B", controller.toScope("A", "B", null));
+    }
+
+    @Test
+    public void toScope_ForComponent() {
+        assertEquals("A/B/C", controller.toScope("A", "B", "C"));
     }
 
 }

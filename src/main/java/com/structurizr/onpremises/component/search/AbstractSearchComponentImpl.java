@@ -1,6 +1,7 @@
 package com.structurizr.onpremises.component.search;
 
 import com.structurizr.documentation.Decision;
+import com.structurizr.model.Component;
 import com.structurizr.model.Container;
 import com.structurizr.model.Element;
 import com.structurizr.model.SoftwareSystem;
@@ -26,7 +27,9 @@ abstract class AbstractSearchComponentImpl implements SearchComponent {
 
     protected String calculateUrlForSection(Element element, int sectionNumber) throws Exception {
         String url = "";
-        if (element instanceof Container) {
+        if (element instanceof Component) {
+            url = "/" + urlEncode(element.getParent().getParent().getName()) + "/" + urlEncode(element.getParent().getName()) + "/" + urlEncode(element.getName());
+        } else if (element instanceof Container) {
             url = "/" + urlEncode(element.getParent().getName()) + "/" + urlEncode(element.getName());
         } else if (element instanceof SoftwareSystem) {
             url = "/" + urlEncode(element.getName());
@@ -41,7 +44,9 @@ abstract class AbstractSearchComponentImpl implements SearchComponent {
 
     protected String calculateUrlForDecision(Element element, Decision decision) throws Exception {
         String url = "";
-        if (element instanceof Container) {
+        if (element instanceof Component) {
+            url = "/" + urlEncode(element.getParent().getParent().getName()) + "/" + urlEncode(element.getParent().getName()) + "/" + urlEncode(element.getName());
+        } else if (element instanceof Container) {
             url = "/" + urlEncode(element.getParent().getName()) + "/" + urlEncode(element.getName());
         } else if (element instanceof SoftwareSystem) {
             url = "/" + urlEncode(element.getName());

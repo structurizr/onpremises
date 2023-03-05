@@ -43,7 +43,19 @@ public class DecisionsController extends AbstractWorkspaceController {
             @PathVariable("container") String container,
             ModelMap model
     ) {
-        model.addAttribute("scope", toScope(softwareSystem, container));
+        return showPublicDecisions(workspaceId, version, softwareSystem, container, null, model);
+    }
+
+    @RequestMapping(value = "/share/{workspaceId}/decisions/{softwareSystem}/{container}/{component}", method = RequestMethod.GET)
+    public String showPublicDecisions(
+            @PathVariable("workspaceId") long workspaceId,
+            @RequestParam(required = false) String version,
+            @PathVariable("softwareSystem") String softwareSystem,
+            @PathVariable("container") String container,
+            @PathVariable("component") String component,
+            ModelMap model
+    ) {
+        model.addAttribute("scope", toScope(softwareSystem, container, component));
         model.addAttribute("showHeader", true);
 
         return showPublicView(VIEW, workspaceId, version, model, false);
@@ -79,7 +91,20 @@ public class DecisionsController extends AbstractWorkspaceController {
             @PathVariable("token") String token,
             ModelMap model
     ) {
-        model.addAttribute("scope", toScope(softwareSystem, container));
+        return showSharedDecisions(workspaceId, version, softwareSystem, container, null, token, model);
+    }
+
+    @RequestMapping(value = "/share/{workspaceId}/{token}/decisions/{softwareSystem}/{container}/{component}", method = RequestMethod.GET)
+    public String showSharedDecisions(
+            @PathVariable("workspaceId") long workspaceId,
+            @RequestParam(required = false) String version,
+            @PathVariable("softwareSystem") String softwareSystem,
+            @PathVariable("container") String container,
+            @PathVariable("component") String component,
+            @PathVariable("token") String token,
+            ModelMap model
+    ) {
+        model.addAttribute("scope", toScope(softwareSystem, container, component));
         model.addAttribute("showHeader", true);
 
         return showSharedView(VIEW, workspaceId, token, version, model, false);
@@ -113,24 +138,38 @@ public class DecisionsController extends AbstractWorkspaceController {
             @PathVariable("container") String container,
             ModelMap model
     ) {
+        return showAuthenticatedDecisions(workspaceId, version, softwareSystem, container, null, model);
+    }
+
+    @RequestMapping(value = "/workspace/{workspaceId}/decisions/{softwareSystem}/{container}/{component}", method = RequestMethod.GET)
+    public String showAuthenticatedDecisions(
+            @PathVariable("workspaceId") long workspaceId,
+            @RequestParam(required = false) String version,
+            @PathVariable("softwareSystem") String softwareSystem,
+            @PathVariable("container") String container,
+            @PathVariable("component") String component,
+            ModelMap model
+    ) {
         WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(workspaceId);
         if (workspaceMetaData == null) {
             return show404Page(model);
         }
 
-        model.addAttribute("scope", toScope(softwareSystem, container));
+        model.addAttribute("scope", toScope(softwareSystem, container, component));
         model.addAttribute("showHeader", true);
 
         return showAuthenticatedView(VIEW, workspaceMetaData, version, model, false, false);
     }
 
-    String toScope(String softwareSystem, String container) {
-        if (softwareSystem == null && container == null) {
-            return WORKSPACE_SCOPE;
-        } else if (container == null) {
+    String toScope(String softwareSystem, String container, String component) {
+        if (softwareSystem != null && container != null && component != null) {
+            return HtmlUtils.filterHtml(softwareSystem) + "/" + HtmlUtils.filterHtml(container) + "/" + HtmlUtils.filterHtml(component);
+        } else if (softwareSystem != null && container != null) {
+            return HtmlUtils.filterHtml(softwareSystem) + "/" + HtmlUtils.filterHtml(container);
+        } else if (softwareSystem != null) {
             return HtmlUtils.filterHtml(softwareSystem);
         } else {
-            return HtmlUtils.filterHtml(softwareSystem) + "/" + HtmlUtils.filterHtml(container);
+            return WORKSPACE_SCOPE;
         }
     }
     
