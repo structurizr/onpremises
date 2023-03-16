@@ -268,7 +268,7 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
             inputStream = amazonS3.getObject(getRequest).getObjectContent();
 
             Properties properties = new Properties();
-            properties.load(inputStream);
+            properties.load(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 
             return WorkspaceMetaData.fromProperties(workspaceId, properties);
         } catch (Throwable t) {
