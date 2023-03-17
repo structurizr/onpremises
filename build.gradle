@@ -39,7 +39,7 @@ tasks.named('check') {
 
 dependencies {
 
-	implementation 'com.structurizr:structurizr-dsl:1.29.0'
+	implementation 'com.structurizr:structurizr-dsl:1.29.1'
 	implementation 'com.structurizr:structurizr-graphviz:1.8.1'
 
 	implementation 'javax.servlet:javax.servlet-api:3.0.1'
