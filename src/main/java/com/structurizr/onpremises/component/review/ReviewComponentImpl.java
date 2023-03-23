@@ -38,8 +38,9 @@ class ReviewComponentImpl implements ReviewComponent {
             String secretAccessKey = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3ReviewDao.SECRET_ACCESS_KEY_PROPERTY, "");
             String region = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3ReviewDao.REGION_PROPERTY, "");
             String bucketName = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3ReviewDao.BUCKET_NAME_PROPERTY, "");
+            String endpoint = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3ReviewDao.ENDPOINT_PROPERTY, "");
 
-            this.reviewDao = new AmazonWebServicesS3ReviewDao(accessKeyId, secretAccessKey, region, bucketName);
+            this.reviewDao = new AmazonWebServicesS3ReviewDao(accessKeyId, secretAccessKey, region, bucketName, endpoint);
         } else {
             this.reviewDao = new FileSystemReviewDao();
         }

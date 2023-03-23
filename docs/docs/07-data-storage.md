@@ -21,6 +21,7 @@ The basic steps to configure S3 are:
 | `aws-s3.secretAccessKey` | Your AWS API secret access key. |
 | `aws-s3.region` | Your AWS region (e.g. `us-east-1`). |
 | `aws-s3.bucketName` | Your S3 bucket name. |
+| `aws-s3.endpoint` | Your custom S3-compatible endpoint. |
 
 Alternatively, you can leave the `aws-s3.accessKeyId` and `aws-s3.secretAccessKey` parameters unset,
 and the on-premises installation will use the "Default Credential Provider Chain" to search your environment for the credentials, as described at
