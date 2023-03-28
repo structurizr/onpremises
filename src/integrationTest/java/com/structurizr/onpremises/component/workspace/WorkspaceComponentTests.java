@@ -16,7 +16,9 @@ import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.TimeZone;
 
+import static com.structurizr.onpremises.util.DateUtils.UTC_TIME_ZONE;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -35,6 +37,9 @@ public class WorkspaceComponentTests {
 
     @Test
     public void test() throws Exception {
+        SimpleDateFormat sdf = new SimpleDateFormat(FileSystemWorkspaceDao.VERSION_TIMESTAMP_FORMAT);
+        sdf.setTimeZone(TimeZone.getTimeZone(UTC_TIME_ZONE));
+        
         User user = new User("user@example.com", new HashSet<>(), AuthenticationMethod.LOCAL);
         long workspaceId = workspaceComponent.createWorkspace(user);
         assertEquals(1, workspaceId);
@@ -67,10 +72,11 @@ public class WorkspaceComponentTests {
         assertEquals(2, workspaceVersions.size());
         assertNull(workspaceVersions.get(0).getVersionId());
         assertEquals(DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()), DateUtils.formatIsoDate(workspaceVersions.get(0).getLastModifiedDate()));
-        assertEquals(new SimpleDateFormat(FileSystemWorkspaceDao.VERSION_TIMESTAMP_FORMAT).format(version1.getLastModifiedDate()), workspaceVersions.get(1).getVersionId());
+
+        assertEquals(sdf.format(version1.getLastModifiedDate()), workspaceVersions.get(1).getVersionId());
         assertEquals(DateUtils.formatIsoDate(version1.getLastModifiedDate()), DateUtils.formatIsoDate(workspaceVersions.get(1).getLastModifiedDate()));
 
-        json = workspaceComponent.getWorkspace(1, new SimpleDateFormat(FileSystemWorkspaceDao.VERSION_TIMESTAMP_FORMAT).format(version1.getLastModifiedDate()));
+        json = workspaceComponent.getWorkspace(1, sdf.format(version1.getLastModifiedDate()));
         assertEquals(jsonV1, json);
 
         try {

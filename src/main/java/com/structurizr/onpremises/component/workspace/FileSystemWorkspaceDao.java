@@ -16,6 +16,8 @@ import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.structurizr.onpremises.util.DateUtils.UTC_TIME_ZONE;
+
 /**
  * A workspace DAO implementation that uses the local file system.
  */
@@ -186,6 +188,7 @@ class FileSystemWorkspaceDao extends AbstractWorkspaceDao {
     public List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, int maxVersions) {
         List<WorkspaceVersion> versions = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat(VERSION_TIMESTAMP_FORMAT);
+        sdf.setTimeZone(TimeZone.getTimeZone(UTC_TIME_ZONE));
 
         try {
             File workspaceDirectory = getPathToWorkspace(workspaceId);
