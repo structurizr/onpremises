@@ -35,7 +35,7 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
     private static Log log = LogFactory.getLog(ElasticSearchComponentImpl.class);
 
     private static final String INDEX_NAME = "structurizr";
-    private static final String DOCUMENT_TYPE = "document";
+    private static final String DOCUMENT_TYPE = "_doc";
     private static final String WORKSPACE_KEY = "workspace";
 
     private static final int SNIPPET_LENGTH = 400;
