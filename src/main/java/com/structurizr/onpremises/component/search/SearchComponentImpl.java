@@ -13,6 +13,7 @@ class SearchComponentImpl implements SearchComponent {
     private static final String ELASTICSEARCH_PORT_PROPERTY = "elasticsearch.port";
     private static final String ELASTICSEARCH_USERNAME_PROPERTY = "elasticsearch.username";
     private static final String ELASTICSEARCH_PASSWORD_PROPERTY = "elasticsearch.password";
+    private static final String ELASTICSEARCH_DOCUMENT_TYPE_PROPERTY = "elasticsearch.document_type";
 
     private final SearchComponent searchComponent;
 
@@ -24,8 +25,9 @@ class SearchComponentImpl implements SearchComponent {
             String port = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(ELASTICSEARCH_PORT_PROPERTY, "9200");
             String username = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(ELASTICSEARCH_USERNAME_PROPERTY, "");
             String password = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(ELASTICSEARCH_PASSWORD_PROPERTY, "");
+            String documentType = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(ELASTICSEARCH_DOCUMENT_TYPE_PROPERTY, "_doc");
 
-            searchComponent = new ElasticSearchComponentImpl(host, Integer.parseInt(port), protocol, username, password);
+            searchComponent = new ElasticSearchComponentImpl(host, Integer.parseInt(port), protocol, username, password, documentType);
         } else if (NONE.equalsIgnoreCase(searchImplementation)) {
             searchComponent = new NoOpSearchComponentImpl();
         } else {

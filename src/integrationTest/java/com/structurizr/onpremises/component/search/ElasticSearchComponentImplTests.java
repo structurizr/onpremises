@@ -10,7 +10,7 @@ public class ElasticSearchComponentImplTests extends AbstractSearchComponentTest
 
     @BeforeEach
     public void setUp() {
-        searchComponent = new ElasticSearchComponentImpl("localhost", 9200, "http", null, null);
+        searchComponent = new ElasticSearchComponentImpl("localhost", 9200, "http", null, null, "_doc");
         searchComponent.async = false; // disable async indexing for testing
         searchComponent.setIndexName("structurizr-test");
         searchComponent.start();

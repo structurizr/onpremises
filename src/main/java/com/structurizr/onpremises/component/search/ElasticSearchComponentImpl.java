@@ -35,7 +35,7 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
     private static Log log = LogFactory.getLog(ElasticSearchComponentImpl.class);
 
     private static final String INDEX_NAME = "structurizr";
-    private static final String DOCUMENT_TYPE = "_doc";
+    //private static final String DOCUMENT_TYPE = "_doc";
     private static final String WORKSPACE_KEY = "workspace";
 
     private static final int SNIPPET_LENGTH = 400;
@@ -47,16 +47,18 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
     private final String protocol;
     private final String user;
     private final String password;
+    private final String documentType;
     private String indexName = INDEX_NAME;
 
     private RestClient restLowLevelClient;
 
-    ElasticSearchComponentImpl(String host, int port, String protocol, String user, String password) {
+    ElasticSearchComponentImpl(String host, int port, String protocol, String user, String password, String documentType) {
         this.host = host;
         this.port = port;
         this.protocol = protocol;
         this.user = user;
         this.password = password;
+        this.documentType = documentType;
     }
 
     String getIndexName() {
@@ -465,7 +467,7 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
             String jsonString = new ObjectMapper().writeValueAsString(document);
             HttpEntity entity = new NStringEntity(jsonString, ContentType.APPLICATION_JSON);
             String method = "POST";
-            String url = "/" + getIndexName() + "/" + DOCUMENT_TYPE;
+            String url = "/" + getIndexName() + "/" + this.documentType;
 
             if (async) {
                 ResponseListener responseListener = new ResponseListener() {
