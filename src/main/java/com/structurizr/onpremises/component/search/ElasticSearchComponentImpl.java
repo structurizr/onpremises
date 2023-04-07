@@ -23,8 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.elasticsearch.client.*;
 
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -35,7 +34,7 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
     private static Log log = LogFactory.getLog(ElasticSearchComponentImpl.class);
 
     private static final String INDEX_NAME = "structurizr";
-    private static final String DOCUMENT_TYPE = "document";
+    private static String DOCUMENT_TYPE;
     private static final String WORKSPACE_KEY = "workspace";
 
     private static final int SNIPPET_LENGTH = 400;
@@ -445,6 +444,25 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
 
             restLowLevelClient = clientBuilder.build();
         }
+
+        try {
+            // mapping types have been removed in Elasticsearch (https://www.elastic.co/guide/en/elasticsearch/reference/7.17/removal-of-types.html)
+            // so let's try to determine the Elasticsearch version in order to construct URLs that work
+            Request request = new Request("GET", "/");
+            Response response = restLowLevelClient.performRequest(request);
+            String responseBody = EntityUtils.toString(response.getEntity());
+            ObjectMapper objectMapper = new ObjectMapper();
+            objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            ElasticsearchInformation information = objectMapper.readValue(responseBody, ElasticsearchInformation.class);
+            log.debug("Elasticsearch version: " + information.getVersion().getNumber());
+            if (information.getVersion().getNumber().startsWith("6") || information.getVersion().getNumber().startsWith("7")) {
+                DOCUMENT_TYPE = "document";
+            } else {
+                DOCUMENT_TYPE = "_doc";
+            }
+        } catch (Exception e) {
+            log.warn("Couldn't determine Elasticsearch version", e);
+        }
     }
 
     public void stop() {
@@ -568,6 +586,38 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
         request = request.replace("$WORKSPACES$", buf.toString().substring(0, buf.length() - 1));
 
         return request;
+    }
+
+    static class ElasticsearchInformation {
+
+        private ElasticsearchVersion version;
+
+        ElasticsearchInformation() {
+        }
+
+        ElasticsearchVersion getVersion() {
+            return version;
+        }
+
+        void setVersion(ElasticsearchVersion version) {
+            this.version = version;
+        }
+    }
+
+    static class ElasticsearchVersion {
+
+        private String number;
+
+        ElasticsearchVersion() {
+        }
+
+        String getNumber() {
+            return number;
+        }
+
+        void setNumber(String number) {
+            this.number = number;
+        }
     }
 
 }
