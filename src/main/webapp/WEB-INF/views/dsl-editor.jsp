@@ -261,8 +261,8 @@
 
     function resize() {
         var navHeight = $('#editorControls').outerHeight();
-        var navHeight = $('#editorControls').outerHeight();
         $('#sourceTextArea').css('height', (window.innerHeight - navHeight - verticalPadding) + 'px');
+        structurizr.embed.setMaxHeight(window.innerHeight - navHeight - verticalPadding);
     }
 
     function renderStructurizrDiagram() {
