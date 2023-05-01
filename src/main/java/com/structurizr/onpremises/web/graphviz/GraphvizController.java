@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
+import java.nio.file.Files;
 
 @RestController
 public class GraphvizController {
@@ -36,10 +37,14 @@ public class GraphvizController {
             Configuration configuration = Configuration.getInstance();
             if (configuration.isGraphvizEnabled()) {
                 File workspaceDirectory = new File(configuration.getDataDirectory(), "" + workspace.getId());
-                File path = new File(workspaceDirectory, "graphviz");
-                path.mkdirs();
+                File graphvizDirectory = new File(workspaceDirectory, "graphviz");
+                graphvizDirectory.mkdirs();
+                File tmpdir = Files.createTempDirectory(graphvizDirectory.toPath(), "").toFile();
+                System.out.println(tmpdir.getAbsolutePath());
+                tmpdir.mkdirs();
+                tmpdir.deleteOnExit();
 
-                GraphvizAutomaticLayout graphviz = new GraphvizAutomaticLayout(path);
+                GraphvizAutomaticLayout graphviz = new GraphvizAutomaticLayout(tmpdir);
                 graphviz.setRankDirection(findRankDirection(rankDirection));
                 graphviz.setChangePaperSize(resizePaper);
                 graphviz.setRankSeparation(rankSeparation);
@@ -86,6 +91,18 @@ public class GraphvizController {
                     if ((StringUtils.isNullOrEmpty(view) && v.getAutomaticLayout() != null) || v.getKey().equals(view)) {
                         graphviz.apply(v);
                     }
+                }
+
+                try {
+                    File[] files = tmpdir.listFiles();
+                    if (files != null) {
+                        for (File file : files) {
+                            file.delete();
+                        }
+                    }
+                    tmpdir.delete();
+                } catch (Exception e) {
+                    // ignore
                 }
             }
 
