@@ -5,6 +5,7 @@
 <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr-embed.js"></script>
 <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/ace-1.5.0.min.js" charset="utf-8"></script>
 
+<%@ include file="/WEB-INF/fragments/graphviz.jspf" %>
 <%@ include file="/WEB-INF/fragments/tooltip.jspf" %>
 <%@ include file="/WEB-INF/fragments/progress-message.jspf" %>
 <%@ include file="/WEB-INF/fragments/dsl/introduction.jspf" %>
@@ -168,6 +169,15 @@
     });
 
     function workspaceLoaded() {
+        // if automatic layout (with Graphviz) needs to be executed, lets do this first
+        if (graphvizRequired()) {
+            runGraphvizForWorkspace(init);
+        } else {
+            init();
+        }
+    }
+
+    function init() {
         if (structurizr.workspace.getProperty('structurizr.dslEditor') === 'false') {
             alert('The browser-based DSL editor has been disabled for this workspace - please use the Structurizr CLI or Structurizr Lite instead.');
             unsavedChanges = false;
