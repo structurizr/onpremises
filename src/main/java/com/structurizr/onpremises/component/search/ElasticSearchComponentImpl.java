@@ -9,6 +9,8 @@ import com.structurizr.documentation.Section;
 import com.structurizr.model.*;
 import com.structurizr.util.StringUtils;
 import com.structurizr.view.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
@@ -19,11 +21,8 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.nio.entity.NStringEntity;
 import org.apache.http.util.EntityUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.elasticsearch.client.*;
 
-import java.io.IOException;
 import java.util.*;
 
 /**
@@ -31,7 +30,7 @@ import java.util.*;
  */
 class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
 
-    private static Log log = LogFactory.getLog(ElasticSearchComponentImpl.class);
+    private static final Log log = LogFactory.getLog(ElasticSearchComponentImpl.class);
 
     private static final String INDEX_NAME = "structurizr";
     private static String DOCUMENT_TYPE = "document";
