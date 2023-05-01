@@ -40,7 +40,6 @@ public class GraphvizController {
                 File graphvizDirectory = new File(workspaceDirectory, "graphviz");
                 graphvizDirectory.mkdirs();
                 File tmpdir = Files.createTempDirectory(graphvizDirectory.toPath(), "").toFile();
-                System.out.println(tmpdir.getAbsolutePath());
                 tmpdir.mkdirs();
                 tmpdir.deleteOnExit();
 
