@@ -12,6 +12,7 @@ src/main/webapp/static/css/*
 src/main/webapp/static/html/*
 src/main/webapp/static/img/*
 
+src/main/webapp/WEB-INF/fragments/graphviz.jspf
 src/main/webapp/WEB-INF/fragments/progress-message.jspf
 src/main/webapp/WEB-INF/fragments/quick-navigation.jspf
 src/main/webapp/WEB-INF/fragments/tooltip.jspf
