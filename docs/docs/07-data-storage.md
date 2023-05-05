@@ -4,7 +4,7 @@
 
 The default configuration uses the local file system for data storage.
 This is sufficient for a single server installation, as well as for a multi-server installation where you can share a file system between server nodes.
-Alternatively, Amazon Web Services S3 can be used for data storage.
+Alternatively, Amazon Web Services S3 (or an S3 compatible service) can be used for data storage.
 
 ![](embed:Deployment-Example4)
 
