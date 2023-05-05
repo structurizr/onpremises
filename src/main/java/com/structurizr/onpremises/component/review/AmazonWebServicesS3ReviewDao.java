@@ -82,7 +82,6 @@ class AmazonWebServicesS3ReviewDao implements ReviewDao {
             InputStream inputStream = new ByteArrayInputStream(bytes);
 
             ObjectMetadata objectMetadata = new ObjectMetadata();
-            objectMetadata.setSSEAlgorithm(ObjectMetadata.AES_256_SERVER_SIDE_ENCRYPTION);
             objectMetadata.setContentLength(bytes.length);
 
             PutObjectRequest putRequest = new PutObjectRequest(bucketName, objectKey, inputStream, objectMetadata);
@@ -129,7 +128,6 @@ class AmazonWebServicesS3ReviewDao implements ReviewDao {
             InputStream inputStream = new ByteArrayInputStream(bytes);
 
             ObjectMetadata objectMetadata = new ObjectMetadata();
-            objectMetadata.setSSEAlgorithm(ObjectMetadata.AES_256_SERVER_SIDE_ENCRYPTION);
             objectMetadata.setContentLength(bytes.length);
 
             PutObjectRequest putRequest = new PutObjectRequest(bucketName, objectKey, inputStream, objectMetadata);
