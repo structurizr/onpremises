@@ -28,6 +28,7 @@ class AmazonWebServicesS3ReviewDao implements ReviewDao {
     static final String SECRET_ACCESS_KEY_PROPERTY = "aws-s3.secretAccessKey";
     static final String REGION_PROPERTY = "aws-s3.region";
     static final String BUCKET_NAME_PROPERTY = "aws-s3.bucketName";
+    static final String ENDPOINT_PROPERTY = "aws-s3.endpoint";
 
     private static final String TYPE_TAG = "type";
     private static final String IMAGE_TYPE = "image";
@@ -39,14 +40,16 @@ class AmazonWebServicesS3ReviewDao implements ReviewDao {
     private final String secretAccessKey;
     private final String region;
     private final String bucketName;
+    private final String endpoint;
 
     private final AmazonS3 amazonS3;
 
-    AmazonWebServicesS3ReviewDao(String accessKeyId, String secretAccessKey, String region, String bucketName) {
+    AmazonWebServicesS3ReviewDao(String accessKeyId, String secretAccessKey, String region, String bucketName, String endpoint) {
         this.accessKeyId = accessKeyId;
         this.secretAccessKey = secretAccessKey;
         this.region = region;
         this.bucketName = bucketName;
+        this.endpoint = endpoint;
 
         this.amazonS3 = createAmazonS3Client();
     }
@@ -55,6 +58,9 @@ class AmazonWebServicesS3ReviewDao implements ReviewDao {
         if (!StringUtils.isNullOrEmpty(accessKeyId) && !StringUtils.isNullOrEmpty(secretAccessKey)) {
             log.debug("Creating AWS client with credentials from structurizr.properties file");
             BasicAWSCredentials credentials = new BasicAWSCredentials(accessKeyId, secretAccessKey);
+            if (!StringUtils.isNullOrEmpty(endpoint)) {
+                return AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials)).withEndpointConfiguration(new AmazonS3ClientBuilder.EndpointConfiguration(endpoint, region)).build();
+            }
             return AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials)).withRegion(region).build();
         } else {
             log.debug("Creating AWS client with default credentials provider chain");

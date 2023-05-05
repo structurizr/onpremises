@@ -46,8 +46,9 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
             String secretAccessKey = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3WorkspaceDao.SECRET_ACCESS_KEY_PROPERTY, "");
             String region = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3WorkspaceDao.REGION_PROPERTY, "");
             String bucketName = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3WorkspaceDao.BUCKET_NAME_PROPERTY, "");
+            String endpoint = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3WorkspaceDao.ENDPOINT_PROPERTY, "");
 
-            this.workspaceDao = new AmazonWebServicesS3WorkspaceDao(accessKeyId, secretAccessKey, region, bucketName);
+            this.workspaceDao = new AmazonWebServicesS3WorkspaceDao(accessKeyId, secretAccessKey, region, bucketName, endpoint);
         } else {
             this.workspaceDao = new FileSystemWorkspaceDao(Configuration.getInstance().getDataDirectory());
         }
