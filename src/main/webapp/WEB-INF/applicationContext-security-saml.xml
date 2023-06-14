@@ -71,7 +71,7 @@
             <bean class="org.springframework.security.saml.websso.WebSSOProfileOptions">
                 <property name="nameID" value="urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress" />
                 <property name="allowCreate" value="false" />
-                <property name="forceAuthN" value="false" />
+                <property name="forceAuthN" value="${structurizr.saml.forceAuthentication:false}" />
                 <property name="includeScoping" value="false"/>
             </bean>
         </property>

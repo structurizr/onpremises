@@ -135,6 +135,12 @@ If you make any changes to the SAML configuration, you will need to restart the 
 By default, Spring Security checks that you've been authenticated with your IdP within the past 2 hours (7200 seconds).
 If this value is too low, you can override it via a property named `structurizr.saml.maxAuthenticationAge` in your `structurizr.properties` file (the value is the number of seconds, e.g. 86400 seconds for 24 hours).
 
+#### Force authentication
+
+If you see HTTP 405 errors when trying to sign in (particularly after signing in already),
+you can set Structurizr to force authentication by setting a property named `structurizr.saml.forceAuthentication`
+in your `structurizr.properties` file (`true`, or `false` by default).
+
 Here are some guides that show how to integrate with different identity providers.
 
 #### Auth0
@@ -150,8 +156,8 @@ Here are some basic instructions for integration with Auth0. In this example, th
 #### Azure Active Directory
 
 Here are some basic instructions for integration with Azure Active Directory. In this example, the Structurizr on-premises installation was running at `http://localhost:7080`.
-See [SSO :: 500 Error after initial authentication](https://github.com/structurizr/onpremises/issues/8) if your SAML integration stops working after a short period of time.
-You may need to change the [max authentication age](#max-authentication-age).
+See [SSO :: 500 Error after initial authentication](https://github.com/structurizr/onpremises/issues/8) if your SAML integration stops working after a short period of time -
+you may need to change the [max authentication age](#max-authentication-age) or [force authentication](#force-authentication).
 
 | Step | Description |
 | ---- | ----------- |
