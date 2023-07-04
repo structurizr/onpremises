@@ -7,6 +7,7 @@ import com.structurizr.onpremises.util.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -19,6 +20,7 @@ import java.util.Properties;
 public class ContextLoaderListener implements ServletContextListener {
 
     private static final String LOGS_DIRECTORY_NAME = "logs";
+    private static final String LOG4J_PROPERTIES_FILENAME = "log4j2.properties";
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
@@ -42,8 +44,17 @@ public class ContextLoaderListener implements ServletContextListener {
             e.printStackTrace();
         }
 
-        ((org.apache.logging.log4j.core.LoggerContext) LogManager.getContext(false)).reconfigure();
-
+        // reconfigure the logging system
+        LoggerContext loggerContext = (LoggerContext)LogManager.getContext(false);
+        File log4jProperties = new File(structurizrDataDirectory, LOG4J_PROPERTIES_FILENAME);
+        if (log4jProperties.exists()) {
+            // if a log4j2.properties file exists inside the Structurizr data directory, use that
+            loggerContext.setConfigLocation(log4jProperties.toURI());
+            loggerContext.reconfigure();
+        } else {
+            // otherwise use the built-in version, which resides on the application classpath
+            loggerContext.reconfigure();
+        }
 
         File logDirectory = new File(structurizrDataDirectory, LOGS_DIRECTORY_NAME);
         if (!logDirectory.exists()) {

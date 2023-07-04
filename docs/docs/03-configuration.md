@@ -43,3 +43,17 @@ There are several options for running the on-premises installation over HTTPS, i
 If, after configuring HTTPS, you find that the on-premises installation is still trying to use some HTTP URLs
 or the web pages don't look right (e.g. styles are not loading correctly, images are oversize, etc),
 you will likely need to specify the correct HTTPS URL via the `structurizr.url` property (see above).
+
+### Logging
+
+The `log4j2` framework is used for logging and, by default, the logging level is set to `info`.
+If you're having an issue and would like to change the logging level:
+
+1. Copy the [log4j2.properties](https://github.com/structurizr/onpremises/blob/main/src/main/resources/log4j2.properties) file into your Structurizr data directory.
+2. Modify the logging levels as needed.
+3. Restart your on-premises installation.
+
+If you're specifically having issues with authentication via SAML, you can make the following changes:
+
+1. Change line 1 to `status = debug`
+2. Change line 21 to `logger.springSecurity.level = debug`
