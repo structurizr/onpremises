@@ -35,3 +35,25 @@ The following headers may need to be disabled in your reverse proxy if they are 
 Some web servers (e.g. Apache Tomcat) restrict the quantity of data that can be sent in a HTTP POST request.
 If you find that creating diagram reviews fails, you may need to change this configuration.
 For Apache Tomcat, you can modify the `maxPostSize` parameter for your connector in the `server.xml` file (see [https://tomcat.apache.org/tomcat-9.0-doc/config/http.html](https://tomcat.apache.org/tomcat-9.0-doc/config/http.html)).
+
+### SAML integration
+
+The variation between identity providers and how organisations configure identity providers can make it difficult
+to configure SAML integration, and even the smallest misconfiguration can cause errors, most of which you'll see in
+the logs as a HTTP 405, `Request method 'POST' not supported` message. Some recommended steps to resolve this are:
+
+1. Configure a non-secure (i.e. HTTP) `localhost` instance of the on-premises installation against your IdP to ascertain whether the problems you are seeing are related to your hosting environment (i.e. HTTPS, load balancers, reverse proxies, DNS, etc).
+2. Debug the SAML handshake with one of the available browser plugins.
+3. Enable debug on the on-premises installation to see the underlying error message (see [Logging](#logging)).
+
+##### Max authentication age
+
+By default, Spring Security checks that you've been authenticated with your IdP within the past 2 hours (7200 seconds).
+If this value is too low, you can override it via a property named `structurizr.saml.maxAuthenticationAge` in your `structurizr.properties` file (the value is the number of seconds, e.g. 86400 seconds for 24 hours).
+
+##### Force authentication
+
+If you see intermittent HTTP 405 errors when trying to sign in (particularly after signing in already),
+you can set Structurizr to force authentication by setting a property named `structurizr.saml.forceAuthentication`
+in your `structurizr.properties` file (`true`, or `false` by default).
+
