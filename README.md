@@ -22,8 +22,12 @@ git clone https://github.com/structurizr/onpremises.git structurizr-onpremises
 git clone https://github.com/structurizr/ui.git structurizr-ui
 cd structurizr-onpremises
 ./ui.sh
-./gradlew build
+./gradlew clean build
 ```
+
+The integration tests use Testcontainers to start an Elasticsearch instance. If you don't have Docker installed, you can use
+`./gradlew clean build -x integrationTest` to exclude the integration tests.
+
 
 If successful, you will see a file named `structurizr-onpremises.war` in `build/libs`.
 To then build a Docker image:
