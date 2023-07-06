@@ -37,16 +37,6 @@ public class Configuration extends ConfigLookup {
         if (!StringUtils.isNullOrEmpty(commaSeparatedUsersAndRoles)) {
             setAdminUsersAndRoles(commaSeparatedUsersAndRoles.split(","));
         }
-
-        try {
-            ProcessBuilder processBuilder = new ProcessBuilder();
-            processBuilder.command("dot", "--version");
-            Process process = processBuilder.start();
-            process.waitFor();
-            setGraphvizEnabled(true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public static Configuration getInstance() {
@@ -120,7 +110,7 @@ public class Configuration extends ConfigLookup {
         return graphvizEnabled;
     }
 
-    void setGraphvizEnabled(boolean graphvizEnabled) {
+    public void setGraphvizEnabled(boolean graphvizEnabled) {
         this.graphvizEnabled = graphvizEnabled;
     }
 

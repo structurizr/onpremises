@@ -2,6 +2,7 @@ package com.structurizr.onpremises.web;
 
 import com.structurizr.Workspace;
 import com.structurizr.dsl.StructurizrDslParser;
+import com.structurizr.graphviz.GraphvizAutomaticLayout;
 import com.structurizr.importer.documentation.DefaultDocumentationImporter;
 import com.structurizr.onpremises.util.*;
 import org.apache.commons.logging.Log;
@@ -88,7 +89,7 @@ public class ContextLoaderListener implements ServletContextListener {
             log.info("|_____/ \\__|_|   \\__,_|\\___|\\__|\\__,_|_|  |_/___|_|   ");
             log.info("                                                      ");
             log.info("Structurizr on-premises installation");
-            log.info(" - build: " + new Version().getBuildNumber() + " (" + DateUtils.formatIsoDate(new Version().getBuildTimestamp()));
+            log.info(" - build: " + new Version().getBuildNumber() + " (" + DateUtils.formatIsoDate(new Version().getBuildTimestamp()) + ")");
 
             try {
                 log.info(" - structurizr-java: v" + Class.forName(Workspace.class.getCanonicalName()).getPackage().getImplementationVersion());
@@ -108,6 +109,12 @@ public class ContextLoaderListener implements ServletContextListener {
                 e.printStackTrace();
             }
 
+            try {
+                log.info(" - structurizr-graphviz: v" + Class.forName(GraphvizAutomaticLayout.class.getCanonicalName()).getPackage().getImplementationVersion());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
             log.info("Data directory: " + structurizrDataDirectory + " (r: " + structurizrDataDirectory.canRead() + "; w: " + structurizrDataDirectory.canWrite() + "; x: " + structurizrDataDirectory.canExecute() + ")");
             log.info("URL: " + Configuration.getInstance().getWebUrl());
             log.info("Memory: used=" + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024)) + "MB; free=" + (Runtime.getRuntime().freeMemory() / (1024 * 1024)) + "MB; total=" + (Runtime.getRuntime().totalMemory() / (1024 * 1024)) + "MB; max=" + (Runtime.getRuntime().maxMemory() / (1024 * 1024)) + "MB");
@@ -116,7 +123,25 @@ public class ContextLoaderListener implements ServletContextListener {
             log.info("Session: " + Configuration.getInstance().getSessionVariant());
             log.info("Data storage: " + Configuration.getInstance().getDataStorageImplementationName());
             log.info("Search: " + Configuration.getInstance().getSearchImplementationName());
-            log.info("dot: " + Configuration.getInstance().isGraphvizEnabled());
+
+            try {
+                ProcessBuilder processBuilder = new ProcessBuilder();
+                processBuilder.command("dot", "-V");
+                Process process = processBuilder.start();
+                int exitCode = process.waitFor();
+
+                String input = new String(process.getInputStream().readAllBytes());
+                String error = new String(process.getErrorStream().readAllBytes());
+                Configuration.getInstance().setGraphvizEnabled(exitCode == 0);
+
+                log.debug("Running: dot -V");
+                log.debug("stdout: " + input);
+                log.debug("stderr: " + error);
+            } catch (Exception e) {
+                log.error(e);
+            }
+            log.info("Graphviz (dot): " + Configuration.getInstance().isGraphvizEnabled());
+
             log.info("DSL editor: " + Configuration.getInstance().isDslEditorEnabled());
             log.info("Safe mode: " + Configuration.getInstance().isSafeMode());
 
