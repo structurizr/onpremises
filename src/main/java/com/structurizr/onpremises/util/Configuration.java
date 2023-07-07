@@ -19,6 +19,7 @@ public class Configuration extends ConfigLookup {
     private boolean graphvizEnabled = false;
     private boolean dslEditorEnabled = false;
     private boolean safeMode = true;
+    private boolean internetConnection = true;
 
     private static Configuration INSTANCE;
 
@@ -32,6 +33,7 @@ public class Configuration extends ConfigLookup {
         setWebUrl(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.URL_PROPERTY, ""));
         setDslEditorEnabled(Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.DSL_EDITOR_PROPERTY, "false")));
         setSafeMode(Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAFE_MODE_PROPERTY, "true")));
+        setInternetConnection(Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.INTERNET_CONNECTION_PROPERTY, "true")));
 
         String commaSeparatedUsersAndRoles = getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.ADMIN_USERS_AND_ROLES_PROPERTY, "");
         if (!StringUtils.isNullOrEmpty(commaSeparatedUsersAndRoles)) {
@@ -120,6 +122,14 @@ public class Configuration extends ConfigLookup {
 
     public void setSafeMode(boolean safeMode) {
         this.safeMode = safeMode;
+    }
+
+    public boolean hasInternetConnection() {
+        return internetConnection;
+    }
+
+    public void setInternetConnection(boolean internetConnection) {
+        this.internetConnection = internetConnection;
     }
 
     public boolean isDslEditorEnabled() {

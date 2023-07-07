@@ -119,6 +119,7 @@ public class ContextLoaderListener implements ServletContextListener {
             log.info("URL: " + Configuration.getInstance().getWebUrl());
             log.info("Memory: used=" + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024)) + "MB; free=" + (Runtime.getRuntime().freeMemory() / (1024 * 1024)) + "MB; total=" + (Runtime.getRuntime().totalMemory() / (1024 * 1024)) + "MB; max=" + (Runtime.getRuntime().maxMemory() / (1024 * 1024)) + "MB");
             log.info("");
+            log.info("Internet connection: " + Configuration.getInstance().hasInternetConnection());
             log.info("Authentication: " + Configuration.getInstance().getAuthenticationVariant());
             log.info("Session: " + Configuration.getInstance().getSessionVariant());
             log.info("Data storage: " + Configuration.getInstance().getDataStorageImplementationName());

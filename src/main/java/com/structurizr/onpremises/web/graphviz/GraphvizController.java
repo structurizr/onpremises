@@ -36,10 +36,16 @@ public class GraphvizController {
             Configuration configuration = Configuration.getInstance();
             if (configuration.isGraphvizEnabled()) {
                 Workspace workspace = WorkspaceUtils.fromJson(json);
-                try {
-                    ThemeUtils.loadThemes(workspace);
-                } catch (Exception e) {
-                    log.warn("Ignoring themes: " + e.getMessage());
+
+                if (configuration.hasInternetConnection()) {
+                    log.debug("Loading themes");
+                    try {
+                        ThemeUtils.loadThemes(workspace);
+                    } catch (Exception e) {
+                        log.warn("Ignoring themes: " + e.getMessage());
+                    }
+                } else {
+                    log.debug("No internet connection - ignoring themes");
                 }
 
                 File workspaceDirectory = new File(configuration.getDataDirectory(), "" + workspace.getId());
