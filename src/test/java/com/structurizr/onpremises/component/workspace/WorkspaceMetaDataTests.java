@@ -242,4 +242,10 @@ public class WorkspaceMetaDataTests {
         assertEquals("user4,user5,user6", properties.getProperty(WorkspaceMetaData.WRITE_USERS_AND_ROLES_PROPERTY));
     }
 
+    @Test
+    public void fromProperties_DefaultsLastModifiedDateWhenNotSet() throws Exception {
+        WorkspaceMetaData workspace = WorkspaceMetaData.fromProperties(123, new Properties());
+        assertEquals(DateUtils.parseIsoDate("1970-01-01T00:00:00Z"), workspace.getLastModifiedDate());
+    }
+
 }

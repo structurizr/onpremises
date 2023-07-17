@@ -320,7 +320,12 @@ public class WorkspaceMetaData {
         workspace.setLastModifiedUser(properties.getProperty(LAST_MODIFIED_USER_PROPERTY));
         workspace.setLastModifiedAgent(properties.getProperty(LAST_MODIFIED_AGENT_PROPERTY));
         try {
-            workspace.setLastModifiedDate(DateUtils.parseIsoDate(properties.getProperty(LAST_MODIFIED_DATE_PROPERTY)));
+            String lastModifiedDateAsString = properties.getProperty(LAST_MODIFIED_DATE_PROPERTY);
+            if (!StringUtils.isNullOrEmpty(lastModifiedDateAsString)) {
+                workspace.setLastModifiedDate(DateUtils.parseIsoDate(lastModifiedDateAsString));
+            } else {
+                workspace.setLastModifiedDate(new Date(0));
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
