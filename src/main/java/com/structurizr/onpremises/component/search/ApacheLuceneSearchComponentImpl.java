@@ -61,6 +61,14 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
 
     @Override
     public void start() {
+        createIndexDirectory();
+    }
+
+    @Override
+    public void stop() {
+    }
+
+    private void createIndexDirectory() {
         if (!indexDirectory.exists()) {
             try {
                 Files.createDirectory(indexDirectory.toPath());
@@ -71,12 +79,9 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
     }
 
     @Override
-    public void stop() {
-    }
-
-    @Override
     public void clear() {
         FileSystemUtils.deleteRecursively(indexDirectory);
+        createIndexDirectory();
     }
 
     @Override
