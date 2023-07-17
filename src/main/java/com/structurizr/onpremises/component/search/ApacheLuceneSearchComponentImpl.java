@@ -75,6 +75,11 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
     }
 
     @Override
+    public void clear() {
+        FileSystemUtils.deleteRecursively(indexDirectory);
+    }
+
+    @Override
     public void index(Workspace workspace) {
         try {
             Analyzer analyzer = new StandardAnalyzer();

@@ -67,4 +67,8 @@ class SearchComponentImpl implements SearchComponent {
         searchComponent.delete(workspaceId);
     }
 
+    @Override
+    public void clear() throws SearchComponentException {
+        searchComponent.clear();
+    }
 }

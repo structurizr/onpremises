@@ -40,4 +40,8 @@ class NoOpSearchComponentImpl implements SearchComponent {
     public void delete(long workspaceId) {
     }
 
+    @Override
+    public void clear() throws SearchComponentException {
+    }
+
 }

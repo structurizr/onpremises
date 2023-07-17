@@ -26,4 +26,6 @@ public interface SearchComponent {
 
     void delete(long workspaceId) throws SearchComponentException;
 
+    void clear() throws SearchComponentException;
+
 }
