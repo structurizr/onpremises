@@ -86,13 +86,15 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
 
     @Override
     public void index(Workspace workspace) {
+        IndexWriter writer = null;
+
         try {
             Analyzer analyzer = new StandardAnalyzer();
             IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
             iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
 
             Directory dir = FSDirectory.open(indexDirectory.toPath());
-            IndexWriter writer = new IndexWriter(dir, iwc);
+            writer = new IndexWriter(dir, iwc);
 
             delete(workspace.getId(), writer);
 
@@ -100,8 +102,8 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
             doc.add(new StoredField(URL_KEY, ""));
             doc.add(new TextField(WORKSPACE_KEY, toString(workspace.getId()), Field.Store.YES));
             doc.add(new TextField(TYPE_KEY, DocumentType.WORKSPACE, Field.Store.YES));
-            doc.add(new StoredField(NAME_KEY, workspace.getName()));
-            doc.add(new StoredField(DESCRIPTION_KEY, workspace.getDescription()));
+            doc.add(new StoredField(NAME_KEY, toString(workspace.getName())));
+            doc.add(new StoredField(DESCRIPTION_KEY, toString(workspace.getDescription())));
             doc.add(new TextField(CONTENT_KEY, appendAll(workspace.getName(), workspace.getDescription()), Field.Store.NO));
             writer.addDocument(doc);
 
@@ -141,9 +143,17 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
                 }
             }
 
-            writer.close();
         } catch (Exception e) {
+            e.printStackTrace();
             log.error(e);
+        } finally {
+            try {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (IOException e) {
+                log.error(e);
+            }
         }
     }
 
@@ -152,8 +162,8 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
         doc.add(new StoredField(URL_KEY, DIAGRAMS_PATH + "#" + view.getKey()));
         doc.add(new TextField(WORKSPACE_KEY, toString(workspace.getId()), Field.Store.YES));
         doc.add(new TextField(TYPE_KEY, DocumentType.DIAGRAM, Field.Store.YES));
-        doc.add(new StoredField(NAME_KEY, view.getName()));
-        doc.add(new StoredField(DESCRIPTION_KEY, view.getDescription() != null ? view.getDescription() : ""));
+        doc.add(new StoredField(NAME_KEY, toString(view.getName())));
+        doc.add(new StoredField(DESCRIPTION_KEY, toString(view.getDescription())));
 
         StringBuilder content = new StringBuilder();
 
@@ -428,29 +438,34 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
 
     @Override
     public void delete(long workspaceId) {
+        IndexWriter indexWriter = null;
+
         try {
             Analyzer analyzer = new StandardAnalyzer();
             IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
             iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
 
             Directory dir = FSDirectory.open(indexDirectory.toPath());
-            IndexWriter indexWriter = new IndexWriter(dir, iwc);
+            indexWriter = new IndexWriter(dir, iwc);
 
             delete(workspaceId, indexWriter);
-
-            indexWriter.close();
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             log.error(e);
+        } finally {
+            try {
+                if (indexWriter != null) {
+                    indexWriter.close();
+                }
+            } catch (IOException e) {
+                log.error(e);
+            }
         }
     }
 
-    private void delete(long workspaceId, IndexWriter indexWriter) {
-        try {
-            Term workspaceIdTerm = new Term(WORKSPACE_KEY, toString(workspaceId));
-            indexWriter.deleteDocuments(workspaceIdTerm);
-        } catch (IOException e) {
-            log.error(e);
-        }
+    private void delete(long workspaceId, IndexWriter indexWriter) throws Exception {
+        Term workspaceIdTerm = new Term(WORKSPACE_KEY, toString(workspaceId));
+        indexWriter.deleteDocuments(workspaceIdTerm);
     }
 
     @Override

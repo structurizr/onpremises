@@ -74,8 +74,8 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
             document.setUrl("");
             document.setWorkspace(toString(workspace.getId()));
             document.setType(DocumentType.WORKSPACE);
-            document.setName(workspace.getName());
-            document.setDescription(workspace.getDescription());
+            document.setName(toString(workspace.getName()));
+            document.setDescription(toString(workspace.getDescription()));
             document.setContent(appendAll(workspace.getName(), workspace.getDescription()));
 
             sendIndexRequest(document);

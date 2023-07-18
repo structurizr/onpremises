@@ -5,6 +5,7 @@ import com.structurizr.model.Component;
 import com.structurizr.model.Container;
 import com.structurizr.model.Element;
 import com.structurizr.model.SoftwareSystem;
+import com.structurizr.util.StringUtils;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -61,6 +62,14 @@ abstract class AbstractSearchComponentImpl implements SearchComponent {
         // 1 -> 0000000000000001 ... this is done so that we can search for specific IDs, rather than all including '1'
         NumberFormat format = new DecimalFormat("0000000000000000");
         return format.format(workspaceId);
+    }
+
+    protected String toString(String s) {
+        if (StringUtils.isNullOrEmpty(s)) {
+            return "";
+        } else {
+            return s;
+        }
     }
 
 }

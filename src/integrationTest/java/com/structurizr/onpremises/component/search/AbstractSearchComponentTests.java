@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public abstract class AbstractSearchComponentTests {
 
     protected abstract SearchComponent getSearchComponent();
-    
+
     @Test
     public void index_AddsTheWorkspaceToTheSearchIndex() throws Exception {
         Workspace workspace = new Workspace("Name", "Description");
@@ -34,6 +34,23 @@ public abstract class AbstractSearchComponentTests {
         assertEquals("", result.getUrl());
         assertEquals("Name", result.getName());
         assertEquals("Description", result.getDescription());
+    }
+
+    @Test
+    public void index_AddsTheWorkspaceToTheSearchIndex_WhenFieldsAreNull() throws Exception {
+        Workspace workspace = new Workspace("Name", null); // null description
+        workspace.setId(12345);
+        getSearchComponent().index(workspace);
+
+        List<SearchResult> results = getSearchComponent().search("name", null, Collections.singleton(12345L));
+        assertEquals(1, results.size());
+
+        SearchResult result = results.get(0);
+        assertEquals(12345, result.getWorkspaceId());
+        assertEquals("workspace", result.getType());
+        assertEquals("", result.getUrl());
+        assertEquals("Name", result.getName());
+        assertEquals("", result.getDescription());
     }
 
     @Test
