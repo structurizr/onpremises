@@ -53,7 +53,7 @@ Delete the following if they exist:
 
 #### Download/copy the on-premises installation file
 
-Download the `structurizr-onpremises-xxxx.war` file from [https://structurizr.com/help/on-premises](https://structurizr.com/help/on-premises),
+Download the `structurizr-onpremises.war` file from [https://github.com/structurizr/onpremises/releases](https://github.com/structurizr/onpremises/releases),
 move it to the `TOMCAT_HOME/webapps` directory,
 and rename it to `ROOT.war` (the on-premises installation must be installed as the root web application, and is not designed to work otherwise).
 
