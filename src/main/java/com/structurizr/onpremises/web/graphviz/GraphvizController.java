@@ -26,7 +26,7 @@ public class GraphvizController {
     @PostMapping(value = "/graphviz", consumes = "application/json", produces = "application/json; charset=UTF-8")
     public String post(@RequestBody String json,
                        @RequestParam(required = false) String view,
-                       @RequestParam(required = false, defaultValue = "TB") String rankDirection,
+                       @RequestParam(required = false, defaultValue = "TopBottom") RankDirection rankDirection,
                        @RequestParam(required = false, defaultValue = "true") boolean resizePaper,
                        @RequestParam(required = false, defaultValue = "300") int rankSeparation,
                        @RequestParam(required = false, defaultValue = "300") int nodeSeparation,
@@ -57,7 +57,7 @@ public class GraphvizController {
                     log.debug("Graphviz working directory is " + tmpdir.getAbsolutePath());
 
                     GraphvizAutomaticLayout graphviz = new GraphvizAutomaticLayout(tmpdir);
-                    graphviz.setRankDirection(findRankDirection(rankDirection));
+                    graphviz.setRankDirection(rankDirection);
                     graphviz.setChangePaperSize(resizePaper);
                     graphviz.setRankSeparation(rankSeparation);
                     graphviz.setNodeSeparation(nodeSeparation);
@@ -128,16 +128,6 @@ public class GraphvizController {
             e.printStackTrace();
             return e.getMessage();
         }
-    }
-
-    private RankDirection findRankDirection(String code) {
-        for (RankDirection rankDirection : RankDirection.values()) {
-            if (rankDirection.getCode().equals(code)) {
-                return rankDirection;
-            }
-        }
-
-        return RankDirection.TopBottom;
     }
 
 }
