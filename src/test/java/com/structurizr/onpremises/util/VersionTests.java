@@ -11,7 +11,6 @@ public class VersionTests {
         Version version = new Version();
         assertNotNull(version.getBuildNumber());
         assertNotNull(version.getBuildTimestamp());
-        assertNotNull(version.getGitCommit());
    }
 
 }
