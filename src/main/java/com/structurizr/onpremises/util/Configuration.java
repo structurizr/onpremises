@@ -15,6 +15,7 @@ public class Configuration extends ConfigLookup {
     private Set<String> adminUsersAndRoles = new HashSet<>();
 
     private String encryptionPassphrase;
+    private String apiKey;
 
     private boolean graphvizEnabled = false;
     private boolean dslEditorEnabled = false;
@@ -34,6 +35,7 @@ public class Configuration extends ConfigLookup {
         setDslEditorEnabled(Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.DSL_EDITOR_PROPERTY, "false")));
         setSafeMode(Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAFE_MODE_PROPERTY, "true")));
         setInternetConnection(Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.INTERNET_CONNECTION_PROPERTY, "true")));
+        setApiKey(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.API_KEY_PROPERTY, ""));
 
         String commaSeparatedUsersAndRoles = getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.ADMIN_USERS_AND_ROLES_PROPERTY, "");
         if (!StringUtils.isNullOrEmpty(commaSeparatedUsersAndRoles)) {
@@ -51,6 +53,14 @@ public class Configuration extends ConfigLookup {
 
     void setEncryptionPassphrase(String encryptionPassphrase) {
         this.encryptionPassphrase = encryptionPassphrase;
+    }
+
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
     }
 
     public String getWebUrl() {

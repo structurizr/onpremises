@@ -5,6 +5,7 @@ import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.graphviz.GraphvizAutomaticLayout;
 import com.structurizr.importer.documentation.DefaultDocumentationImporter;
 import com.structurizr.onpremises.util.*;
+import com.structurizr.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.logging.log4j.LogManager;
@@ -121,6 +122,7 @@ public class ContextLoaderListener implements ServletContextListener {
             log.info("");
             log.info("Internet connection: " + Configuration.getInstance().hasInternetConnection());
             log.info("Authentication: " + Configuration.getInstance().getAuthenticationVariant());
+            log.info("API key: " + !StringUtils.isNullOrEmpty(Configuration.getInstance().getApiKey()));
             log.info("Session: " + Configuration.getInstance().getSessionVariant());
             log.info("Data storage: " + Configuration.getInstance().getDataStorageImplementationName());
             log.info("Search: " + Configuration.getInstance().getSearchImplementationName());

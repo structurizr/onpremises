@@ -11,6 +11,7 @@ public class StructurizrProperties {
 
     public static final String URL_PROPERTY = "structurizr.url";
     public static final String ENCRYPTION_PASSPHRASE_PROPERTY = "structurizr.encryption";
+    public static final String API_KEY_PROPERTY = "structurizr.apiKey";
     public static final String ADMIN_USERS_AND_ROLES_PROPERTY = "structurizr.admin";
     public static final String MAX_WORKSPACE_VERSIONS_PROPERTY = "structurizr.maxWorkspaceVersions";
     public static final String DSL_EDITOR_PROPERTY = "structurizr.dslEditor";
