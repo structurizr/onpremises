@@ -2,15 +2,20 @@ package com.structurizr.onpremises.util;
 
 import com.structurizr.onpremises.component.search.SearchComponent;
 import com.structurizr.onpremises.component.workspace.WorkspaceComponent;
+import com.structurizr.onpremises.plugin.WorkspaceEventListener;
 import com.structurizr.util.StringUtils;
 
 import java.io.File;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 public class Configuration extends ConfigLookup {
+
+    private static final String PLUGINS_DIRECTORY_NAME = "plugins";
 
     private File dataDirectory;
     private String webUrl;
@@ -24,6 +29,8 @@ public class Configuration extends ConfigLookup {
     private boolean internetConnection = true;
 
     private final Map<String,Boolean> features = new HashMap<>();
+
+    private WorkspaceEventListener workspaceEventListener;
 
     private static Configuration INSTANCE;
 
@@ -42,6 +49,16 @@ public class Configuration extends ConfigLookup {
         String commaSeparatedUsersAndRoles = getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.ADMIN_USERS_AND_ROLES_PROPERTY, "");
         if (!StringUtils.isNullOrEmpty(commaSeparatedUsersAndRoles)) {
             setAdminUsersAndRoles(commaSeparatedUsersAndRoles.split(","));
+        }
+
+        try {
+            String workspaceEventListenerClassName = getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.WORKSPACE_EVENT_LISTENER_PLUGIN_PROPERTY, "");
+            if (!StringUtils.isNullOrEmpty(workspaceEventListenerClassName)) {
+                Class clazz = loadClass(workspaceEventListenerClassName);
+                workspaceEventListener = (WorkspaceEventListener)clazz.getDeclaredConstructor().newInstance();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         features.put(Features.UI_WORKSPACE_USERS, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.UI_WORKSPACE_USERS, "true")));
@@ -208,6 +225,36 @@ public class Configuration extends ConfigLookup {
 
     public boolean isFeatureEnabled(String feature) {
         return features.getOrDefault(feature, true);
+    }
+
+    protected Class loadClass(String fqn) throws Exception {
+        File pluginsDirectory = new File(dataDirectory, PLUGINS_DIRECTORY_NAME);
+        URL[] urls = new URL[0];
+
+        if (pluginsDirectory.exists()) {
+            File[] jarFiles = pluginsDirectory.listFiles((dir, name) -> name.endsWith(".jar"));
+            if (jarFiles != null) {
+                urls = new URL[jarFiles.length];
+                for (int i = 0; i < jarFiles.length; i++) {
+                    try {
+                        urls[i] = jarFiles[i].toURI().toURL();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+        URLClassLoader childClassLoader = new URLClassLoader(urls, getClass().getClassLoader());
+        return childClassLoader.loadClass(fqn);
+    }
+
+    public WorkspaceEventListener getWorkspaceEventListener() {
+        return workspaceEventListener;
+    }
+
+    public void setWorkspaceEventListener(WorkspaceEventListener workspaceEventListener) {
+        this.workspaceEventListener = workspaceEventListener;
     }
 
 }

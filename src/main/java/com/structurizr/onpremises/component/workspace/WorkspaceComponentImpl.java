@@ -13,6 +13,7 @@ import com.structurizr.io.json.EncryptedJsonWriter;
 import com.structurizr.onpremises.domain.Image;
 import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 import com.structurizr.onpremises.domain.User;
+import com.structurizr.onpremises.plugin.WorkspaceEvent;
 import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.DateUtils;
 import com.structurizr.util.StringUtils;
@@ -153,7 +154,7 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
         try {
             long workspaceId = workspaceDao.createWorkspace(user);
 
-            Workspace workspace = new Workspace("Workspace " + workspaceId, "An empty workspace");
+            Workspace workspace = new Workspace("Workspace " + workspaceId, "Description");
             String json = WorkspaceUtils.toJson(workspace, false);
 
             putWorkspace(workspaceId, json);
@@ -176,6 +177,12 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
             AbstractWorkspace workspaceToBeStored;
             String jsonToBeStored;
             WorkspaceConfiguration configuration;
+
+            if (Configuration.getInstance().getWorkspaceEventListener() != null) {
+                WorkspaceEvent event = new WorkspaceEvent(workspaceId, json);
+                Configuration.getInstance().getWorkspaceEventListener().beforeSave(event);
+                json = event.getJson();
+            }
 
             WorkspaceMetaData workspaceMetaData = getWorkspaceMetaData(workspaceId);
             if (workspaceMetaData == null) {

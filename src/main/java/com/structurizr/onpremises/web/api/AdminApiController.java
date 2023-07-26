@@ -59,9 +59,6 @@ public class AdminApiController extends AbstractController {
         try {
             long workspaceId = workspaceComponent.createWorkspace(null);
             if (workspaceId > 0) {
-                Workspace workspace = new Workspace("Workspace " + workspaceId, "");
-                workspaceComponent.putWorkspace(workspaceId, WorkspaceUtils.toJson(workspace, false));
-
                 WorkspaceMetaData wmd = workspaceComponent.getWorkspaceMetaData(workspaceId);
                 return toWorkspaceApiResponse(wmd);
             } else {

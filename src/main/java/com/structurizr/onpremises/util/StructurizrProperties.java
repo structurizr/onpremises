@@ -9,6 +9,8 @@ public class StructurizrProperties {
     public static final String AUTHENTICATION_IMPLEMENTATION_PROPERTY = "structurizr.authentication";
     public static final String SESSION_IMPLEMENTATION_PROPERTY = "structurizr.session";
 
+    public static final String WORKSPACE_EVENT_LISTENER_PLUGIN_PROPERTY = "structurizr.plugin.workspaceEventListener";
+
     public static final String URL_PROPERTY = "structurizr.url";
     public static final String ENCRYPTION_PASSPHRASE_PROPERTY = "structurizr.encryption";
     public static final String API_KEY_PROPERTY = "structurizr.apiKey";

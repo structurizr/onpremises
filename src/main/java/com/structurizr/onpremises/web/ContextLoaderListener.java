@@ -127,6 +127,10 @@ public class ContextLoaderListener implements ServletContextListener {
             log.info("Data storage: " + Configuration.getInstance().getDataStorageImplementationName());
             log.info("Search: " + Configuration.getInstance().getSearchImplementationName());
 
+            if (Configuration.getInstance().getWorkspaceEventListener() != null) {
+                log.info("Workspace event listener: " + Configuration.getInstance().getWorkspaceEventListener().getClass().getName());
+            }
+
             try {
                 ProcessBuilder processBuilder = new ProcessBuilder();
                 processBuilder.command("dot", "-V");

@@ -9,8 +9,12 @@ import com.structurizr.encryption.EncryptionStrategy;
 import com.structurizr.io.json.EncryptedJsonWriter;
 import com.structurizr.onpremises.domain.AuthenticationMethod;
 import com.structurizr.onpremises.domain.User;
+import com.structurizr.onpremises.plugin.WorkspaceEvent;
+import com.structurizr.onpremises.plugin.WorkspaceEventListener;
+import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.DateUtils;
 import com.structurizr.util.WorkspaceUtils;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.StringWriter;
@@ -19,6 +23,11 @@ import java.util.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class WorkspaceComponentImplTests {
+
+    @BeforeEach
+    public void setUp() {
+        Configuration.init();
+    }
 
     @Test
     public void getWorkspaces() {
@@ -117,7 +126,7 @@ public class WorkspaceComponentImplTests {
         long workspaceId = workspaceComponent.createWorkspace(null);
 
         assertEquals(1, workspaceId);
-        assertEquals(String.format("{\"id\":1,\"name\":\"Workspace 1\",\"description\":\"An empty workspace\",\"revision\":1,\"lastModifiedDate\":\"%s\",\"model\":{},\"documentation\":{},\"views\":{\"configuration\":{\"branding\":{},\"styles\":{},\"terminology\":{}}}}", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate())), jsonBuffer.toString());
+        assertEquals(String.format("{\"id\":1,\"name\":\"Workspace 1\",\"description\":\"Description\",\"revision\":1,\"lastModifiedDate\":\"%s\",\"model\":{},\"documentation\":{},\"views\":{\"configuration\":{\"branding\":{},\"styles\":{},\"terminology\":{}}}}", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate())), jsonBuffer.toString());
     }
 
     @Test
@@ -369,6 +378,32 @@ public class WorkspaceComponentImplTests {
         assertTrue(writeUsers.contains("user1@example.com"));
         assertEquals(1, readUsers.size());
         assertTrue(readUsers.contains("user2@example.com"));
+    }
+
+    @Test
+    public void putWorkspace_WithWorkspaceEventListener() throws Exception {
+        Workspace workspace = new Workspace("Name", "Description");
+        String json = WorkspaceUtils.toJson(workspace, false);
+
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        WorkspaceDao dao = new MockWorkspaceDao() {
+            @Override
+            public void putWorkspaceMetaData(WorkspaceMetaData wmd) {
+                workspaceMetaData.setLastModifiedDate(wmd.getLastModifiedDate());
+            }
+        };
+
+        StringBuilder buf = new StringBuilder();
+        Configuration.getInstance().setWorkspaceEventListener(new WorkspaceEventListener() {
+            @Override
+            public void beforeSave(WorkspaceEvent event) {
+                buf.append("beforeSave:" + event.getWorkspaceId() + ":" + event.getJson());
+            }
+        });
+
+        WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
+        workspaceComponent.putWorkspace(1, json);
+        assertEquals("beforeSave:1:" + json, buf.toString());
     }
 
     @Test

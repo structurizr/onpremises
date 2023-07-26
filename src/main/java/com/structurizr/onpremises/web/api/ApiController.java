@@ -6,8 +6,6 @@ import com.structurizr.io.json.JsonReader;
 import com.structurizr.onpremises.component.search.SearchComponent;
 import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
-import com.structurizr.onpremises.util.Configuration;
-import com.structurizr.onpremises.util.HtmlUtils;
 import com.structurizr.onpremises.web.AbstractController;
 import com.structurizr.util.StringUtils;
 import org.apache.commons.logging.Log;

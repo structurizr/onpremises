@@ -3,6 +3,7 @@ package com.structurizr.onpremises.component.workspace;
 import com.structurizr.Workspace;
 import com.structurizr.onpremises.domain.AuthenticationMethod;
 import com.structurizr.onpremises.domain.User;
+import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.DateUtils;
 import com.structurizr.util.WorkspaceUtils;
 
@@ -33,6 +34,8 @@ public class WorkspaceComponentTests {
 
         FileSystemWorkspaceDao dao = new FileSystemWorkspaceDao(DATA_DIRECTORY);
         workspaceComponent = new WorkspaceComponentImpl(dao, "");
+
+        Configuration.init();
     }
 
     @Test
@@ -45,7 +48,7 @@ public class WorkspaceComponentTests {
         assertEquals(1, workspaceId);
 
         WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(1);
-        String jsonV1 = String.format("{\"id\":1,\"name\":\"Workspace 1\",\"description\":\"An empty workspace\",\"revision\":1,\"lastModifiedDate\":\"%s\",\"model\":{},\"documentation\":{},\"views\":{\"configuration\":{\"branding\":{},\"styles\":{},\"terminology\":{}}}}", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()));
+        String jsonV1 = String.format("{\"id\":1,\"name\":\"Workspace 1\",\"description\":\"Description\",\"revision\":1,\"lastModifiedDate\":\"%s\",\"model\":{},\"documentation\":{},\"views\":{\"configuration\":{\"branding\":{},\"styles\":{},\"terminology\":{}}}}", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()));
         assertEquals(jsonV1, workspaceComponent.getWorkspace(1, ""));
 
         Collection<WorkspaceMetaData> workspaces = workspaceComponent.getWorkspaces();
