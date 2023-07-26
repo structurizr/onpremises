@@ -4,6 +4,8 @@ import com.structurizr.onpremises.component.workspace.WorkspaceComponentExceptio
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.domain.Messages;
 import com.structurizr.onpremises.domain.User;
+import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.util.Features;
 import com.structurizr.onpremises.util.HtmlUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,10 +39,12 @@ public class UsersController extends AbstractWorkspaceController {
             return show404Page(model);
         }
 
+        boolean editable = Configuration.getInstance().isFeatureEnabled(Features.UI_WORKSPACE_USERS);
+
         model.addAttribute("readUsers", toNewlineSeparatedString(workspaceMetaData.getReadUsers()));
         model.addAttribute("writeUsers", toNewlineSeparatedString(workspaceMetaData.getWriteUsers()));
 
-        return showAuthenticatedView(VIEW, workspaceMetaData, null, model, true, true);
+        return showAuthenticatedView(VIEW, workspaceMetaData, null, model, true, editable);
     }
 
     @RequestMapping(value = "/workspace/{workspaceId}/users", method = RequestMethod.POST)
@@ -54,6 +58,10 @@ public class UsersController extends AbstractWorkspaceController {
         WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(workspaceId);
         if (workspaceMetaData == null) {
             return show404Page(model);
+        }
+
+        if (!Configuration.getInstance().isFeatureEnabled(Features.UI_WORKSPACE_USERS)) {
+            return showFeatureNotAvailablePage(model);
         }
 
         User signedInUser = getUser();

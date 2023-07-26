@@ -87,6 +87,12 @@ public abstract class AbstractController {
         return "500";
     }
 
+    protected String showFeatureNotAvailablePage(ModelMap model) {
+        addCommonAttributes(model, "Feature not available", true);
+
+        return "feature-not-available";
+    }
+
     protected final User getUser() {
         return SecurityUtils.getUser();
     }

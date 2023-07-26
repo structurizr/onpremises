@@ -5,7 +5,9 @@ import com.structurizr.onpremises.component.workspace.WorkspaceComponent;
 import com.structurizr.util.StringUtils;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 public class Configuration extends ConfigLookup {
@@ -21,6 +23,8 @@ public class Configuration extends ConfigLookup {
     private boolean dslEditorEnabled = false;
     private boolean safeMode = true;
     private boolean internetConnection = true;
+
+    private Map<String,Boolean> features = new HashMap<>();
 
     private static Configuration INSTANCE;
 
@@ -41,6 +45,8 @@ public class Configuration extends ConfigLookup {
         if (!StringUtils.isNullOrEmpty(commaSeparatedUsersAndRoles)) {
             setAdminUsersAndRoles(commaSeparatedUsersAndRoles.split(","));
         }
+
+        features.put(Features.UI_WORKSPACE_USERS, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.UI_WORKSPACE_USERS, "true")));
     }
 
     public static Configuration getInstance() {
@@ -190,6 +196,10 @@ public class Configuration extends ConfigLookup {
         } else {
             return SearchComponent.LUCENE;
         }
+    }
+
+    public boolean isFeatureEnabled(String feature) {
+        return features.getOrDefault(feature, true);
     }
 
 }
