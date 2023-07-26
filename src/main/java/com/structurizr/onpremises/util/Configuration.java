@@ -59,7 +59,7 @@ public class Configuration extends ConfigLookup {
         return apiKey;
     }
 
-    void setApiKey(String apiKey) {
+    public void setApiKey(String apiKey) {
         this.apiKey = apiKey;
     }
 

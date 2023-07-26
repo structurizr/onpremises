@@ -45,7 +45,9 @@ public abstract class AbstractWorkspaceDao implements WorkspaceDao {
             try {
                 // create and write the workspace metadata
                 WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(workspaceId);
-                workspaceMetaData.setOwner(user.getUsername());
+                if (user != null) {
+                    workspaceMetaData.setOwner(user.getUsername());
+                }
                 workspaceMetaData.setApiKey(UUID.randomUUID().toString());
                 workspaceMetaData.setApiSecret(UUID.randomUUID().toString());
 

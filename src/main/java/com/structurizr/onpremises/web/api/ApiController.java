@@ -31,7 +31,7 @@ import java.util.Base64;
 @RestController
 public class ApiController extends AbstractController {
 
-    private static Log log = LogFactory.getLog(ApiController.class);
+    private static final Log log = LogFactory.getLog(ApiController.class);
 
     private SearchComponent searchComponent;
 
