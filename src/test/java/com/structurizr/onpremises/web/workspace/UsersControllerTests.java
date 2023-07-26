@@ -3,6 +3,7 @@ package com.structurizr.onpremises.web.workspace;
 import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.util.Features;
 import com.structurizr.onpremises.web.ControllerTestsBase;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
 import org.junit.jupiter.api.BeforeEach;
@@ -113,6 +114,30 @@ public class UsersControllerTests extends ControllerTestsBase {
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
         assertEquals("read1@example.com\nread2@example.com\n", model.getAttribute("readUsers"));
         assertEquals("write1@example.com\nwrite2@example.com\n", model.getAttribute("writeUsers"));
+    }
+
+    @Test
+    public void showUsers_ReturnsTheUsersPage_WhenTheUserHasWriteAccessButTheFeatureIsNotEnabled()  {
+        Configuration.getInstance().setFeatureDisabled(Features.UI_WORKSPACE_USERS);
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        workspaceMetaData.addWriteUser("write@example.com");
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMetaData;
+            }
+
+            @Override
+            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+                return "json";
+            }
+        });
+
+        setUser("write@example.com");
+        String view = controller.showUsers(1, model);
+        assertEquals("users", view);
+        assertSame(workspaceMetaData, model.getAttribute("workspace"));
+        assertFalse(workspaceMetaData.isEditable()); // feature not available, so can't modify
     }
 
     @Test
@@ -246,6 +271,23 @@ public class UsersControllerTests extends ControllerTestsBase {
         assertEquals(2, workspaceMetaData.getWriteUsers().size());
         assertTrue(workspaceMetaData.getWriteUsers().contains("user1@example.com"));
         assertTrue(workspaceMetaData.getWriteUsers().contains("write@example.com"));
+    }
+
+    @Test
+    public void updateUsers_ReturnsTheFeatureUnavailablePage_WhenTheUserHasWriteAccessButTheFeatureIsNotEnabled()  {
+        Configuration.getInstance().setFeatureDisabled(Features.UI_WORKSPACE_USERS);
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        workspaceMetaData.addWriteUser("user1@example.com");
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMetaData;
+            }
+        });
+
+        setUser("user1@example.com");
+        String view = controller.updateUsers(1, "read@example.com", "user1@example.com\nwrite@example.com", model, redirectAttributes);
+        assertEquals("feature-not-available", view);
     }
 
     @Test

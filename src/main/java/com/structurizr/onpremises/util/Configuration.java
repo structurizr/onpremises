@@ -198,6 +198,14 @@ public class Configuration extends ConfigLookup {
         }
     }
 
+    public void setFeatureEnabled(String feature) {
+        features.put(feature, true);
+    }
+
+    public void setFeatureDisabled(String feature) {
+        features.put(feature, false);
+    }
+
     public boolean isFeatureEnabled(String feature) {
         return features.getOrDefault(feature, true);
     }
