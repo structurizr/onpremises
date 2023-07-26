@@ -20,11 +20,10 @@ public class Configuration extends ConfigLookup {
     private String apiKey;
 
     private boolean graphvizEnabled = false;
-    private boolean dslEditorEnabled = false;
     private boolean safeMode = true;
     private boolean internetConnection = true;
 
-    private Map<String,Boolean> features = new HashMap<>();
+    private final Map<String,Boolean> features = new HashMap<>();
 
     private static Configuration INSTANCE;
 
@@ -36,7 +35,6 @@ public class Configuration extends ConfigLookup {
         setDataDirectory(new File(getDataDirectoryLocation()));
         setEncryptionPassphrase(getConfigurationParameter("structurizr.encryption", "STRUCTURIZR_ENCRYPTION", StructurizrProperties.ENCRYPTION_PASSPHRASE_PROPERTY, null));
         setWebUrl(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.URL_PROPERTY, ""));
-        setDslEditorEnabled(Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.DSL_EDITOR_PROPERTY, "false")));
         setSafeMode(Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAFE_MODE_PROPERTY, "true")));
         setInternetConnection(Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.INTERNET_CONNECTION_PROPERTY, "true")));
         setApiKey(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.API_KEY_PROPERTY, ""));
@@ -47,6 +45,12 @@ public class Configuration extends ConfigLookup {
         }
 
         features.put(Features.UI_WORKSPACE_USERS, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.UI_WORKSPACE_USERS, "true")));
+        features.put(Features.UI_DSL_EDITOR, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.UI_DSL_EDITOR, "false")));
+
+        // for backwards compatibility
+        if (!isDslEditorEnabled()) {
+            features.put(Features.UI_DSL_EDITOR, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.DSL_EDITOR_PROPERTY, "false")));
+        }
     }
 
     public static Configuration getInstance() {
@@ -149,11 +153,7 @@ public class Configuration extends ConfigLookup {
     }
 
     public boolean isDslEditorEnabled() {
-        return dslEditorEnabled;
-    }
-
-    public void setDslEditorEnabled(boolean dslEditorEnabled) {
-        this.dslEditorEnabled = dslEditorEnabled;
+        return isFeatureEnabled(Features.UI_DSL_EDITOR);
     }
 
     public File getDataDirectory() {

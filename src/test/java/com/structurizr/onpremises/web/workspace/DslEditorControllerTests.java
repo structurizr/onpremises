@@ -3,6 +3,7 @@ package com.structurizr.onpremises.web.workspace;
 import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.util.Features;
 import com.structurizr.onpremises.web.ControllerTestsBase;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,13 +23,13 @@ public class DslEditorControllerTests extends ControllerTestsBase {
         controller = new DslEditorController();
         model = new ModelMap();
         Configuration.init();
-        Configuration.getInstance().setDslEditorEnabled(true);
+        Configuration.getInstance().setFeatureEnabled(Features.UI_DSL_EDITOR);
         clearUser();
     }
 
     @Test
     public void showAuthenticatedDslEditor_ReturnsAnErrorPage_WhenTheDslEditorHasBeenDisabled() {
-        Configuration.getInstance().setDslEditorEnabled(false);
+        Configuration.getInstance().setFeatureDisabled(Features.UI_DSL_EDITOR);
         setUser("user@example.com");
         String view = controller.showAuthenticatedDslEditor(1, "version", model);
         assertEquals("dsl-editor-disabled", view);
