@@ -46,6 +46,10 @@ public interface WorkspaceComponent {
 
     boolean deleteImages(long workspaceId) throws WorkspaceComponentException;
 
+    void makeWorkspacePublic(long workspaceId) throws WorkspaceComponentException;
+
+    void makeWorkspacePrivate(long workspaceId) throws WorkspaceComponentException;
+
     void shareWorkspace(long workspaceId) throws WorkspaceComponentException;
 
     void unshareWorkspace(long workspaceId) throws WorkspaceComponentException;

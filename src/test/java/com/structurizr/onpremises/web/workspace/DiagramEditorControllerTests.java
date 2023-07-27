@@ -56,7 +56,7 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void showAuthenticatedDiagramEditor_ReturnsTheDiagramEditorPage_WhenTheWorkspaceIsPublic()  {
+    public void showAuthenticatedDiagramEditor_ReturnsTheDiagramEditorPage_WhenTheWorkspaceHasNoUsersConfigured()  {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override

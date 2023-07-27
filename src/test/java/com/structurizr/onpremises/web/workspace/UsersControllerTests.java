@@ -65,7 +65,7 @@ public class UsersControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void showUsers_ReturnsTheUsersPage_WhenTheWorkspaceIsPublic()  {
+    public void showUsers_ReturnsTheUsersPage_WhenTheWorkspaceHasNoUsersConfigured()  {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override

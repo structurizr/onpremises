@@ -59,7 +59,7 @@ public class ExploreControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void showPublicExplorePage_ReturnsTheExplorePagePage_WhenTheWorkspaceIsPublic()  {
+    public void showPublicExplorePage_ReturnsTheExplorePagePage_WhenTheWorkspaceHasNoUsersConfigured()  {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override

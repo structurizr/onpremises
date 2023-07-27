@@ -59,7 +59,7 @@ public class DocumentationControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void showPublicDocumentation_ReturnsTheDocumentationPage_WhenTheWorkspaceIsPublic()  {
+    public void showPublicDocumentation_ReturnsTheDocumentationPage_WhenTheWorkspaceHasNoUsersConfigured()  {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override

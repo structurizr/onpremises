@@ -13,18 +13,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-public class ShareWorkspaceController extends AbstractController {
+public class PublicWorkspaceController extends AbstractController {
 
-    private static final Log log = LogFactory.getLog(ShareWorkspaceController.class);
+    private static final Log log = LogFactory.getLog(PublicWorkspaceController.class);
 
-    @RequestMapping(value="/workspace/{workspaceId}/share", method = RequestMethod.POST)
+    @RequestMapping(value="/workspace/{workspaceId}/public", method = RequestMethod.POST)
     @PreAuthorize("isAuthenticated()")
-    public String shareWorkspace(@PathVariable("workspaceId")long workspaceId, ModelMap model) {
+    public String makeWorkspacePublic(@PathVariable("workspaceId")long workspaceId, ModelMap model) {
         try {
             WorkspaceMetaData workspace = workspaceComponent.getWorkspaceMetaData(workspaceId);
             if (workspace != null) {
                 if (workspace.hasNoUsersConfigured() || workspace.isWriteUser(getUser())) {
-                    workspaceComponent.shareWorkspace(workspaceId);
+                    workspaceComponent.makeWorkspacePublic(workspaceId);
                 }
             } else {
                 return show404Page(model);

@@ -65,7 +65,7 @@ public class ImagesControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void showAuthenticatedImages_ReturnsTheWorkspaceSettingsPage_WhenTheWorkspaceIsPublic()  {
+    public void showAuthenticatedImages_ReturnsTheWorkspaceSettingsPage_WhenTheWorkspaceHasNoUsersConfigured()  {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override

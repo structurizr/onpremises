@@ -150,7 +150,7 @@ public class LockControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void unlockWorkspace_UnlocksTheWorkspace_WhenTheWorkspaceIsPublic()  {
+    public void unlockWorkspace_UnlocksTheWorkspace_WhenTheWorkspaceHasNoUsersConfigured()  {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         workspaceMetaData.addLock("user@example.com", "agent");
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {

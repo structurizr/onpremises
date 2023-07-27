@@ -44,7 +44,7 @@ public class ImagesController extends AbstractWorkspaceController {
 
             model.addAttribute("images", images);
 
-            boolean editable = workspaceMetaData.isOpen() || workspaceMetaData.isWriteUser(getUser());
+            boolean editable = workspaceMetaData.hasNoUsersConfigured() || workspaceMetaData.isWriteUser(getUser());
 
             return showAuthenticatedView(VIEW, workspaceMetaData, null, model, true, editable);
         }
@@ -58,7 +58,7 @@ public class ImagesController extends AbstractWorkspaceController {
         if (workspaceMetaData == null) {
             return show404Page(model);
         }
-        if (workspaceMetaData.isOpen() || workspaceMetaData.isWriteUser(getUser())) {
+        if (workspaceMetaData.hasNoUsersConfigured() || workspaceMetaData.isWriteUser(getUser())) {
             workspaceComponent.deleteImages(workspaceId);
         }
 

@@ -27,7 +27,7 @@ public class WorkspaceSettingsController extends AbstractWorkspaceController {
             return show404Page(model);
         }
 
-        if (workspaceMetaData.isOpen() || workspaceMetaData.isWriteUser(getUser())) {
+        if (workspaceMetaData.hasNoUsersConfigured() || workspaceMetaData.isWriteUser(getUser())) {
             model.addAttribute("showAdminFeatures", Configuration.getInstance().getAdminUsersAndRoles().isEmpty() || getUser().isAdmin());
             return showAuthenticatedView(VIEW, workspaceMetaData, version, model, true, true);
         } else {

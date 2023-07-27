@@ -67,7 +67,36 @@
                 </div>
 
                 <div class="col-sm-6">
-                    <h4>Sharing link <span class="smaller">(<a href="https://structurizr.com/help/workspace-sharing" target="_blank">help</a>)</span></h4>
+                    <h4>Workspace visibility <span class="smaller">(<a href="https://structurizr.com/help/workspace-sharing" target="_blank">help</a>)</span></h4>
+
+                    <c:if test="${not empty workspace.writeUsers}">
+                    <c:if test="${workspace.publicWorkspace}">
+                        <div class="small" style="margin-bottom: 5px">
+                            <a href="/share/${workspace.id}" title="Sharing link">${structurizrConfiguration.webUrl}/share/${workspace.id}${urlSuffix}</a>
+                        </div>
+                    </c:if>
+
+                    <c:if test="${workspace.editable}">
+                        <div>
+                            <c:choose>
+                                <c:when test="${workspace.publicWorkspace}">
+                                    <form class="form-inline small centered" style="display: inline-block; margin-bottom: 5px" action="/workspace/${workspace.id}/private" method="post" onsubmit="return confirm('Are you sure you want to make this workspace private?');">
+                                        <input type="hidden" name="workspaceId" value="${workspace.id}" />
+                                        <button class="btn btn-default small" type="submit" name="action" value="private" title="Make workspace private"><img src="/static/bootstrap-icons/lock.svg" class="icon-btn" /> Make private</button>
+                                    </form>
+                                </c:when>
+                                <c:otherwise>
+                                    <form class="form-inline small centered" style="display: inline-block; margin-bottom: 5px" action="/workspace/${workspace.id}/public" method="post" onsubmit="return confirm('Are you sure you want to make this workspace public?');">
+                                        <input type="hidden" name="workspaceId" value="${workspace.id}" />
+                                        <button class="btn btn-default small" type="submit" name="action" value="public" title="Make workspace public"><img src="/static/bootstrap-icons/unlock.svg" class="icon-btn" /> Make public</button>
+                                    </form>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </c:if>
+
+                    <br />
+                    </c:if>
 
                     <c:if test="${workspace.shareable}">
                         <div class="small" style="margin-bottom: 5px">

@@ -59,7 +59,7 @@ public class DecisionsControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void showPublicDecisions_ReturnsTheDecisionsPage_WhenTheWorkspaceIsPublic()  {
+    public void showPublicDecisions_ReturnsTheDecisionsPage_WhenTheWorkspaceHasNoUsersConfigured()  {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override

@@ -60,7 +60,7 @@ public class ShareWorkspaceControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void shareWorkspace_SharesTheWorkspace_WhenTheWorkspaceIsPublic() {
+    public void shareWorkspace_SharesTheWorkspace_WhenTheWorkspaceHasNoUsersConfigured() {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         assertFalse(workspaceMetaData.isShareable());
 

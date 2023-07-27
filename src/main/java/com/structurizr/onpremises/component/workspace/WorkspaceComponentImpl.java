@@ -83,7 +83,6 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
             for (WorkspaceMetaData workspace : workspaces) {
                 if (workspace.isOpen()) {
                     // the workspace is public, so anybody can see it
-                    workspace.setEditable(false);
                     filteredWorkspaces.add(workspace);
                 }
             }
@@ -91,15 +90,12 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
             for (WorkspaceMetaData workspace : workspaces) {
                 if (workspace.isOpen()) {
                     // the workspace is public, so anybody can see it
-                    workspace.setEditable(true);
                     filteredWorkspaces.add(workspace);
                 } else if (workspace.isWriteUser(user)) {
                     // the user has read-write access to the workspace
-                    workspace.setEditable(true);
                     filteredWorkspaces.add(workspace);
                 } else if (workspace.isReadUser(user)) {
                     // the user has read-only access to the workspace
-                    workspace.setEditable(false);
                     filteredWorkspaces.add(workspace);
                 }
             }
@@ -346,6 +342,20 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
         }
 
         return false;
+    }
+
+    @Override
+    public void makeWorkspacePublic(long workspaceId) throws WorkspaceComponentException {
+        WorkspaceMetaData workspace = getWorkspaceMetaData(workspaceId);
+        workspace.setPublicWorkspace(true);
+        putWorkspaceMetaData(workspace);
+    }
+
+    @Override
+    public void makeWorkspacePrivate(long workspaceId) throws WorkspaceComponentException {
+        WorkspaceMetaData workspace = getWorkspaceMetaData(workspaceId);
+        workspace.setPublicWorkspace(false);
+        putWorkspaceMetaData(workspace);
     }
 
     @Override

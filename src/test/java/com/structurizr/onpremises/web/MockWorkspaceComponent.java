@@ -90,6 +90,16 @@ public abstract class MockWorkspaceComponent implements WorkspaceComponent {
     }
 
     @Override
+    public void makeWorkspacePublic(long workspaceId) throws WorkspaceComponentException {
+
+    }
+
+    @Override
+    public void makeWorkspacePrivate(long workspaceId) throws WorkspaceComponentException {
+
+    }
+
+    @Override
     public void shareWorkspace(long workspaceId) throws WorkspaceComponentException {
 
     }

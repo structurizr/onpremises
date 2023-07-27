@@ -59,8 +59,33 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
     }
 
     @Test
+    public void showPublicWorkspaceSummary_ReturnsTheWorkspaceSummaryPage_WhenTheWorkspaceHasNoUsersConfigured()  {
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMetaData;
+            }
+
+            @Override
+            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+                return "json";
+            }
+        });
+
+        String view = controller.showPublicWorkspaceSummary(1, "version", model);
+        assertEquals("workspace-summary", view);
+        assertSame(workspaceMetaData, model.getAttribute("workspace"));
+        assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
+        assertEquals("/share/1", model.getAttribute("urlPrefix"));
+        assertEquals("/share/1/images/", model.getAttribute("thumbnailUrl"));
+    }
+
+    @Test
     public void showPublicWorkspaceSummary_ReturnsTheWorkspaceSummaryPage_WhenTheWorkspaceIsPublic()  {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        workspaceMetaData.addWriteUser("user1@example.com");
+        workspaceMetaData.setPublicWorkspace(true);
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override
             public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {

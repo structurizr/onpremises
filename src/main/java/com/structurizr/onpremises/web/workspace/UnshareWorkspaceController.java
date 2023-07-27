@@ -23,7 +23,7 @@ public class UnshareWorkspaceController extends AbstractController {
         try {
             WorkspaceMetaData workspace = workspaceComponent.getWorkspaceMetaData(workspaceId);
             if (workspace != null) {
-                if (workspace.isOpen() || workspace.isWriteUser(getUser())) {
+                if (workspace.hasNoUsersConfigured() || workspace.isWriteUser(getUser())) {
                     workspaceComponent.unshareWorkspace(workspaceId);
                 }
             } else {

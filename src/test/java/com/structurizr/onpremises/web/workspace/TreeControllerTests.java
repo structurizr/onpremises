@@ -59,7 +59,7 @@ public class TreeControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void showPublicTree_ReturnsTheTreePage_WhenTheWorkspaceIsPublic()  {
+    public void showPublicTree_ReturnsTheTreePage_WhenTheWorkspaceHasNoUsersConfigured()  {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override

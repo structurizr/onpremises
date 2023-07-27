@@ -61,7 +61,7 @@ public class WorkspaceSettingsControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void showAuthenticatedWorkspaceSettings_ReturnsTheWorkspaceSettingsPage_WhenTheWorkspaceIsPublic()  {
+    public void showAuthenticatedWorkspaceSettings_ReturnsTheWorkspaceSettingsPage_WhenTheWorkspaceHasNoUsersConfigured()  {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override

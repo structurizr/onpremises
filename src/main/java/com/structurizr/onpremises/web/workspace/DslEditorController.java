@@ -54,7 +54,7 @@ public class DslEditorController extends AbstractWorkspaceEditorController {
             // ignore
         }
 
-        if (!workspaceMetaData.isOpen() && !workspaceMetaData.isWriteUser(getUser())) {
+        if (!workspaceMetaData.hasNoUsersConfigured() && !workspaceMetaData.isWriteUser(getUser())) {
             if (workspaceMetaData.isReadUser(getUser())) {
                 return showError("workspace-is-readonly", model);
             } else {
@@ -77,7 +77,7 @@ public class DslEditorController extends AbstractWorkspaceEditorController {
         }
 
         User user = getUser();
-        if (!workspaceMetaData.isOpen() && !workspaceMetaData.isWriteUser(getUser())) {
+        if (!workspaceMetaData.hasNoUsersConfigured() && !workspaceMetaData.isWriteUser(getUser())) {
             return new DslEditorResponse(false, "404");
         }
 

@@ -66,7 +66,7 @@ public class UsersController extends AbstractWorkspaceController {
 
         User signedInUser = getUser();
 
-        if (workspaceMetaData.isOpen() || workspaceMetaData.isWriteUser(signedInUser)) {
+        if (workspaceMetaData.hasNoUsersConfigured() || workspaceMetaData.isWriteUser(signedInUser)) {
             readUsers = HtmlUtils.filterHtml(readUsers);
             writeUsers = HtmlUtils.filterHtml(writeUsers);
 
@@ -87,7 +87,7 @@ public class UsersController extends AbstractWorkspaceController {
             }
 
             // a safety check, to ensure that the currently signed in user doesn't remove themselves!
-            if (!workspaceMetaData.isOpen() && !workspaceMetaData.isWriteUser(signedInUser)) {
+            if (!workspaceMetaData.hasNoUsersConfigured() && !workspaceMetaData.isWriteUser(signedInUser)) {
                 workspaceMetaData.addWriteUser(signedInUser.getUsername());
             }
 

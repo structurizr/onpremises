@@ -12,6 +12,27 @@ import static org.junit.jupiter.api.Assertions.*;
 public class WorkspaceMetaDataTests {
 
     @Test
+    public void isPublic() {
+        WorkspaceMetaData workspace = new WorkspaceMetaData(1);
+        assertFalse(workspace.isPublicWorkspace());
+
+        workspace.setPublicWorkspace(true);
+        assertTrue(workspace.isPublicWorkspace());
+    }
+
+    @Test
+    public void open() {
+        WorkspaceMetaData workspace = new WorkspaceMetaData(1);
+        assertTrue(workspace.isOpen()); // workspaces are open by default (i.e. no configured users)
+
+        workspace.addWriteUser("user1"); // adding a user makes the workspace private
+        assertFalse(workspace.isOpen());
+
+        workspace.setPublicWorkspace(true); // force the workspace to be public
+        assertTrue(workspace.isOpen());
+    }
+
+    @Test
     public void sharingToken() {
         WorkspaceMetaData workspace = new WorkspaceMetaData(1);
         assertEquals("", workspace.getSharingToken());
@@ -24,23 +45,23 @@ public class WorkspaceMetaDataTests {
     }
 
     @Test
-    public void isOpen_ReturnsTrue_WhenTheWorkspaceIsOpen() {
+    public void hasNoUsersConfigured_ReturnsTrue_WhenTheWorkspaceHasNoConfiguredUsers() {
         WorkspaceMetaData workspace = new WorkspaceMetaData(1);
-        assertTrue(workspace.isOpen());
+        assertTrue(workspace.hasNoUsersConfigured());
     }
 
     @Test
-    public void isOpen_ReturnsFalse_WhenTheWorkspaceHasAReadOnlyUser() {
+    public void hasNoUsersConfigured_ReturnsFalse_WhenTheWorkspaceHasAReadOnlyUser() {
         WorkspaceMetaData workspace = new WorkspaceMetaData(1);
         workspace.addReadUser("user");
-        assertFalse(workspace.isOpen());
+        assertFalse(workspace.hasNoUsersConfigured());
     }
 
     @Test
-    public void isOpen_ReturnsFalse_WhenTheWorkspaceHasAReadWriteUser() {
+    public void hasNoUsersConfigured_ReturnsFalse_WhenTheWorkspaceHasAReadWriteUser() {
         WorkspaceMetaData workspace = new WorkspaceMetaData(1);
         workspace.addWriteUser("user");
-        assertFalse(workspace.isOpen());
+        assertFalse(workspace.hasNoUsersConfigured());
     }
 
     @Test
@@ -192,6 +213,7 @@ public class WorkspaceMetaDataTests {
         properties.setProperty(WorkspaceMetaData.REVISION_PROPERTY, "81");
         properties.setProperty(WorkspaceMetaData.API_KEY_PROPERTY, "1234567890");
         properties.setProperty(WorkspaceMetaData.API_SECRET_PROPERTY, "0987654321");
+        properties.setProperty(WorkspaceMetaData.PUBLIC_PROPERTY, "true");
         properties.setProperty(WorkspaceMetaData.SHARING_TOKEN_PROPERTY, "12345678901234567890");
         properties.setProperty(WorkspaceMetaData.OWNER_PROPERTY, "user@example.com");
         properties.setProperty(WorkspaceMetaData.LOCKED_USER_PROPERTY, "user2@example.com");
@@ -212,6 +234,7 @@ public class WorkspaceMetaDataTests {
         assertEquals(81, workspace.getRevision());
         assertEquals("1234567890", workspace.getApiKey());
         assertEquals("0987654321", workspace.getApiSecret());
+        assertTrue(workspace.isPublicWorkspace());
         assertEquals("12345678901234567890", workspace.getSharingToken());
         assertEquals("user@example.com", workspace.getOwner());
         assertEquals("user2@example.com", workspace.getLockedUser());
@@ -233,6 +256,7 @@ public class WorkspaceMetaDataTests {
         assertEquals("81", properties.getProperty(WorkspaceMetaData.REVISION_PROPERTY));
         assertEquals("1234567890", properties.getProperty(WorkspaceMetaData.API_KEY_PROPERTY));
         assertEquals("0987654321", properties.getProperty(WorkspaceMetaData.API_SECRET_PROPERTY));
+        assertEquals("true", properties.getProperty(WorkspaceMetaData.PUBLIC_PROPERTY));
         assertEquals("12345678901234567890", properties.getProperty(WorkspaceMetaData.SHARING_TOKEN_PROPERTY));
         assertEquals("user@example.com", properties.getProperty(WorkspaceMetaData.OWNER_PROPERTY));
         assertEquals("user2@example.com", properties.getProperty(WorkspaceMetaData.LOCKED_USER_PROPERTY));

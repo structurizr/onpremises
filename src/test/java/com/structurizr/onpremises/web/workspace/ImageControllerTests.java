@@ -79,7 +79,7 @@ public class ImageControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void getPublicImage_ReturnsTheImage_WhenTheWorkspaceIsPublic() throws Exception {
+    public void getPublicImage_ReturnsTheImage_WhenTheWorkspaceHasNoUsersConfigured() throws Exception {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override

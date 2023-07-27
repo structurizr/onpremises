@@ -59,7 +59,7 @@ public class GraphControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void showPublicGraph_ReturnsTheGraphPage_WhenTheWorkspaceIsPublic()  {
+    public void showPublicGraph_ReturnsTheGraphPage_WhenTheWorkspaceHasNoUsersConfigured()  {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override

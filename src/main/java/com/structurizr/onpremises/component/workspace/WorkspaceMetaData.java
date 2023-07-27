@@ -26,6 +26,7 @@ public class WorkspaceMetaData {
     static final String SIZE_PROPERTY = "size";
     static final String API_KEY_PROPERTY = "apiKey";
     static final String API_SECRET_PROPERTY = "apiSecret";
+    static final String PUBLIC_PROPERTY = "public";
     static final String SHARING_TOKEN_PROPERTY = "sharingToken";
     static final String OWNER_PROPERTY = "owner";
     static final String LOCKED_USER_PROPERTY = "lockedUser";
@@ -42,6 +43,7 @@ public class WorkspaceMetaData {
     private boolean clientSideEncrypted = false;
     private String apiKey;
     private String apiSecret;
+    private boolean publicWorkspace = false;
     private String sharingToken = "";
 
     private Date lastModifiedDate;
@@ -109,6 +111,18 @@ public class WorkspaceMetaData {
         this.apiSecret = apiSecret;
     }
 
+    public boolean isPublicWorkspace() {
+        return publicWorkspace;
+    }
+
+    public void setPublicWorkspace(boolean publicWorkspace) {
+        this.publicWorkspace = publicWorkspace;
+    }
+
+    public boolean isOpen() {
+        return isPublicWorkspace() || hasNoUsersConfigured();
+    }
+
     public String getSharingToken() {
         return sharingToken;
     }
@@ -121,7 +135,7 @@ public class WorkspaceMetaData {
         return (sharingToken == null ? "" : sharingToken.substring(0, 6)) + "...";
     }
 
-    public boolean isOpen() {
+    public boolean hasNoUsersConfigured() {
         return readUsers.size() == 0 && writeUsers.size() == 0;
     }
 
@@ -333,6 +347,7 @@ public class WorkspaceMetaData {
         workspace.setSize(Long.parseLong(properties.getProperty(SIZE_PROPERTY, "0")));
         workspace.setApiKey(properties.getProperty(API_KEY_PROPERTY, ""));
         workspace.setApiSecret(properties.getProperty(API_SECRET_PROPERTY, ""));
+        workspace.setPublicWorkspace("true".equals(properties.getProperty(PUBLIC_PROPERTY, "false")));
         workspace.setSharingToken(properties.getProperty(SHARING_TOKEN_PROPERTY, ""));
         workspace.setOwner(properties.getProperty(OWNER_PROPERTY, ""));
 
@@ -414,6 +429,8 @@ public class WorkspaceMetaData {
 
         properties.setProperty(API_KEY_PROPERTY, this.getApiKey());
         properties.setProperty(API_SECRET_PROPERTY, this.getApiSecret());
+
+        properties.setProperty(PUBLIC_PROPERTY, "" + this.isPublicWorkspace());
 
         if (!StringUtils.isNullOrEmpty(getSharingToken())) {
             properties.setProperty(SHARING_TOKEN_PROPERTY, this.getSharingToken());

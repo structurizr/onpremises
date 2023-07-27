@@ -101,7 +101,7 @@ public abstract class AbstractWorkspaceController extends AbstractController {
                 model.addAttribute(URL_SUFFIX, "?version=" + version);
             }
 
-            if (workspaceMetaData.isOpen() || workspaceMetaData.isWriteUser(user)) {
+            if (workspaceMetaData.hasNoUsersConfigured() || workspaceMetaData.isWriteUser(user)) {
                 return showView(view, workspaceMetaData, version, model, editable, showHeaderAndFooter);
             } else if (workspaceMetaData.isReadUser(user)) {
                 return showView(view, workspaceMetaData, version, model, false, showHeaderAndFooter);
@@ -116,7 +116,7 @@ public abstract class AbstractWorkspaceController extends AbstractController {
             if (editable) {
                 workspaceMetaData.setEditable(true);
 
-                if (workspaceMetaData.isOpen()) {
+                if (workspaceMetaData.isPublicWorkspace() || workspaceMetaData.hasNoUsersConfigured()) {
                     model.addAttribute("sharingUrlPrefix", "/share/" + workspaceMetaData.getId());
                 }
             } else {

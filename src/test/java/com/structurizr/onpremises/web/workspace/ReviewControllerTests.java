@@ -222,7 +222,7 @@ public class ReviewControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void showReview_ReturnsTheReviewPage_WhenTheAssociatedWorkspaceIsPublic() throws Exception {
+    public void showReview_ReturnsTheReviewPage_WhenTheAssociatedWorkspaceHasNoUsersConfigured() throws Exception {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override

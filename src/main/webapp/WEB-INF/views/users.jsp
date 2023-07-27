@@ -9,11 +9,18 @@
 
         <p class="centered" style="font-size: 20px">
             <c:choose>
-            <c:when test="${workspace.open}">
-            <img src="/static/bootstrap-icons/unlock.svg" class="icon-md" /> Public <span class="smaller">(no users/roles are assigned; role-based access is not active)</span>
+            <c:when test="${empty workspace.writeUsers}">
+            <img src="/static/bootstrap-icons/unlock.svg" class="icon-md" /> Public <span class="smaller">(role-based access is not active)</span>
             </c:when>
             <c:otherwise>
-                <img src="/static/bootstrap-icons/lock.svg" class="icon-md" /> Private <span class="smaller">(users/roles are assigned; role-based access is active)</span>
+                <c:choose>
+                    <c:when test="${workspace.publicWorkspace}">
+                    <img src="/static/bootstrap-icons/unlock.svg" class="icon-md" /> Public <span class="smaller">(role-based access is active and <a href="/workspace/${workspaceId}/settings">the workspace is marked as public</a>)</span>
+                    </c:when>
+                    <c:otherwise>
+                    <img src="/static/bootstrap-icons/lock.svg" class="icon-md" /> Private <span class="smaller">(role-based access is active and <a href="/workspace/${workspaceId}/settings">the workspace is marked as private</a>)</span>
+                    </c:otherwise>
+                </c:choose>
             </c:otherwise>
             </c:choose>
         </p>

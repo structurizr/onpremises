@@ -71,7 +71,7 @@ public class ThemeControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void showPublicTheme_ReturnsTheThemePage_WhenTheWorkspaceIsPublic()  {
+    public void showPublicTheme_ReturnsTheThemePage_WhenTheWorkspaceHasNoUsersConfigured()  {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override

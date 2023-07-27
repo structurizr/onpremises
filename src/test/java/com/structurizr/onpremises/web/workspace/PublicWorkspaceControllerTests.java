@@ -10,19 +10,19 @@ import org.springframework.ui.ModelMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UnshareWorkspaceControllerTests extends ControllerTestsBase {
+public class PublicWorkspaceControllerTests extends ControllerTestsBase {
 
-    private UnshareWorkspaceController controller;
+    private PublicWorkspaceController controller;
     private ModelMap model;
 
     @BeforeEach
     public void setUp() {
-        controller = new UnshareWorkspaceController();
+        controller = new PublicWorkspaceController();
         model = new ModelMap();
     }
 
     @Test
-    public void unshareWorkspace_ReturnsThe404Page_WhenTheWorkspaceDoesNotExist() {
+    public void makeWorkspacePublic_ReturnsThe404Page_WhenTheWorkspaceDoesNotExist() {
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override
             public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
@@ -30,16 +30,15 @@ public class UnshareWorkspaceControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.unshareWorkspace(1, model);
+        String view = controller.makeWorkspacePublic(1, model);
         assertEquals("404", view);
     }
 
     @Test
-    public void unshareWorkspace_RedirectsToTheWorkspaceSettingsPage_WhenTheUserDoesNotHaveAccess() {
+    public void makeWorkspacePublic_RedirectsToTheWorkspaceSettingsPage_WhenTheUserDoesNotHaveAccess() {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         workspaceMetaData.addWriteUser("user1@example.com");
-        workspaceMetaData.setSharingToken("1234567890");
-        assertTrue(workspaceMetaData.isShareable());
+        assertFalse(workspaceMetaData.isPublicWorkspace());
 
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override
@@ -48,22 +47,21 @@ public class UnshareWorkspaceControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public void unshareWorkspace(long workspaceId) throws WorkspaceComponentException {
+            public void makeWorkspacePublic(long workspaceId) throws WorkspaceComponentException {
                 fail();
             }
         });
 
         setUser("user2@example.com");
-        String view = controller.unshareWorkspace(1, model);
+        String view = controller.makeWorkspacePublic(1, model);
         assertEquals("redirect:/workspace/1/settings", view);
-        assertTrue(workspaceMetaData.isShareable());
+        assertFalse(workspaceMetaData.isPublicWorkspace());
     }
 
     @Test
-    public void unshareWorkspace_UnsharesTheWorkspace_WhenTheWorkspaceHasNoUsersConfigured() {
+    public void makeWorkspacePublic_MakesTheWorkspacePublic_WhenTheWorkspaceHasNoUsersConfigured() {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
-        workspaceMetaData.setSharingToken("1234567890");
-        assertTrue(workspaceMetaData.isShareable());
+        assertFalse(workspaceMetaData.isPublicWorkspace());
 
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override
@@ -72,24 +70,22 @@ public class UnshareWorkspaceControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public void unshareWorkspace(long workspaceId) throws WorkspaceComponentException {
-                workspaceMetaData.setSharingToken("");
+            public void makeWorkspacePublic(long workspaceId) throws WorkspaceComponentException {
+                workspaceMetaData.setPublicWorkspace(true);
             }
         });
 
         setUser("user1@example.com");
-        String view = controller.unshareWorkspace(1, model);
+        String view = controller.makeWorkspacePublic(1, model);
         assertEquals("redirect:/workspace/1/settings", view);
-        assertFalse(workspaceMetaData.isShareable());
-        assertEquals("", workspaceMetaData.getSharingToken());
+        assertTrue(workspaceMetaData.isPublicWorkspace());
     }
 
     @Test
-    public void unshareWorkspace_UnsharesTheWorkspace_WhenTheUserHasAccess() {
+    public void makeWorkspacePublic_MakesTheWorkspacePublic_WhenTheUserHasAccess() {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         workspaceMetaData.addWriteUser("user1@example.com");
-        workspaceMetaData.setSharingToken("1234567890");
-        assertTrue(workspaceMetaData.isShareable());
+        assertFalse(workspaceMetaData.isPublicWorkspace());
 
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override
@@ -98,16 +94,15 @@ public class UnshareWorkspaceControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public void unshareWorkspace(long workspaceId) throws WorkspaceComponentException {
-                workspaceMetaData.setSharingToken("");
+            public void makeWorkspacePublic(long workspaceId) throws WorkspaceComponentException {
+                workspaceMetaData.setPublicWorkspace(true);
             }
         });
 
         setUser("user1@example.com");
-        String view = controller.unshareWorkspace(1, model);
+        String view = controller.makeWorkspacePublic(1, model);
         assertEquals("redirect:/workspace/1/settings", view);
-        assertFalse(workspaceMetaData.isShareable());
-        assertEquals("", workspaceMetaData.getSharingToken());
+        assertTrue(workspaceMetaData.isPublicWorkspace());
     }
 
 }

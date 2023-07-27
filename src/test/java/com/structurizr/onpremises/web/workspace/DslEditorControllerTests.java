@@ -81,7 +81,7 @@ public class DslEditorControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void showAuthenticatedDslEditor_ReturnsTheDslEditorPage_WhenTheWorkspaceIsPublic()  {
+    public void showAuthenticatedDslEditor_ReturnsTheDslEditorPage_WhenTheWorkspaceHasNoUsersConfigured()  {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override

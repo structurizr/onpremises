@@ -59,7 +59,7 @@ public class DiagramViewerControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void showPublicDiagramViewer_ReturnsTheDiagramViewerPage_WhenTheWorkspaceIsPublic()  {
+    public void showPublicDiagramViewer_ReturnsTheDiagramViewerPage_WhenTheWorkspaceHasNoUsersConfigured()  {
         final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override

@@ -37,7 +37,7 @@ public class EmbedControllerTests {
     }
 
     @Test
-    public void embedDiagrams_ReturnsTheDiagramsPage_WhenTheWorkspaceIsPublic() {
+    public void embedDiagrams_ReturnsTheDiagramsPage_WhenTheWorkspaceHasNoUsersConfigured() {
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override
             public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {

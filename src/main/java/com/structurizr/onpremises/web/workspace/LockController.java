@@ -85,7 +85,7 @@ public class LockController extends AbstractWorkspaceController {
         }
 
         User user = getUser();
-        if (workspaceMetaData.isOpen() || workspaceMetaData.isWriteUser(user)) {
+        if (workspaceMetaData.hasNoUsersConfigured() || workspaceMetaData.isWriteUser(user)) {
             try {
                 workspaceComponent.unlockWorkspace(workspaceId);
             } catch (WorkspaceComponentException e) {
