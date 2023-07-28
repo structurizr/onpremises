@@ -62,6 +62,7 @@ public class Configuration extends ConfigLookup {
         }
 
         features.put(Features.UI_WORKSPACE_USERS, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.UI_WORKSPACE_USERS, "true")));
+        features.put(Features.UI_WORKSPACE_SETTINGS, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.UI_WORKSPACE_SETTINGS, "true")));
         features.put(Features.UI_DSL_EDITOR, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.UI_DSL_EDITOR, "false")));
 
         // for backwards compatibility

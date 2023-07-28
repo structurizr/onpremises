@@ -2,6 +2,7 @@ package com.structurizr.onpremises.web.workspace;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.util.Features;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -25,6 +26,10 @@ public class WorkspaceSettingsController extends AbstractWorkspaceController {
         WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(workspaceId);
         if (workspaceMetaData == null) {
             return show404Page(model);
+        }
+
+        if (!Configuration.getInstance().isFeatureEnabled(Features.UI_WORKSPACE_SETTINGS)) {
+            return showFeatureNotAvailablePage(model);
         }
 
         if (workspaceMetaData.hasNoUsersConfigured() || workspaceMetaData.isWriteUser(getUser())) {

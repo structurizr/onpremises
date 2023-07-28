@@ -3,9 +3,9 @@ package com.structurizr.onpremises.web.workspace;
 import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.util.Features;
 import com.structurizr.onpremises.web.ControllerTestsBase;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ModelMap;
@@ -21,7 +21,10 @@ public class WorkspaceSettingsControllerTests extends ControllerTestsBase {
     public void setUp() {
         controller = new WorkspaceSettingsController();
         model = new ModelMap();
+
         Configuration.init();
+        Configuration.getInstance().setFeatureEnabled(Features.UI_WORKSPACE_SETTINGS);
+
         clearUser();
     }
 
@@ -130,6 +133,23 @@ public class WorkspaceSettingsControllerTests extends ControllerTestsBase {
         setUser("user1@example.com");
         String view = controller.showAuthenticatedWorkspaceSettings(1, "version", model);
         assertEquals("404", view);
+    }
+
+    @Test
+    public void showAuthenticatedWorkspaceSettings_ReturnsTheFeatureUnavailablePage_WhenTheUserHasAccessButTheFeatureIsNotEnabled()  {
+        Configuration.getInstance().setFeatureDisabled(Features.UI_WORKSPACE_SETTINGS);
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        workspaceMetaData.addWriteUser("user1@example.com");
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMetaData;
+            }
+        });
+
+        setUser("user1@example.com");
+        String view = controller.showAuthenticatedWorkspaceSettings(1, "version", model);
+        assertEquals("feature-not-available", view);
     }
 
 }

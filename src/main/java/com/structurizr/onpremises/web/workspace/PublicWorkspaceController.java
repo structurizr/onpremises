@@ -2,6 +2,8 @@ package com.structurizr.onpremises.web.workspace;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
+import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.util.Features;
 import com.structurizr.onpremises.web.AbstractController;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,6 +25,10 @@ public class PublicWorkspaceController extends AbstractController {
         try {
             WorkspaceMetaData workspace = workspaceComponent.getWorkspaceMetaData(workspaceId);
             if (workspace != null) {
+                if (!Configuration.getInstance().isFeatureEnabled(Features.UI_WORKSPACE_SETTINGS)) {
+                    return showFeatureNotAvailablePage(model);
+                }
+
                 if (workspace.hasNoUsersConfigured() || workspace.isWriteUser(getUser())) {
                     workspaceComponent.makeWorkspacePublic(workspaceId);
                 }

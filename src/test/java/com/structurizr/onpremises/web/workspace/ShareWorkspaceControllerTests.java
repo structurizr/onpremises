@@ -2,6 +2,8 @@ package com.structurizr.onpremises.web.workspace;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
+import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.util.Features;
 import com.structurizr.onpremises.web.ControllerTestsBase;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
 
@@ -20,6 +22,9 @@ public class ShareWorkspaceControllerTests extends ControllerTestsBase {
     public void setUp() {
         controller = new ShareWorkspaceController();
         model = new ModelMap();
+
+        Configuration.init();
+        Configuration.getInstance().setFeatureEnabled(Features.UI_WORKSPACE_SETTINGS);
     }
 
     @Test
@@ -106,6 +111,33 @@ public class ShareWorkspaceControllerTests extends ControllerTestsBase {
         assertEquals("redirect:/workspace/1/settings", view);
         assertTrue(workspaceMetaData.isShareable());
         assertEquals("1234567890", workspaceMetaData.getSharingToken());
+    }
+
+    @Test
+    public void shareWorkspace_ReturnsTheFeatureNotAvailablePage_WhenTheUserHasAccessButTheFeatureIsNotEnabled() {
+        Configuration.getInstance().setFeatureDisabled(Features.UI_WORKSPACE_SETTINGS);
+
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        workspaceMetaData.addWriteUser("user1@example.com");
+        assertFalse(workspaceMetaData.isShareable());
+
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMetaData;
+            }
+
+            @Override
+            public void shareWorkspace(long workspaceId) throws WorkspaceComponentException {
+                workspaceMetaData.setSharingToken("1234567890");
+            }
+        });
+
+        setUser("user1@example.com");
+        String view = controller.shareWorkspace(1, model);
+        assertEquals("feature-not-available", view);
+        assertFalse(workspaceMetaData.isShareable());
+        assertEquals("", workspaceMetaData.getSharingToken());
     }
 
 }

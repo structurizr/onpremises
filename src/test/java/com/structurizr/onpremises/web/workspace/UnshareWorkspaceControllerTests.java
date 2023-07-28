@@ -2,6 +2,8 @@ package com.structurizr.onpremises.web.workspace;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
+import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.util.Features;
 import com.structurizr.onpremises.web.ControllerTestsBase;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +21,9 @@ public class UnshareWorkspaceControllerTests extends ControllerTestsBase {
     public void setUp() {
         controller = new UnshareWorkspaceController();
         model = new ModelMap();
+
+        Configuration.init();
+        Configuration.getInstance().setFeatureEnabled(Features.UI_WORKSPACE_SETTINGS);
     }
 
     @Test
@@ -108,6 +113,34 @@ public class UnshareWorkspaceControllerTests extends ControllerTestsBase {
         assertEquals("redirect:/workspace/1/settings", view);
         assertFalse(workspaceMetaData.isShareable());
         assertEquals("", workspaceMetaData.getSharingToken());
+    }
+
+    @Test
+    public void unshareWorkspace_ReturnsTheFeatureNotAvailablePage_WhenTheUserHasAccessButTheFeatureIsNotEnabled() {
+        Configuration.getInstance().setFeatureDisabled(Features.UI_WORKSPACE_SETTINGS);
+
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+        workspaceMetaData.addWriteUser("user1@example.com");
+        workspaceMetaData.setSharingToken("1234567890");
+        assertTrue(workspaceMetaData.isShareable());
+
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMetaData;
+            }
+
+            @Override
+            public void unshareWorkspace(long workspaceId) throws WorkspaceComponentException {
+                workspaceMetaData.setSharingToken("");
+            }
+        });
+
+        setUser("user1@example.com");
+        String view = controller.unshareWorkspace(1, model);
+        assertEquals("feature-not-available", view);
+        assertTrue(workspaceMetaData.isShareable());
+        assertEquals("1234567890", workspaceMetaData.getSharingToken());
     }
 
 }
