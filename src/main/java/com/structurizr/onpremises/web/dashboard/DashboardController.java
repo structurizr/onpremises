@@ -1,9 +1,12 @@
-package com.structurizr.onpremises.web.home;
+package com.structurizr.onpremises.web.dashboard;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
+import com.structurizr.onpremises.domain.User;
+import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.HtmlUtils;
 import com.structurizr.onpremises.web.AbstractController;
 import com.structurizr.util.StringUtils;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,16 +19,18 @@ import java.util.Comparator;
 import java.util.List;
 
 @Controller
-public class HomePageController extends AbstractController {
+public class DashboardController extends AbstractController {
 
     private static final String SORT_DATE = "date";
     private static final String SORT_NAME = "name";
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
+    @PreAuthorize("isAuthenticated()")
     public String show(@RequestParam(required = false) String sort, ModelMap model) {
-        model.addAttribute("urlPrefix", "/share");
+        model.addAttribute("urlPrefix", "/workspace");
+        model.addAttribute("showAdminFeatures", Configuration.getInstance().getAdminUsersAndRoles().isEmpty() || getUser().isAdmin());
 
-        List<WorkspaceMetaData> workspaces = new ArrayList<>(workspaceComponent.getWorkspaces(null));
+        List<WorkspaceMetaData> workspaces = new ArrayList<>(workspaceComponent.getWorkspaces(getUser()));
 
         sort = HtmlUtils.filterHtml(sort);
         if (!StringUtils.isNullOrEmpty(sort) && sort.trim().equals(SORT_DATE)) {
@@ -43,7 +48,7 @@ public class HomePageController extends AbstractController {
         model.addAttribute("sort", sort);
         addCommonAttributes(model, "", true);
 
-        return "home";
+        return "dashboard";
     }
 
 }

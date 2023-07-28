@@ -100,12 +100,12 @@ public class WorkspaceComponentImplTests {
         User user = new User("user1", new HashSet<>(), AuthenticationMethod.LOCAL);
         Collection<WorkspaceMetaData> workspaces = workspaceComponent.getWorkspaces(user);
 
-        assertEquals(4, workspaces.size());
+        assertEquals(3, workspaces.size());
         assertTrue(workspaces.stream().anyMatch(w -> w.getId() == 1)); // private workspace, read/write access
         assertTrue(workspaces.stream().anyMatch(w -> w.getId() == 2)); // private workspace, read-only access
         assertTrue(workspaces.stream().anyMatch(w -> w.getId() == 3)); // open workspace
         assertFalse(workspaces.stream().anyMatch(w -> w.getId() == 4)); // private workspace, no access
-        assertTrue(workspaces.stream().anyMatch(w -> w.getId() == 5)); // public workspace
+        assertFalse(workspaces.stream().anyMatch(w -> w.getId() == 5)); // public workspace, not included
     }
 
     @Test

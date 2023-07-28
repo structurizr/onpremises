@@ -81,15 +81,15 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
 
         if (user == null) {
             for (WorkspaceMetaData workspace : workspaces) {
-                if (workspace.isOpen()) {
-                    // the workspace is public, so anybody can see it
+                if (workspace.isPublicWorkspace() || workspace.hasNoUsersConfigured()) {
+                    // so anybody can see it
                     filteredWorkspaces.add(workspace);
                 }
             }
         } else {
             for (WorkspaceMetaData workspace : workspaces) {
-                if (workspace.isOpen()) {
-                    // the workspace is public, so anybody can see it
+                if (workspace.hasNoUsersConfigured()) {
+                    // the workspace has no users configured, so anybody can see it
                     filteredWorkspaces.add(workspace);
                 } else if (workspace.isWriteUser(user)) {
                     // the user has read-write access to the workspace

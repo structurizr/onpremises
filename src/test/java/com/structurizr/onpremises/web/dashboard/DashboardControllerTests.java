@@ -1,4 +1,4 @@
-package com.structurizr.onpremises.web.home;
+package com.structurizr.onpremises.web.dashboard;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.domain.User;
@@ -15,41 +15,21 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class HomePageControllerTests extends ControllerTestsBase {
+public class DashboardControllerTests extends ControllerTestsBase {
 
-    private HomePageController controller;
+    private DashboardController controller;
     private ModelMap model;
 
     @BeforeEach
     public void setUp() {
-        controller = new HomePageController();
+        controller = new DashboardController();
 
         model = new ModelMap();
         Configuration.init();
     }
 
     @Test
-    public void show_WhenUnauthenticated() {
-        WorkspaceMetaData workspace1 = new WorkspaceMetaData(1);
-
-        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
-            @Override
-            public Collection<WorkspaceMetaData> getWorkspaces(User user) {
-                return List.of(workspace1);
-            }
-        });
-        clearUser();
-
-        String result = controller.show("", model);
-
-        assertEquals(1, model.getAttribute("numberOfWorkspaces"));
-        assertTrue(((Collection)model.getAttribute("workspaces")).contains(workspace1));
-        assertEquals("/share", model.getAttribute("urlPrefix"));
-        assertEquals("home", result);
-    }
-
-    @Test
-    public void show_WhenAuthenticated() {
+    public void show_WhenAuthenticatedAndNoAdminUsersHaveBeenDefined() {
         WorkspaceMetaData workspace1 = new WorkspaceMetaData(1);
 
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
@@ -64,8 +44,55 @@ public class HomePageControllerTests extends ControllerTestsBase {
 
         assertEquals(1, model.getAttribute("numberOfWorkspaces"));
         assertTrue(((Collection)model.getAttribute("workspaces")).contains(workspace1));
-        assertEquals("/share", model.getAttribute("urlPrefix"));
-        assertEquals("home", result);
+        assertEquals("/workspace", model.getAttribute("urlPrefix"));
+        assertEquals("dashboard", result);
+        assertEquals(true, model.getAttribute("showAdminFeatures"));
     }
-    
+
+    @Test
+    public void show_WhenAuthenticatedAndTheUserIsNotAnAdmin() {
+        WorkspaceMetaData workspace1 = new WorkspaceMetaData(1);
+
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public Collection<WorkspaceMetaData> getWorkspaces(User user) {
+                return List.of(workspace1);
+            }
+        });
+
+        Configuration.getInstance().setAdminUsersAndRoles("admin@exmaple.com");
+        setUser("user@example.com");
+
+        String result = controller.show("", model);
+
+        assertEquals(1, model.getAttribute("numberOfWorkspaces"));
+        assertTrue(((Collection)model.getAttribute("workspaces")).contains(workspace1));
+        assertEquals("/workspace", model.getAttribute("urlPrefix"));
+        assertEquals("dashboard", result);
+        assertEquals(false, model.getAttribute("showAdminFeatures"));
+    }
+
+    @Test
+    public void show_WhenAuthenticatedAndTheUserIsAnAdmin() {
+        WorkspaceMetaData workspace1 = new WorkspaceMetaData(1);
+
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public Collection<WorkspaceMetaData> getWorkspaces(User user) {
+                return List.of(workspace1);
+            }
+        });
+
+        Configuration.getInstance().setAdminUsersAndRoles("admin@exmaple.com");
+        setUser("admin@example.com");
+
+        String result = controller.show("", model);
+
+        assertEquals(1, model.getAttribute("numberOfWorkspaces"));
+        assertTrue(((Collection)model.getAttribute("workspaces")).contains(workspace1));
+        assertEquals("/workspace", model.getAttribute("urlPrefix"));
+        assertEquals("dashboard", result);
+        assertEquals(false, model.getAttribute("showAdminFeatures"));
+    }
+
 }

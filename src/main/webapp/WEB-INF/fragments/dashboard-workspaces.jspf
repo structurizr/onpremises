@@ -1,3 +1,30 @@
+<style>
+    .workspaceSummary {
+        position: relative;
+        display: inline-block;
+        margin: 10px;
+        font-size: 18px;
+        max-width: 320px;
+        min-height: 360px;
+        max-height: 360px;
+        height: 360px;
+        padding: 10px;
+        border:1px solid #ddd;
+        border-radius: 4px;
+        overflow-y: hidden;
+    }
+
+    .workspaceThumbnail {
+        display: inline-block;
+        width: 300px;
+        height: 200px;
+        min-height: 200px;
+        max-height: 200px;
+        overflow-y: hidden;
+        margin-top: 10px;
+    }
+</style>
+
 <div class="section">
     <div class="centered">
         <c:if test="${numberOfWorkspaces > 3}">

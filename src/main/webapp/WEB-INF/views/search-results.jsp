@@ -3,7 +3,7 @@
         <h1><c:out value="${query}" /></h1>
 
         <div class="centered">
-            <form id="searchForm" method="get" action="/search" style="display: inline-block">
+            <form id="searchForm" method="get" action="${searchBaseUrl}search" style="display: inline-block">
                 <div class="form-inline" style="margin-top: 8px">
                     <div class="form-group">
                         <div class="btn-group">
