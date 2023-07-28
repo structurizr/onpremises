@@ -2,6 +2,7 @@ package com.structurizr.onpremises.component.workspace;
 
 import com.structurizr.Workspace;
 import com.structurizr.configuration.Role;
+import com.structurizr.configuration.Visibility;
 import com.structurizr.encryption.AesEncryptionStrategy;
 import com.structurizr.encryption.EncryptedWorkspace;
 import com.structurizr.encryption.EncryptionLocation;
@@ -9,8 +10,6 @@ import com.structurizr.encryption.EncryptionStrategy;
 import com.structurizr.io.json.EncryptedJsonWriter;
 import com.structurizr.onpremises.domain.AuthenticationMethod;
 import com.structurizr.onpremises.domain.User;
-import com.structurizr.onpremises.plugin.WorkspaceEvent;
-import com.structurizr.onpremises.plugin.WorkspaceEventListener;
 import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.DateUtils;
 import com.structurizr.util.WorkspaceUtils;
@@ -317,6 +316,51 @@ public class WorkspaceComponentImplTests {
         workspaceComponent.putWorkspace(1, json);
         assertTrue(jsonBuffer.toString().startsWith(String.format("{\"id\":1,\"name\":\"Name\",\"description\":\"Description\",\"revision\":2,\"lastModifiedDate\":\"%s\",\"ciphertext\"", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()))));
         assertTrue(jsonBuffer.toString().endsWith((json.substring(json.indexOf("ciphertext")))));
+    }
+
+    @Test
+    public void test_putWorkspace_UpdatesTheVisibility_WhenTheVisibilityIsSpecified() throws Exception {
+        Workspace workspace = new Workspace("Name", "Description");
+        workspace.getConfiguration().setVisibility(Visibility.Public);
+
+        String json = WorkspaceUtils.toJson(workspace, false);
+
+        final WorkspaceMetaData wmd = new WorkspaceMetaData(1);
+        wmd.setPublicWorkspace(false);
+
+        WorkspaceDao dao = new MockWorkspaceDao() {
+            @Override
+            public void putWorkspaceMetaData(WorkspaceMetaData workspaceMetaData) {
+                wmd.setPublicWorkspace(workspaceMetaData.isPublicWorkspace());
+            }
+        };
+
+        WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
+        workspaceComponent.putWorkspace(1, json);
+
+        assertTrue(wmd.isPublicWorkspace());
+    }
+
+    @Test
+    public void test_putWorkspace_DoesNotUpdateTheVisibility_WhenTheVisibilityIsNotSpecified() throws Exception {
+        Workspace workspace = new Workspace("Name", "Description");
+
+        String json = WorkspaceUtils.toJson(workspace, false);
+
+        final WorkspaceMetaData wmd = new WorkspaceMetaData(1);
+        wmd.setPublicWorkspace(false);
+
+        WorkspaceDao dao = new MockWorkspaceDao() {
+            @Override
+            public void putWorkspaceMetaData(WorkspaceMetaData workspaceMetaData) {
+                wmd.setPublicWorkspace(workspaceMetaData.isPublicWorkspace());
+            }
+        };
+
+        WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
+        workspaceComponent.putWorkspace(1, json);
+
+        assertFalse(wmd.isPublicWorkspace());
     }
 
     @Test

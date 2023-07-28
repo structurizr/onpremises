@@ -93,7 +93,9 @@ sourceSets.main.resources {
 
 task pluginJar(type: Jar) {
 	from(sourceSets.main.output) {
-		include "com/structurizr/onpremises/plugin/**"
+		include "com/structurizr/onpremises/component/workspace/WorkspaceEventListener.class"
+		include "com/structurizr/onpremises/component/workspace/WorkspaceEvent.class"
+		include "com/structurizr/onpremises/component/workspace/WorkspaceProperties.class"
 	}
 	destinationDirectory = file('lib')
 	archiveBaseName = 'structurizr-onpremises-plugins'

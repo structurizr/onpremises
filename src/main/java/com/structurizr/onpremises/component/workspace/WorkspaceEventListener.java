@@ -1,4 +1,4 @@
-package com.structurizr.onpremises.plugin;
+package com.structurizr.onpremises.component.workspace;
 
 public interface WorkspaceEventListener {
 

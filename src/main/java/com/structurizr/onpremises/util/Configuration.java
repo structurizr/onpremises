@@ -2,7 +2,7 @@ package com.structurizr.onpremises.util;
 
 import com.structurizr.onpremises.component.search.SearchComponent;
 import com.structurizr.onpremises.component.workspace.WorkspaceComponent;
-import com.structurizr.onpremises.plugin.WorkspaceEventListener;
+import com.structurizr.onpremises.component.workspace.WorkspaceEventListener;
 import com.structurizr.util.StringUtils;
 
 import java.io.File;

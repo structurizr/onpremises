@@ -3,6 +3,7 @@ package com.structurizr.onpremises.component.workspace;
 import com.structurizr.AbstractWorkspace;
 import com.structurizr.Workspace;
 import com.structurizr.configuration.Role;
+import com.structurizr.configuration.Visibility;
 import com.structurizr.configuration.WorkspaceConfiguration;
 import com.structurizr.encryption.AesEncryptionStrategy;
 import com.structurizr.encryption.EncryptedWorkspace;
@@ -13,7 +14,6 @@ import com.structurizr.io.json.EncryptedJsonWriter;
 import com.structurizr.onpremises.domain.Image;
 import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 import com.structurizr.onpremises.domain.User;
-import com.structurizr.onpremises.plugin.WorkspaceEvent;
 import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.DateUtils;
 import com.structurizr.util.StringUtils;
@@ -174,15 +174,15 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
             String jsonToBeStored;
             WorkspaceConfiguration configuration;
 
-            if (Configuration.getInstance().getWorkspaceEventListener() != null) {
-                WorkspaceEvent event = new WorkspaceEvent(workspaceId, json);
-                Configuration.getInstance().getWorkspaceEventListener().beforeSave(event);
-                json = event.getJson();
-            }
-
             WorkspaceMetaData workspaceMetaData = getWorkspaceMetaData(workspaceId);
             if (workspaceMetaData == null) {
                 workspaceMetaData = new WorkspaceMetaData(workspaceId);
+            }
+
+            if (Configuration.getInstance().getWorkspaceEventListener() != null) {
+                WorkspaceEvent event = new WorkspaceEvent(workspaceMetaData, json);
+                Configuration.getInstance().getWorkspaceEventListener().beforeSave(event);
+                json = event.getJson();
             }
 
             if (json.contains(ENCRYPTION_STRATEGY_STRING) && json.contains(CIPHERTEXT_STRING)) {
@@ -282,15 +282,21 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
                 workspaceMetaData.setRevision(workspaceMetaData.getRevision() + 1);
 
                 // configure users
-                if (configuration != null && !configuration.getUsers().isEmpty()) {
-                    workspaceMetaData.clearWriteUsers();
-                    workspaceMetaData.clearReadUsers();
+                if (configuration != null) {
+                    if (configuration.getVisibility() != null) {
+                        workspaceMetaData.setPublicWorkspace(configuration.getVisibility() == Visibility.Public);
+                    }
 
-                    for (com.structurizr.configuration.User user : configuration.getUsers()) {
-                        if (user.getRole() == Role.ReadWrite) {
-                            workspaceMetaData.addWriteUser(user.getUsername());
-                        } else {
-                            workspaceMetaData.addReadUser(user.getUsername());
+                    if (!configuration.getUsers().isEmpty()) {
+                        workspaceMetaData.clearWriteUsers();
+                        workspaceMetaData.clearReadUsers();
+
+                        for (com.structurizr.configuration.User user : configuration.getUsers()) {
+                            if (user.getRole() == Role.ReadWrite) {
+                                workspaceMetaData.addWriteUser(user.getUsername());
+                            } else {
+                                workspaceMetaData.addReadUser(user.getUsername());
+                            }
                         }
                     }
                 }
