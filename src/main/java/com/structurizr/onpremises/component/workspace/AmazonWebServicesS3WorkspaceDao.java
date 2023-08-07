@@ -28,6 +28,7 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
     static final String REGION_PROPERTY = "aws-s3.region";
     static final String BUCKET_NAME_PROPERTY = "aws-s3.bucketName";
     static final String ENDPOINT_PROPERTY = "aws-s3.endpoint";
+    static final String PATH_STYLE_ACCESS_PROPERTY = "aws-s3.pathStyleAccess";
 
     private static final String WORKSPACE_PROPERTIES_FILENAME = "workspace.properties";
     private static final String WORKSPACE_CONTENT_FILENAME = "workspace.json";
@@ -41,16 +42,18 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
     private final String region;
     private final String bucketName;
     private final String endpoint;
+    private final Boolean pathStyleAccessEnabled;
 
     private final AmazonS3 amazonS3;
 
     AmazonWebServicesS3WorkspaceDao(String accessKeyId, String secretAccessKey, String region, String bucketName,
-            String endpoint) {
+            String endpoint, Boolean pathStyleAccessEnabled) {
         this.accessKeyId = accessKeyId;
         this.secretAccessKey = secretAccessKey;
         this.region = region;
         this.bucketName = bucketName;
         this.endpoint = endpoint;
+        this.pathStyleAccessEnabled = pathStyleAccessEnabled;
 
         this.amazonS3 = createAmazonS3Client();
     }
@@ -60,7 +63,7 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
             log.debug("Creating AWS client with credentials from structurizr.properties file");
             BasicAWSCredentials credentials = new BasicAWSCredentials(accessKeyId, secretAccessKey);
             if (!StringUtils.isNullOrEmpty(endpoint)) {
-                return AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials)).withEndpointConfiguration(new AmazonS3ClientBuilder.EndpointConfiguration(endpoint, region)).build();
+                return AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials)).withEndpointConfiguration(new AmazonS3ClientBuilder.EndpointConfiguration(endpoint, region)).withPathStyleAccessEnabled(pathStyleAccessEnabled).build();
             }
             return AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials)).withRegion(region).build();
         } else {
