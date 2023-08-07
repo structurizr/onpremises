@@ -42,12 +42,18 @@ class AmazonWebServicesS3ReviewDao implements ReviewDao {
     private final String region;
     private final String bucketName;
     private final String endpoint;
-    private final Boolean pathStyleAccessEnabled;
+    private final boolean pathStyleAccessEnabled;
 
     private final AmazonS3 amazonS3;
 
-    AmazonWebServicesS3ReviewDao(String accessKeyId, String secretAccessKey, String region, String bucketName, String endpoint,
-            Boolean pathStyleAccessEnabled) {
+    AmazonWebServicesS3ReviewDao(
+            String accessKeyId,
+            String secretAccessKey,
+            String region,
+            String bucketName,
+            String endpoint,
+            boolean pathStyleAccessEnabled
+    ) {
         this.accessKeyId = accessKeyId;
         this.secretAccessKey = secretAccessKey;
         this.region = region;

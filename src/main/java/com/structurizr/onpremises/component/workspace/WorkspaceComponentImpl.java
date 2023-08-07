@@ -48,7 +48,7 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
             String region = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3WorkspaceDao.REGION_PROPERTY, "");
             String bucketName = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3WorkspaceDao.BUCKET_NAME_PROPERTY, "");
             String endpoint = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3WorkspaceDao.ENDPOINT_PROPERTY, "");
-            Boolean pathAccessEnabled = Boolean.parseBoolean(Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3WorkspaceDao.PATH_STYLE_ACCESS_PROPERTY, "false"));
+            boolean pathAccessEnabled = Boolean.parseBoolean(Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3WorkspaceDao.PATH_STYLE_ACCESS_PROPERTY, "false"));
 
             this.workspaceDao = new AmazonWebServicesS3WorkspaceDao(accessKeyId, secretAccessKey, region, bucketName, endpoint,pathAccessEnabled);
         } else {

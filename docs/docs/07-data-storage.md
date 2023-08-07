@@ -14,15 +14,15 @@ The basic steps to configure S3 are:
 - Create a new programmatic access user in AWS, with the following permissions: `AmazonS3FullAccess`.
 - Modify your `structurizr.properties` file to configure AWS S3 integration as follows:
 
-| Property name | Property value |
-| ------------- | -------------- |
-| `structurizr.data` | `aws-s3` |
-| `aws-s3.accessKeyId` | Your AWS API key ID. |
-| `aws-s3.secretAccessKey` | Your AWS API secret access key. |
-| `aws-s3.region` | Your AWS region (e.g. `us-east-1`). |
-| `aws-s3.bucketName` | Your S3 bucket name. |
-| `aws-s3.endpoint` | Your custom S3-compatible endpoint. |
-| `aws-s3.pathStyleAccess` | Enables aws sdk path style access. |
+| Property name            | Property value                                                                                                                                 |
+|--------------------------|------------------------------------------------------------------------------------------------------------------------------------------------|
+| `structurizr.data`       | `aws-s3`                                                                                                                                       |
+| `aws-s3.accessKeyId`     | Your AWS API key ID.                                                                                                                           |
+| `aws-s3.secretAccessKey` | Your AWS API secret access key.                                                                                                                |
+| `aws-s3.region`          | Your AWS region (e.g. `us-east-1`).                                                                                                            |
+| `aws-s3.bucketName`      | Your S3 bucket name.                                                                                                                           |
+| `aws-s3.endpoint`        | Your custom S3-compatible endpoint.                                                                                                            |
+| `aws-s3.pathStyleAccess` | Enables [path-style access](https://docs.aws.amazon.com/AmazonS3/latest/userguide/VirtualHosting.html#path-style-access) (`false` by default). |
 
 Alternatively, you can leave the `aws-s3.accessKeyId` and `aws-s3.secretAccessKey` parameters unset,
 and the on-premises installation will use the "Default Credential Provider Chain" to search your environment for the credentials, as described at

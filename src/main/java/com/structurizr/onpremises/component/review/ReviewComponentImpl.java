@@ -39,7 +39,7 @@ class ReviewComponentImpl implements ReviewComponent {
             String region = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3ReviewDao.REGION_PROPERTY, "");
             String bucketName = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3ReviewDao.BUCKET_NAME_PROPERTY, "");
             String endpoint = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3ReviewDao.ENDPOINT_PROPERTY, "");
-            Boolean pathAccessEnabled = Boolean.parseBoolean(Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3ReviewDao.PATH_STYLE_ACCESS_PROPERTY, "false"));
+            boolean pathAccessEnabled = Boolean.parseBoolean(Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3ReviewDao.PATH_STYLE_ACCESS_PROPERTY, "false"));
 
             this.reviewDao = new AmazonWebServicesS3ReviewDao(accessKeyId, secretAccessKey, region, bucketName, endpoint, pathAccessEnabled);
         } else {
