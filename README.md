@@ -29,10 +29,11 @@ The integration tests use Testcontainers to start an Elasticsearch instance. If 
 `./gradlew clean build -x integrationTest` to exclude the integration tests.
 
 
-If successful, you will see a file named `structurizr-onpremises.war` in `build/libs`.
+If successful, you will see a file named `structurizr-onpremises.war` in `structurizr-onpremises/build/libs`.
 To then build a Docker image:
 
 ```
+cd structurizr-onpremises
 docker build . -t mytag
 ```
 

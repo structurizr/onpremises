@@ -1,0 +1,104 @@
+plugins {
+	id 'war'
+}
+
+group = 'com.structurizr'
+
+sourceCompatibility = '17'
+targetCompatibility = '17'
+
+repositories {
+	mavenCentral()
+}
+
+testing {
+	suites {
+		test {
+			useJUnitJupiter()
+		}
+
+		integrationTest(JvmTestSuite) {
+			dependencies {
+				implementation project()
+			}
+
+			targets {
+				all {
+					testTask.configure {
+						shouldRunAfter(test)
+					}
+				}
+			}
+		}
+	}
+}
+
+tasks.named('check') {
+	dependsOn(testing.suites.integrationTest)
+}
+
+dependencies {
+
+	implementation project(':structurizr-onpremises-plugin')
+
+	implementation 'com.structurizr:structurizr-dsl:1.32.0'
+	implementation 'com.structurizr:structurizr-graphviz:2.2.1'
+
+	implementation 'javax.servlet:javax.servlet-api:3.0.1'
+	implementation 'taglibs:standard:1.1.2'
+	implementation 'jstl:jstl:1.2'
+	implementation 'javax.annotation:javax.annotation-api:1.3.2'
+
+	implementation 'org.springframework:spring-webmvc:5.3.23'
+	implementation 'org.springframework.security:spring-security-web:5.6.2'
+	implementation 'org.springframework.security:spring-security-config:5.6.2'
+	implementation 'org.springframework.security:spring-security-ldap:5.6.2'
+	implementation 'org.springframework.security.extensions:spring-security-saml2-core:1.0.3.RELEASE'
+	implementation 'org.springframework.session:spring-session-data-redis:1.3.3.RELEASE'
+
+	implementation 'org.apache.lucene:lucene-core:9.7.0'
+	implementation 'org.apache.lucene:lucene-queryparser:9.7.0'
+
+	implementation 'org.apache.logging.log4j:log4j-api:2.17.1'
+	implementation 'org.apache.logging.log4j:log4j-core:2.17.1'
+	implementation 'org.apache.logging.log4j:log4j-jcl:2.17.1'
+	implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.17.1'
+
+	implementation 'org.elasticsearch.client:elasticsearch-rest-client:7.9.0'
+	implementation 'org.apache.httpcomponents.client5:httpclient5:5.1.3'
+	implementation 'org.apache.httpcomponents:httpasyncclient:4.1.4'
+
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.134'
+	implementation 'com.amazonaws:aws-java-sdk-sts:1.12.134'
+
+	testImplementation 'org.testcontainers:elasticsearch:1.18.3'
+}
+
+war {
+	duplicatesStrategy 'exclude'
+
+	webInf {
+		from('src/main/java') {
+			include '*.xml'
+			into('classes')
+		}
+	}
+}
+
+sourceSets.main.resources {
+	srcDirs = ['src/main/java','src/main/resources']
+	include '**/*.xml'
+	include 'log4j2.properties'
+	include 'samlKeystore.jks'
+	include 'build.properties'
+}
+
+task explodedWar(type: Sync) {
+	into "${buildDir}/exploded"
+	with war
+}
+
+configurations {
+	integrationTestImplementation.extendsFrom testImplementation
+	integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+}

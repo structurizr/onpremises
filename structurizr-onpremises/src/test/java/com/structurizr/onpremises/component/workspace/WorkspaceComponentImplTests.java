@@ -449,7 +449,7 @@ public class WorkspaceComponentImplTests {
         Configuration.getInstance().setWorkspaceEventListener(new WorkspaceEventListener() {
             @Override
             public void beforeSave(WorkspaceEvent event) {
-                buf.append("beforeSave:" + event.getWorkspaceId() + ":" + event.getJson());
+                buf.append("beforeSave:" + event.getWorkspaceProperties().getId() + ":" + event.getJson());
             }
         });
 

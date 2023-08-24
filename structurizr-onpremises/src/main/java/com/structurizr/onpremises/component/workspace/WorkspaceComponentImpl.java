@@ -25,10 +25,7 @@ import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class WorkspaceComponentImpl implements WorkspaceComponent {
 
@@ -181,7 +178,7 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
             }
 
             if (Configuration.getInstance().getWorkspaceEventListener() != null) {
-                WorkspaceEvent event = new WorkspaceEvent(workspaceMetaData, json);
+                WorkspaceEvent event = createWorkspaceEvent(workspaceMetaData, json);
                 Configuration.getInstance().getWorkspaceEventListener().beforeSave(event);
                 json = event.getJson();
             }
@@ -312,6 +309,55 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
             e.printStackTrace();
             throw new WorkspaceComponentException(e.getMessage(), e);
         }
+    }
+
+    private WorkspaceEvent createWorkspaceEvent(WorkspaceMetaData workspaceMetaData, String workspaceAsJson) {
+        return new WorkspaceEvent() {
+
+            private String json = workspaceAsJson;
+
+            @Override
+            public WorkspaceProperties getWorkspaceProperties() {
+                return workspaceMetaData.toWorkspaceProperties();
+            }
+
+            @Override
+            public String getJson() {
+                return json;
+            }
+
+            @Override
+            public void setJson(String json) {
+                this.json = json;
+            }
+        };
+//
+//            public WorkspaceProperties(WorkspaceMetaData workspaceMetaData) {
+//            this.id = workspaceMetaData.getId();
+//            this.name = workspaceMetaData.getName();
+//            this.description = workspaceMetaData.getDescription();
+//
+//            this.users = new LinkedHashSet<>();
+//            for (String user : workspaceMetaData.getReadUsers()) {
+//                users.add(new com.structurizr.configuration.User(user, Role.ReadOnly));
+//            }
+//            for (String user : workspaceMetaData.getWriteUsers()) {
+//                users.add(new com.structurizr.configuration.User(user, Role.ReadWrite));
+//            }
+//
+//            if (workspaceMetaData.isPublicWorkspace()) {
+//                this.visibility = Visibility.Public;
+//            } else {
+//                this.visibility = Visibility.Private;
+//            }
+//
+//            this.lastModifiedDate = workspaceMetaData.getLastModifiedDate();
+//        }
+//
+//        this.workspaceId = workspaceMetaData.getId();
+//        this.workspaceProperties = new WorkspaceProperties(workspaceMetaData);
+//        this.json = json;
+
     }
 
     @Override

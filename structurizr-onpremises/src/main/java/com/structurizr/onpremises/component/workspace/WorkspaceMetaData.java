@@ -1,5 +1,7 @@
 package com.structurizr.onpremises.component.workspace;
 
+import com.structurizr.configuration.Role;
+import com.structurizr.configuration.Visibility;
 import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.domain.UserType;
 import com.structurizr.onpremises.util.DateUtils;
@@ -467,6 +469,52 @@ public class WorkspaceMetaData {
         } else {
             return buf.toString();
         }
+    }
+
+    public WorkspaceProperties toWorkspaceProperties() {
+        return new WorkspaceProperties() {
+            @Override
+            public long getId() {
+                return WorkspaceMetaData.this.getId();
+            }
+
+            @Override
+            public String getName() {
+                return WorkspaceMetaData.this.getName();
+            }
+
+            @Override
+            public String getDescription() {
+                return WorkspaceMetaData.this.getDescription();
+            }
+
+            @Override
+            public Date getLastModifiedDate() {
+                return WorkspaceMetaData.this.getLastModifiedDate();
+            }
+
+            @Override
+            public Visibility getVisibility() {
+                if (WorkspaceMetaData.this.isPublicWorkspace()) {
+                    return Visibility.Public;
+                } else {
+                    return Visibility.Private;
+                }
+            }
+
+            @Override
+            public Set<com.structurizr.configuration.User> getUsers() {
+                Set<com.structurizr.configuration.User> users = new LinkedHashSet<>();
+                for (String user : WorkspaceMetaData.this.getReadUsers()) {
+                    users.add(new com.structurizr.configuration.User(user, Role.ReadOnly));
+                }
+                for (String user : WorkspaceMetaData.this.getWriteUsers()) {
+                    users.add(new com.structurizr.configuration.User(user, Role.ReadWrite));
+                }
+
+                return users;
+            }
+        };
     }
 
 }
