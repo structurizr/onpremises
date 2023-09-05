@@ -15,6 +15,11 @@ import java.util.List;
 public abstract class MockWorkspaceComponent implements WorkspaceComponent {
 
     @Override
+    public List<Long> getWorkspaceIds() throws WorkspaceComponentException {
+        return null;
+    }
+
+    @Override
     public Collection<WorkspaceMetaData> getWorkspaces() {
         return null;
     }

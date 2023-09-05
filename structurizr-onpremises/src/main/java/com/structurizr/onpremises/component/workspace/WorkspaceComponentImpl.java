@@ -60,6 +60,12 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
         this.encryptionPassphrase = encryptionPassphrase;
     }
 
+
+    @Override
+    public List<Long> getWorkspaceIds() throws WorkspaceComponentException {
+        return workspaceDao.getWorkspaceIds();
+    }
+
     @Override
     public Collection<WorkspaceMetaData> getWorkspaces() throws WorkspaceComponentException {
         List<WorkspaceMetaData> workspaces = new ArrayList<>();

@@ -16,6 +16,8 @@ public interface WorkspaceComponent {
     String FILE = "file";
     String AMAZON_WEB_SERVICES_S3 = "aws-s3";
 
+    List<Long> getWorkspaceIds() throws WorkspaceComponentException;
+
     Collection<WorkspaceMetaData> getWorkspaces() throws WorkspaceComponentException;
 
     Collection<WorkspaceMetaData> getWorkspaces(User user) throws WorkspaceComponentException;
