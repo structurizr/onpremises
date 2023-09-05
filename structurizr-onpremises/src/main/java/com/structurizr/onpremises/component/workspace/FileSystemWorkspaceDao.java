@@ -56,7 +56,7 @@ class FileSystemWorkspaceDao extends AbstractWorkspaceDao {
     }
 
     @Override
-    protected List<Long> getWorkspaceIds() {
+    public List<Long> getWorkspaceIds() {
         File[] files = dataDirectory.listFiles();
         List<Long> workspaceIds = new ArrayList<>();
 

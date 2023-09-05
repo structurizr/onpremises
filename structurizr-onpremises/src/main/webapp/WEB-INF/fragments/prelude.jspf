@@ -46,6 +46,16 @@
                 <a id="brandingLogoAnchor" href="/"><img src="/static/img/structurizr-banner.png" alt="Structurizr" class="structurizrBannerLight img-responsive brandingLogo" /><img src="/static/img/structurizr-banner-dark.png" alt="Structurizr" class="structurizrBannerDark img-responsive brandingLogo" /></a>
             </div>
             <div class="col-sm-10 centered" style="padding: 20px 20px 10px 20px; text-align: right;">
+                <span class="topNavigationItem" style="margin-right: 0">
+                    <form id="searchForm" method="get" action="/search" style="display: inline-block">
+                        <div class="form-inline" style="margin-top: 8px">
+                            <div class="form-group">
+                                <input type="text" name="query" class="form-control" placeholder="Search" value="${query}" style="width: 300px" />
+                            </div>
+                        </div>
+                    </form>
+                </span>
+
                 <c:choose>
                     <c:when test="${authenticated eq true}">
                         <span class="topNavigationItem" style="margin-right: 0">

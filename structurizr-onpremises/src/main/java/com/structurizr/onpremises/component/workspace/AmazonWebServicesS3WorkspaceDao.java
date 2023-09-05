@@ -251,7 +251,7 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
     }
 
     @Override
-    protected List<Long> getWorkspaceIds() {
+    public List<Long> getWorkspaceIds() {
         List<Long> workspaceIds = new ArrayList<>();
 
         try {
@@ -282,13 +282,16 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
             GetObjectRequest getRequest = new GetObjectRequest(bucketName, objectKey);
 
             inputStream = amazonS3.getObject(getRequest).getObjectContent();
+            if (inputStream != null) {
+                Properties properties = new Properties();
+                properties.load(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
 
-            Properties properties = new Properties();
-            properties.load(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-
-            return WorkspaceMetaData.fromProperties(workspaceId, properties);
+                return WorkspaceMetaData.fromProperties(workspaceId, properties);
+            } else {
+                return null;
+            }
         } catch (Throwable t) {
-            t.printStackTrace();
+            log.error(t.getMessage());
             return null;
         } finally {
             try {

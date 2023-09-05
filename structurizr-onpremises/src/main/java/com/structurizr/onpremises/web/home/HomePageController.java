@@ -23,7 +23,9 @@ public class HomePageController extends AbstractController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String show(@RequestParam(required = false) String sort, ModelMap model) {
-        model.addAttribute("urlPrefix", "/share");
+        if (isAuthenticated()) {
+            return "redirect:/dashboard";
+        }
 
         List<WorkspaceMetaData> workspaces = new ArrayList<>(workspaceComponent.getWorkspaces(null));
 

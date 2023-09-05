@@ -68,26 +68,11 @@ public class SearchController extends AbstractController {
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
-    public String searchFromHomePage(ModelMap model,
+    public String search(ModelMap model,
                          @RequestParam(required = false) String query,
                          @RequestParam(required = false) Long workspaceId,
                          @RequestParam(required = false) String category) {
         model.addAttribute("searchBaseUrl", "/");
-        return search(null, model, query, workspaceId, category);
-    }
-
-
-    @RequestMapping(value = "/dashboard/search", method = RequestMethod.GET)
-    @PreAuthorize("isAuthenticated()")
-    public String searchFromDashboard(ModelMap model,
-                                    @RequestParam(required = false) String query,
-                                    @RequestParam(required = false) Long workspaceId,
-                                    @RequestParam(required = false) String category) {
-        model.addAttribute("searchBaseUrl", "/dashboard/");
-        return search(getUser(), model, query, workspaceId, category);
-    }
-
-    private String search(User user, ModelMap model, String query, Long workspaceId, String category) {
 
         List<SearchResult> filteredSearchResults = new ArrayList<>();
 
@@ -102,7 +87,7 @@ public class SearchController extends AbstractController {
             category = category.toLowerCase();
         }
 
-        Collection<WorkspaceMetaData> workspaces = workspaceComponent.getWorkspaces(user);
+        Collection<WorkspaceMetaData> workspaces = workspaceComponent.getWorkspaces(getUser());
         if (!workspaces.isEmpty()) {
             Map<Long, WorkspaceMetaData> workspacesById = new HashMap<>();
 
@@ -137,7 +122,6 @@ public class SearchController extends AbstractController {
         model.addAttribute("workspaceId", workspaceId);
         model.addAttribute("category", category);
         model.addAttribute("results", filteredSearchResults);
-        model.addAttribute("urlPrefix", isAuthenticated() ? "/workspace" : "/share");
         addCommonAttributes(model, "Search", true);
 
         return "search-results";

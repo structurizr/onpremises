@@ -10,7 +10,7 @@ import java.util.List;
 
 interface WorkspaceDao {
 
-    Collection<WorkspaceMetaData> getWorkspaces();
+    List<Long> getWorkspaceIds();
 
     WorkspaceMetaData getWorkspaceMetaData(long workspaceId);
 

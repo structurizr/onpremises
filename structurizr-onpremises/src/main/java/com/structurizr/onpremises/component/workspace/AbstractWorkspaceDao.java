@@ -4,30 +4,13 @@ import com.structurizr.onpremises.domain.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
-public abstract class AbstractWorkspaceDao implements WorkspaceDao {
+abstract class AbstractWorkspaceDao implements WorkspaceDao {
 
     private static final Log log = LogFactory.getLog(WorkspaceDao.class);
-
-    protected abstract List<Long> getWorkspaceIds();
-
-    @Override
-    public final Collection<WorkspaceMetaData> getWorkspaces() {
-        List<WorkspaceMetaData> workspaces = new ArrayList<>();
-        Collection<Long> workspaceIds = getWorkspaceIds();
-
-        for (Long workspaceId : workspaceIds) {
-            WorkspaceMetaData workspace = getWorkspaceMetaData(workspaceId);
-            if (workspace != null) {
-                workspaces.add(workspace);
-            }
-        }
-
-        workspaces.sort(Comparator.comparing(wmd -> wmd.getName().toLowerCase()));
-
-        return workspaces;
-    }
 
     @Override
     public final long createWorkspace(User user) throws WorkspaceComponentException {

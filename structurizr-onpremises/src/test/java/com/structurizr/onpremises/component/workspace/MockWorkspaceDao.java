@@ -11,7 +11,7 @@ import java.util.List;
 public class MockWorkspaceDao implements WorkspaceDao {
 
     @Override
-    public Collection<WorkspaceMetaData> getWorkspaces() {
+    public List<Long> getWorkspaceIds() {
         return null;
     }
 

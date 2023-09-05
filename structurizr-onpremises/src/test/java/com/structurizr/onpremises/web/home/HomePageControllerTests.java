@@ -44,28 +44,16 @@ public class HomePageControllerTests extends ControllerTestsBase {
 
         assertEquals(1, model.getAttribute("numberOfWorkspaces"));
         assertTrue(((Collection)model.getAttribute("workspaces")).contains(workspace1));
-        assertEquals("/share", model.getAttribute("urlPrefix"));
         assertEquals("home", result);
     }
 
     @Test
     public void show_WhenAuthenticated() {
-        WorkspaceMetaData workspace1 = new WorkspaceMetaData(1);
-
-        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
-            @Override
-            public Collection<WorkspaceMetaData> getWorkspaces(User user) {
-                return List.of(workspace1);
-            }
-        });
         setUser("user@example.com");
 
         String result = controller.show("", model);
 
-        assertEquals(1, model.getAttribute("numberOfWorkspaces"));
-        assertTrue(((Collection)model.getAttribute("workspaces")).contains(workspace1));
-        assertEquals("/share", model.getAttribute("urlPrefix"));
-        assertEquals("home", result);
+        assertEquals("redirect:/dashboard", result);
     }
     
 }

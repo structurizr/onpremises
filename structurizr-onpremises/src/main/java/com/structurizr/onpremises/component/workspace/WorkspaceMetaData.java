@@ -47,6 +47,7 @@ public class WorkspaceMetaData {
     private String apiSecret;
     private boolean publicWorkspace = false;
     private String sharingToken = "";
+    private String urlPrefix = "/workspace";
 
     private Date lastModifiedDate;
     private String lastModifiedUser;
@@ -123,6 +124,14 @@ public class WorkspaceMetaData {
 
     public boolean isOpen() {
         return isPublicWorkspace() || hasNoUsersConfigured();
+    }
+
+    public void setUrlPrefix(String urlPrefix) {
+        this.urlPrefix = urlPrefix;
+    }
+
+    public String getUrlPrefix() {
+        return this.urlPrefix;
     }
 
     public String getSharingToken() {

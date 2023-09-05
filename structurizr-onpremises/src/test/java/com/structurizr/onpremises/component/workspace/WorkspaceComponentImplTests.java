@@ -29,37 +29,49 @@ public class WorkspaceComponentImplTests {
     }
 
     @Test
-    public void getWorkspaces() {
+    public void getWorkspaces_WhenThereAreNoWorkspaces() {
         Collection<WorkspaceMetaData> workspaces = new ArrayList<>();
 
         WorkspaceDao dao = new MockWorkspaceDao() {
             @Override
-            public Collection<WorkspaceMetaData> getWorkspaces() {
-                return workspaces;
+            public List<Long> getWorkspaceIds() {
+                return new ArrayList<>();
             }
         };
 
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
-        assertSame(workspaces, workspaceComponent.getWorkspaces());
+        assertTrue(workspaceComponent.getWorkspaces().isEmpty());
     }
 
     @Test
     public void getWorkspaces_WhenUnauthenticated() {
+        Map<Long, WorkspaceMetaData> workspaceMap = new HashMap<>();
+
         WorkspaceMetaData workspace1 = new WorkspaceMetaData(1); // private workspace
         workspace1.addWriteUser("user1");
+        workspaceMap.put(workspace1.getId(), workspace1);
+
         WorkspaceMetaData workspace2 = new WorkspaceMetaData(2); // private workspace
         workspace2.addWriteUser("user2");
+        workspaceMap.put(workspace2.getId(), workspace2);
+
         WorkspaceMetaData workspace3 = new WorkspaceMetaData(3); // open workspace
+        workspaceMap.put(workspace3.getId(), workspace3);
+
         WorkspaceMetaData workspace4 = new WorkspaceMetaData(4); // public workspace
         workspace4.addWriteUser("user1");
         workspace4.setPublicWorkspace(true);
+        workspaceMap.put(workspace4.getId(), workspace4);
 
         WorkspaceDao dao = new MockWorkspaceDao() {
             @Override
-            public Collection<WorkspaceMetaData> getWorkspaces() {
-                return Arrays.asList(
-                        workspace1, workspace2, workspace3, workspace4
-                );
+            public List<Long> getWorkspaceIds() {
+                return new ArrayList<>(workspaceMap.keySet());
+            }
+
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMap.get(workspaceId);
             }
         };
 
@@ -67,32 +79,57 @@ public class WorkspaceComponentImplTests {
         Collection<WorkspaceMetaData> workspaces = workspaceComponent.getWorkspaces(null);
 
         assertEquals(2, workspaces.size());
+
         assertFalse(workspaces.stream().anyMatch(w -> w.getId() == 1)); // private workspace
+
         assertFalse(workspaces.stream().anyMatch(w -> w.getId() == 2)); // private workspace
+
         assertTrue(workspaces.stream().anyMatch(w -> w.getId() == 3)); // open workspace
+        assertEquals("/share", workspaces.stream().filter(w -> w.getId() == 3).findFirst().get().getUrlPrefix());
+
         assertTrue(workspaces.stream().anyMatch(w -> w.getId() == 4)); // public workspace
+        assertEquals("/share", workspaces.stream().filter(w -> w.getId() == 4).findFirst().get().getUrlPrefix());
     }
 
     @Test
     public void getWorkspaces_WhenAuthenticated() {
+        Map<Long, WorkspaceMetaData> workspaceMap = new HashMap<>();
+
         WorkspaceMetaData workspace1 = new WorkspaceMetaData(1); // private workspace, read/write access
         workspace1.addWriteUser("user1");
+        workspaceMap.put(workspace1.getId(), workspace1);
+
         WorkspaceMetaData workspace2 = new WorkspaceMetaData(2); // private workspace, read-only access
         workspace2.addWriteUser("user2");
         workspace2.addReadUser("user1");
+        workspaceMap.put(workspace2.getId(), workspace2);
+
         WorkspaceMetaData workspace3 = new WorkspaceMetaData(3); // open workspace
+        workspaceMap.put(workspace3.getId(), workspace3);
+
         WorkspaceMetaData workspace4 = new WorkspaceMetaData(4); // private workspace, no access
         workspace4.addWriteUser("user4");
-        WorkspaceMetaData workspace5 = new WorkspaceMetaData(5); // public workspace
-        workspace5.addWriteUser("user4");
+        workspaceMap.put(workspace4.getId(), workspace4);
+
+        WorkspaceMetaData workspace5 = new WorkspaceMetaData(5); // public workspace, read/write access
+        workspace5.addWriteUser("user1");
         workspace5.setPublicWorkspace(true);
+        workspaceMap.put(workspace5.getId(), workspace5);
+
+        WorkspaceMetaData workspace6 = new WorkspaceMetaData(6); // public workspace, no role-based access
+        workspace6.addWriteUser("user6");
+        workspace6.setPublicWorkspace(true);
+        workspaceMap.put(workspace6.getId(), workspace6);
 
         WorkspaceDao dao = new MockWorkspaceDao() {
             @Override
-            public Collection<WorkspaceMetaData> getWorkspaces() {
-                return Arrays.asList(
-                        workspace1, workspace2, workspace3, workspace4, workspace5
-                );
+            public List<Long> getWorkspaceIds() {
+                return new ArrayList<>(workspaceMap.keySet());
+            }
+
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return workspaceMap.get(workspaceId);
             }
         };
 
@@ -100,12 +137,24 @@ public class WorkspaceComponentImplTests {
         User user = new User("user1", new HashSet<>(), AuthenticationMethod.LOCAL);
         Collection<WorkspaceMetaData> workspaces = workspaceComponent.getWorkspaces(user);
 
-        assertEquals(3, workspaces.size());
+        assertEquals(5, workspaces.size());
+
         assertTrue(workspaces.stream().anyMatch(w -> w.getId() == 1)); // private workspace, read/write access
+        assertEquals("/workspace", workspaces.stream().filter(w -> w.getId() == 1).findFirst().get().getUrlPrefix());
+
         assertTrue(workspaces.stream().anyMatch(w -> w.getId() == 2)); // private workspace, read-only access
+        assertEquals("/workspace", workspaces.stream().filter(w -> w.getId() == 2).findFirst().get().getUrlPrefix());
+
         assertTrue(workspaces.stream().anyMatch(w -> w.getId() == 3)); // open workspace
+        assertEquals("/workspace", workspaces.stream().filter(w -> w.getId() == 3).findFirst().get().getUrlPrefix());
+
         assertFalse(workspaces.stream().anyMatch(w -> w.getId() == 4)); // private workspace, no access
-        assertFalse(workspaces.stream().anyMatch(w -> w.getId() == 5)); // public workspace, not included
+
+        assertTrue(workspaces.stream().anyMatch(w -> w.getId() == 5)); // public workspace, read/write access
+        assertEquals("/workspace", workspaces.stream().filter(w -> w.getId() == 5).findFirst().get().getUrlPrefix());
+
+        assertTrue(workspaces.stream().anyMatch(w -> w.getId() == 6)); // public workspace, no role-based access
+        assertEquals("/share", workspaces.stream().filter(w -> w.getId() == 6).findFirst().get().getUrlPrefix());
     }
 
     @Test

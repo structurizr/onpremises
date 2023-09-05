@@ -3,7 +3,7 @@
         <h1><c:out value="${query}" /></h1>
 
         <div class="centered">
-            <form id="searchForm" method="get" action="${searchBaseUrl}search" style="display: inline-block">
+            <form id="searchForm" method="get" action="/search" style="display: inline-block">
                 <div class="form-inline" style="margin-top: 8px">
                     <div class="form-group">
                         <div class="btn-group">
@@ -39,7 +39,7 @@
                         <tr>
                             <td width="90px">
                                 <div>
-                                    <img src="${urlPrefix}/${result.workspaceId}/images/thumbnail.png" width="70px" alt="<c:out value='${result.workspace.name}' escapeXml='true' />" class="thumbnail" onerror="this.onerror = null; this.src='/static/img/thumbnail-not-available.png';" />
+                                    <img src="${result.workspace.urlPrefix}/${result.workspaceId}/images/thumbnail.png" width="70px" alt="<c:out value='${result.workspace.name}' escapeXml='true' />" class="thumbnail" onerror="this.onerror = null; this.src='/static/img/thumbnail-not-available.png';" />
                                 </div>
                             </td>
                             <td>
@@ -57,10 +57,10 @@
                                         <img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/bounding-box.svg" class="icon-sm" />
                                     </c:when>
                                 </c:choose>
-                                <a href="${urlPrefix}/${result.workspaceId}${result.url}"><c:out value="${result.name}" escapeXml="true" /></a>
+                                <a href="${result.workspace.urlPrefix}/${result.workspaceId}${result.url}"><c:out value="${result.name}" escapeXml="true" /></a>
                                 <c:if test="${result.type ne 'workspace'}">
                                 <div class="smaller">
-                                    (from <a href="${urlPrefix}/${result.workspace.id}"><c:out value="${result.workspace.name}" escapeXml="true" /></a>)
+                                    (from <a href="${result.workspace.urlPrefix}/${result.workspace.id}"><c:out value="${result.workspace.name}" escapeXml="true" /></a>)
                                 </div>
                                 </c:if>
                                 <div class="smaller" style="margin-top: 5px">
