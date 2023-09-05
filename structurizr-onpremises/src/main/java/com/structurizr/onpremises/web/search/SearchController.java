@@ -54,13 +54,15 @@ public class SearchController extends AbstractController {
                     executorService.submit(() -> {
                         try {
                             WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(workspaceId);
-                            if (!workspaceMetaData.isClientEncrypted()) {
-                                log.debug("Indexing workspace with ID " + workspaceMetaData.getId());
-                                String json = workspaceComponent.getWorkspace(workspaceMetaData.getId(), null);
-                                Workspace workspace = WorkspaceUtils.fromJson(json);
-                                searchComponent.index(workspace);
-                            } else {
-                                log.debug("Skipping workspace with ID " + workspaceMetaData.getId() + " because it's client-side encrypted");
+                            if (workspaceMetaData != null) {
+                                if (!workspaceMetaData.isClientEncrypted()) {
+                                    log.debug("Indexing workspace with ID " + workspaceMetaData.getId());
+                                    String json = workspaceComponent.getWorkspace(workspaceMetaData.getId(), null);
+                                    Workspace workspace = WorkspaceUtils.fromJson(json);
+                                    searchComponent.index(workspace);
+                                } else {
+                                    log.debug("Skipping workspace with ID " + workspaceMetaData.getId() + " because it's client-side encrypted");
+                                }
                             }
                         } catch (Exception e) {
                             log.warn("Error indexing workspace with ID " + workspaceId, e);

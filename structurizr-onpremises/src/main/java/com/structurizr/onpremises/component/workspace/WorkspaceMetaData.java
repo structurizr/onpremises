@@ -36,6 +36,7 @@ public class WorkspaceMetaData {
     static final String LOCKED_DATE_PROPERTY = "lockedDate";
     static final String READ_USERS_AND_ROLES_PROPERTY = "readUsers";
     static final String WRITE_USERS_AND_ROLES_PROPERTY = "writeUsers";
+    static final String ARCHIVED_PROPERTY = "archived";
 
     private final long id;
     private String name = "";
@@ -48,6 +49,7 @@ public class WorkspaceMetaData {
     private boolean publicWorkspace = false;
     private String sharingToken = "";
     private String urlPrefix = "/workspace";
+    private boolean archived = false;
 
     private Date lastModifiedDate;
     private String lastModifiedUser;
@@ -144,6 +146,14 @@ public class WorkspaceMetaData {
 
     public String getSharingTokenTruncated() {
         return (sharingToken == null ? "" : sharingToken.substring(0, 6)) + "...";
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 
     public boolean hasNoUsersConfigured() {
@@ -361,6 +371,7 @@ public class WorkspaceMetaData {
         workspace.setPublicWorkspace("true".equals(properties.getProperty(PUBLIC_PROPERTY, "false")));
         workspace.setSharingToken(properties.getProperty(SHARING_TOKEN_PROPERTY, ""));
         workspace.setOwner(properties.getProperty(OWNER_PROPERTY, ""));
+        workspace.setArchived("true".equals(properties.getProperty(ARCHIVED_PROPERTY)));
 
         workspace.setLockedUser(properties.getProperty(LOCKED_USER_PROPERTY, null));
         workspace.setLockedAgent(properties.getProperty(LOCKED_AGENT_PROPERTY, null));
@@ -435,6 +446,8 @@ public class WorkspaceMetaData {
         }
         properties.setProperty(READ_USERS_AND_ROLES_PROPERTY, toCommaSeparatedString(this.getReadUsers()));
         properties.setProperty(WRITE_USERS_AND_ROLES_PROPERTY, toCommaSeparatedString(this.getWriteUsers()));
+
+        properties.setProperty(ARCHIVED_PROPERTY, "" + this.isArchived());
 
         properties.setProperty(SIZE_PROPERTY, "" + this.getSize());
 

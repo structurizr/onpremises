@@ -12,6 +12,7 @@ import com.structurizr.onpremises.domain.AuthenticationMethod;
 import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.DateUtils;
+import com.structurizr.onpremises.util.Features;
 import com.structurizr.util.WorkspaceUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -196,6 +197,28 @@ public class WorkspaceComponentImplTests {
 
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
         assertTrue(workspaceComponent.deleteWorkspace(1));
+    }
+
+    @Test
+    public void deleteWorkspace_WhenArchivingIsEnabled() {
+        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
+
+        Configuration.getInstance().setFeatureEnabled(Features.WORKSPACE_ARCHIVING);
+        WorkspaceDao dao = new MockWorkspaceDao() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return new WorkspaceMetaData(1);
+            }
+
+            @Override
+            public void putWorkspaceMetaData(WorkspaceMetaData wmd) {
+                workspaceMetaData.setArchived(wmd.isArchived());
+            }
+        };
+
+        WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
+        assertTrue(workspaceComponent.deleteWorkspace(1));
+        assertTrue(workspaceMetaData.isArchived());
     }
 
     @Test

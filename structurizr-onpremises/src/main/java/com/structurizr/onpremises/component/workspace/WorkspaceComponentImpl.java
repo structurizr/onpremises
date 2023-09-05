@@ -172,6 +172,10 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
             }
         }
 
+        if (wmd != null && wmd.isArchived()) {
+            return null;
+        }
+
         return wmd;
     }
 
@@ -233,7 +237,17 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
 
     @Override
     public boolean deleteWorkspace(long workspaceId) throws WorkspaceComponentException {
-        return workspaceDao.deleteWorkspace(workspaceId);
+        if (Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_ARCHIVING)) {
+            log.debug("Archiving workspace with ID " + workspaceId);
+            WorkspaceMetaData workspaceMetaData = getWorkspaceMetaData(workspaceId);
+            workspaceMetaData.setArchived(true);
+            putWorkspaceMetaData(workspaceMetaData);
+
+            return true;
+        } else {
+            log.debug("Deleting workspace with ID " + workspaceId);
+            return workspaceDao.deleteWorkspace(workspaceId);
+        }
     }
 
     @Override

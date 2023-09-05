@@ -5,6 +5,7 @@ import com.structurizr.onpremises.domain.AuthenticationMethod;
 import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.DateUtils;
+import com.structurizr.onpremises.util.Features;
 import com.structurizr.util.WorkspaceUtils;
 
 
@@ -99,6 +100,30 @@ public class WorkspaceComponentTests {
         } catch (WorkspaceComponentException e) {
             assertEquals("Could not get workspace 1", e.getMessage());
         }
+    }
+
+    @Test
+    public void deleteWorkspace() throws Exception {
+        User user = new User("user@example.com", new HashSet<>(), AuthenticationMethod.LOCAL);
+        long workspaceId = workspaceComponent.createWorkspace(user);
+        assertEquals(1, workspaceId);
+
+        Configuration.getInstance().setFeatureDisabled(Features.WORKSPACE_ARCHIVING);
+        assertTrue(workspaceComponent.deleteWorkspace(1));
+        assertFalse(new File(DATA_DIRECTORY, "1").exists());
+
+        // create a new workspace - the ID should be recycled
+        workspaceId = workspaceComponent.createWorkspace(user);
+        assertEquals(1, workspaceId);
+
+        Configuration.getInstance().setFeatureEnabled(Features.WORKSPACE_ARCHIVING);
+        assertTrue(workspaceComponent.deleteWorkspace(1));
+        assertTrue(new File(DATA_DIRECTORY, "1").exists());
+        assertNull(workspaceComponent.getWorkspaceMetaData(1));
+
+        // with workspace archiving enabled, the workspace isn't deleted, so we get a new ID
+        workspaceId = workspaceComponent.createWorkspace(user);
+        assertEquals(2, workspaceId);
     }
 
     @AfterEach

@@ -125,6 +125,7 @@ public class ContextLoaderListener implements ServletContextListener {
             log.info("API key: " + !StringUtils.isNullOrEmpty(Configuration.getInstance().getApiKey()));
             log.info("Session: " + Configuration.getInstance().getSessionVariant());
             log.info("Data storage: " + Configuration.getInstance().getDataStorageImplementationName());
+            log.info("Workspace archiving: " + Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_ARCHIVING));
             log.info("Workspace metadata caching: " + Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_METADATA_CACHING));
             log.info("Search: " + Configuration.getInstance().getSearchImplementationName());
 

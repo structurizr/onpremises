@@ -221,6 +221,7 @@ public class WorkspaceMetaDataTests {
         properties.setProperty(WorkspaceMetaData.LOCKED_DATE_PROPERTY, "2022-01-31T14:30:59Z");
         properties.setProperty(WorkspaceMetaData.READ_USERS_AND_ROLES_PROPERTY, "user1,user2,user3");
         properties.setProperty(WorkspaceMetaData.WRITE_USERS_AND_ROLES_PROPERTY, "user4,user5,user6");
+        properties.setProperty(WorkspaceMetaData.ARCHIVED_PROPERTY, "false");
 
         WorkspaceMetaData workspace = WorkspaceMetaData.fromProperties(123, properties);
 
@@ -242,6 +243,7 @@ public class WorkspaceMetaDataTests {
         assertEquals(DateUtils.parseIsoDate("2022-01-31T14:30:59Z"), workspace.getLockedDate());
         assertEquals(Set.of("user1", "user2", "user3"), workspace.getReadUsers());
         assertEquals(Set.of("user4", "user5", "user6"), workspace.getWriteUsers());
+        assertFalse(workspace.isArchived());
         
         properties.clear();
         properties = workspace.toProperties();
@@ -264,6 +266,7 @@ public class WorkspaceMetaDataTests {
         assertEquals("2022-01-31T14:30:59Z", properties.getProperty(WorkspaceMetaData.LOCKED_DATE_PROPERTY));
         assertEquals("user1,user2,user3", properties.getProperty(WorkspaceMetaData.READ_USERS_AND_ROLES_PROPERTY));
         assertEquals("user4,user5,user6", properties.getProperty(WorkspaceMetaData.WRITE_USERS_AND_ROLES_PROPERTY));
+        assertEquals("false", properties.getProperty(WorkspaceMetaData.ARCHIVED_PROPERTY));
     }
 
     @Test
