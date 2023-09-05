@@ -62,7 +62,19 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
 
     @Override
     public Collection<WorkspaceMetaData> getWorkspaces() throws WorkspaceComponentException {
-        return workspaceDao.getWorkspaces();
+        List<WorkspaceMetaData> workspaces = new ArrayList<>();
+        Collection<Long> workspaceIds = workspaceDao.getWorkspaceIds();
+
+        for (Long workspaceId : workspaceIds) {
+            WorkspaceMetaData workspace = getWorkspaceMetaData(workspaceId);
+            if (workspace != null) {
+                workspaces.add(workspace);
+            }
+        }
+
+        workspaces.sort(Comparator.comparing(wmd -> wmd.getName().toLowerCase()));
+
+        return workspaces;
     }
 
     @Override
@@ -78,22 +90,32 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
         List<WorkspaceMetaData> filteredWorkspaces = new ArrayList<>();
 
         if (user == null) {
+            // unauthenticated request
             for (WorkspaceMetaData workspace : workspaces) {
                 if (workspace.isPublicWorkspace() || workspace.hasNoUsersConfigured()) {
                     // so anybody can see it
+                    workspace.setUrlPrefix("/share");
                     filteredWorkspaces.add(workspace);
                 }
             }
         } else {
+            // authenticated request
             for (WorkspaceMetaData workspace : workspaces) {
-                if (workspace.hasNoUsersConfigured()) {
-                    // the workspace has no users configured, so anybody can see it
-                    filteredWorkspaces.add(workspace);
-                } else if (workspace.isWriteUser(user)) {
+                if (workspace.isWriteUser(user)) {
                     // the user has read-write access to the workspace
+                    workspace.setUrlPrefix("/workspace");
                     filteredWorkspaces.add(workspace);
                 } else if (workspace.isReadUser(user)) {
                     // the user has read-only access to the workspace
+                    workspace.setUrlPrefix("/workspace");
+                    filteredWorkspaces.add(workspace);
+                } else if (workspace.hasNoUsersConfigured()) {
+                    // the workspace has no users configured, so anybody can see it
+                    workspace.setUrlPrefix("/workspace");
+                    filteredWorkspaces.add(workspace);
+                } else if (workspace.isPublicWorkspace()) {
+                    // so anybody can see it
+                    workspace.setUrlPrefix("/share");
                     filteredWorkspaces.add(workspace);
                 }
             }
