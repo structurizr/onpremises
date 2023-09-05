@@ -360,10 +360,6 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
         }
     }
 
-    @Override
-    public void clear() throws SearchComponentException {
-    }
-
     private String appendAll(String... strings) {
         StringBuilder buf = new StringBuilder();
 

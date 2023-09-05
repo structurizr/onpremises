@@ -46,8 +46,6 @@ public class SearchController extends AbstractController {
             log.debug("Rebuilding search index...");
 
             try {
-                searchComponent.clear();
-
                 executorService = Executors.newFixedThreadPool(10);
 
                 try {

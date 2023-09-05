@@ -16,12 +16,14 @@ public class ApacheLuceneSearchComponentTests extends AbstractSearchComponentTes
 
     @BeforeEach
     public void setUp() {
+        DATA_DIRECTORY.mkdirs();
         searchComponent = new ApacheLuceneSearchComponentImpl(DATA_DIRECTORY);
         searchComponent.start();
     }
 
     @AfterEach
     public void tearDown() {
+        searchComponent.stop();
         FileSystemUtils.deleteRecursively(DATA_DIRECTORY);
     }
 

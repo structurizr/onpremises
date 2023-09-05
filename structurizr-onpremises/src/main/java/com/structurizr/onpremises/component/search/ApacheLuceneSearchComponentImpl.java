@@ -59,7 +59,19 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
 
     @Override
     public void start() {
+        FileSystemUtils.deleteRecursively(indexDirectory);
         createIndexDirectory();
+
+        Analyzer analyzer = new StandardAnalyzer();
+        IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
+        iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+
+        try {
+            Directory dir = FSDirectory.open(indexDirectory.toPath());
+            indexWriter = new IndexWriter(dir, iwc);
+        } catch (IOException e) {
+            log.error(e);
+        }
     }
 
     @Override
@@ -78,25 +90,8 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
             try {
                 Files.createDirectory(indexDirectory.toPath());
             } catch (IOException e) {
-                log.error(e);
+                log.error("Error creating Lucene index directory", e);
             }
-        }
-    }
-
-    @Override
-    public void clear() {
-        FileSystemUtils.deleteRecursively(indexDirectory);
-        createIndexDirectory();
-
-        Analyzer analyzer = new StandardAnalyzer();
-        IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
-        iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-
-        try {
-            Directory dir = FSDirectory.open(indexDirectory.toPath());
-            indexWriter = new IndexWriter(dir, iwc);
-        } catch (IOException e) {
-            log.error(e);
         }
     }
 
