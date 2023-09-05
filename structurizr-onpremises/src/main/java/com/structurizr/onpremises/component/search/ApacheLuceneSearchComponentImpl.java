@@ -5,7 +5,6 @@ import com.structurizr.documentation.Decision;
 import com.structurizr.documentation.Documentation;
 import com.structurizr.documentation.Section;
 import com.structurizr.model.*;
-import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.util.StringUtils;
 import com.structurizr.view.*;
 import org.apache.commons.logging.Log;
@@ -28,8 +27,6 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -54,6 +51,7 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
     private static final String NEWLINE = "\n";
 
     private final File indexDirectory;
+    private IndexWriter indexWriter;
 
     ApacheLuceneSearchComponentImpl(File dataDirectory) {
         this.indexDirectory = new File(dataDirectory, INDEX_DIRECTORY_NAME);
@@ -66,6 +64,13 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
 
     @Override
     public void stop() {
+        try {
+            if (indexWriter != null) {
+                indexWriter.close();
+            }
+        } catch (IOException e) {
+            log.warn(e);
+        }
     }
 
     private void createIndexDirectory() {
@@ -82,21 +87,23 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
     public void clear() {
         FileSystemUtils.deleteRecursively(indexDirectory);
         createIndexDirectory();
+
+        Analyzer analyzer = new StandardAnalyzer();
+        IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
+        iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+
+        try {
+            Directory dir = FSDirectory.open(indexDirectory.toPath());
+            indexWriter = new IndexWriter(dir, iwc);
+        } catch (IOException e) {
+            log.error(e);
+        }
     }
 
     @Override
     public void index(Workspace workspace) {
-        IndexWriter writer = null;
-
         try {
-            Analyzer analyzer = new StandardAnalyzer();
-            IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
-            iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-
-            Directory dir = FSDirectory.open(indexDirectory.toPath());
-            writer = new IndexWriter(dir, iwc);
-
-            delete(workspace.getId(), writer);
+            delete(workspace.getId());
 
             Document doc = new Document();
             doc.add(new StoredField(URL_KEY, ""));
@@ -105,40 +112,41 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
             doc.add(new StoredField(NAME_KEY, toString(workspace.getName())));
             doc.add(new StoredField(DESCRIPTION_KEY, toString(workspace.getDescription())));
             doc.add(new TextField(CONTENT_KEY, appendAll(workspace.getName(), workspace.getDescription()), Field.Store.NO));
-            writer.addDocument(doc);
+            indexWriter.addDocument(doc);
+            indexWriter.commit();
 
             for (CustomView view : workspace.getViews().getCustomViews()) {
-                index(workspace, view, writer);
+                index(workspace, view, indexWriter);
             }
             for (SystemLandscapeView view : workspace.getViews().getSystemLandscapeViews()) {
-                index(workspace, view, writer);
+                index(workspace, view, indexWriter);
             }
             for (SystemContextView view : workspace.getViews().getSystemContextViews()) {
-                index(workspace, view, writer);
+                index(workspace, view, indexWriter);
             }
             for (ContainerView view : workspace.getViews().getContainerViews()) {
-                index(workspace, view, writer);
+                index(workspace, view, indexWriter);
             }
             for (ComponentView view : workspace.getViews().getComponentViews()) {
-                index(workspace, view, writer);
+                index(workspace, view, indexWriter);
             }
             for (DynamicView view : workspace.getViews().getDynamicViews()) {
-                index(workspace, view, writer);
+                index(workspace, view, indexWriter);
             }
             for (DeploymentView view : workspace.getViews().getDeploymentViews()) {
-                index(workspace, view, writer);
+                index(workspace, view, indexWriter);
             }
 
-            indexDocumentationAndDecisions(workspace, null, workspace.getDocumentation(), writer);
+            indexDocumentationAndDecisions(workspace, null, workspace.getDocumentation());
 
             for (SoftwareSystem softwareSystem : workspace.getModel().getSoftwareSystems()) {
-                indexDocumentationAndDecisions(workspace, softwareSystem, softwareSystem.getDocumentation(), writer);
+                indexDocumentationAndDecisions(workspace, softwareSystem, softwareSystem.getDocumentation());
 
                 for (Container container : softwareSystem.getContainers()) {
-                    indexDocumentationAndDecisions(workspace, container, container.getDocumentation(), writer);
+                    indexDocumentationAndDecisions(workspace, container, container.getDocumentation());
 
                     for (Component component : container.getComponents()) {
-                        indexDocumentationAndDecisions(workspace, component, component.getDocumentation(), writer);
+                        indexDocumentationAndDecisions(workspace, component, component.getDocumentation());
                     }
                 }
             }
@@ -146,14 +154,6 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e);
-        } finally {
-            try {
-                if (writer != null) {
-                    writer.close();
-                }
-            } catch (IOException e) {
-                log.error(e);
-            }
         }
     }
 
@@ -227,6 +227,7 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
         doc.add(new TextField(CONTENT_KEY, content.toString(), Field.Store.NO));
 
         indexWriter.addDocument(doc);
+        indexWriter.commit();
     }
 
     private String indexElementBasics(Element element) {
@@ -285,22 +286,22 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
         return content.toString();
     }
 
-    private void indexDocumentationAndDecisions(Workspace workspace, Element element, Documentation documentation, IndexWriter indexWriter) throws Exception {
+    private void indexDocumentationAndDecisions(Workspace workspace, Element element, Documentation documentation) throws Exception {
         if (documentation != null) {
             StringBuilder documentationContent = new StringBuilder();
             for (Section section : documentation.getSections()) {
                 documentationContent.append(section.getContent());
                 documentationContent.append(NEWLINE);
             }
-            indexDocumentation(workspace, element, documentationContent.toString(), indexWriter);
+            indexDocumentation(workspace, element, documentationContent.toString());
 
             for (Decision decision : documentation.getDecisions()) {
-                indexDecision(workspace, element, decision, indexWriter);
+                indexDecision(workspace, element, decision);
             }
         }
     }
 
-    private void indexDocumentation(Workspace workspace, Element element, String documentationContent, IndexWriter indexWriter) throws Exception {
+    private void indexDocumentation(Workspace workspace, Element element, String documentationContent) throws Exception {
         // split the entire documentation content up into sections, each of which is defined by a ## or == heading.
         String title = "";
         StringBuilder content = new StringBuilder();
@@ -309,7 +310,7 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
 
         for (String line : lines) {
             if (line.startsWith(MARKDOWN_SECTION_HEADING) || line.startsWith(ASCIIDOC_SECTION_HEADING)) {
-                indexDocumentationSection(title, content.toString(), sectionNumber, workspace, element, indexWriter);
+                indexDocumentationSection(title, content.toString(), sectionNumber, workspace, element);
                 title = line.substring(MARKDOWN_SECTION_HEADING.length()-1).trim();
                 content = new StringBuilder();
                 sectionNumber++;
@@ -320,11 +321,11 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
         }
 
         if (content.length() > 0) {
-            indexDocumentationSection(title, content.toString(), sectionNumber, workspace, element, indexWriter);
+            indexDocumentationSection(title, content.toString(), sectionNumber, workspace, element);
         }
     }
 
-    private void indexDocumentationSection(String title, String content, int sectionNumber, Workspace workspace, Element element, IndexWriter indexWriter) throws Exception {
+    private void indexDocumentationSection(String title, String content, int sectionNumber, Workspace workspace, Element element) throws Exception {
         Document doc = new Document();
 
         doc.add(new StoredField(URL_KEY, DOCUMENTATION_PATH + calculateUrlForSection(element, sectionNumber)));
@@ -346,9 +347,10 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
         doc.add(new StoredField(DESCRIPTION_KEY, ""));
         doc.add(new TextField(CONTENT_KEY, appendAll(title, content.toString()), Field.Store.NO));
         indexWriter.addDocument(doc);
+        indexWriter.commit();
     }
 
-    private void indexDecision(Workspace workspace, Element element, Decision decision, IndexWriter indexWriter) throws Exception {
+    private void indexDecision(Workspace workspace, Element element, Decision decision) throws Exception {
         Document doc = new Document();
 
         doc.add(new StoredField(URL_KEY, DECISIONS_PATH + calculateUrlForDecision(element, decision)));
@@ -364,6 +366,7 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
         doc.add(new StoredField(DESCRIPTION_KEY, decision.getStatus()));
         doc.add(new TextField(CONTENT_KEY, appendAll(decision.getTitle(), decision.getContent(), decision.getStatus()), Field.Store.NO));
         indexWriter.addDocument(doc);
+        indexWriter.commit();
     }
 
     private String appendAll(String... strings) {
@@ -438,34 +441,13 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
 
     @Override
     public void delete(long workspaceId) {
-        IndexWriter indexWriter = null;
-
         try {
-            Analyzer analyzer = new StandardAnalyzer();
-            IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
-            iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-
-            Directory dir = FSDirectory.open(indexDirectory.toPath());
-            indexWriter = new IndexWriter(dir, iwc);
-
-            delete(workspaceId, indexWriter);
+            Term workspaceIdTerm = new Term(WORKSPACE_KEY, toString(workspaceId));
+            indexWriter.deleteDocuments(workspaceIdTerm);
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e);
-        } finally {
-            try {
-                if (indexWriter != null) {
-                    indexWriter.close();
-                }
-            } catch (IOException e) {
-                log.error(e);
-            }
         }
-    }
-
-    private void delete(long workspaceId, IndexWriter indexWriter) throws Exception {
-        Term workspaceIdTerm = new Term(WORKSPACE_KEY, toString(workspaceId));
-        indexWriter.deleteDocuments(workspaceIdTerm);
     }
 
     @Override
