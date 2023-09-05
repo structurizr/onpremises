@@ -228,6 +228,10 @@ public class Configuration extends ConfigLookup {
         return features.getOrDefault(feature, true);
     }
 
+    public boolean isFeatureEnabled(String feature, boolean defaultValue) {
+        return features.getOrDefault(feature, defaultValue);
+    }
+
     protected Class loadClass(String fqn) throws Exception {
         File pluginsDirectory = new File(dataDirectory, PLUGINS_DIRECTORY_NAME);
         URL[] urls = new URL[0];

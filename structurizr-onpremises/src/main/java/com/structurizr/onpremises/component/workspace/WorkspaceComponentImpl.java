@@ -16,11 +16,19 @@ import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.DateUtils;
+import com.structurizr.onpremises.util.Features;
 import com.structurizr.util.StringUtils;
 import com.structurizr.util.WorkspaceUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.cache.Cache;
+import javax.cache.CacheManager;
+import javax.cache.Caching;
+import javax.cache.configuration.MutableConfiguration;
+import javax.cache.expiry.CreatedExpiryPolicy;
+import javax.cache.expiry.Duration;
+import javax.cache.spi.CachingProvider;
 import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -32,9 +40,12 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
     private static final Log log = LogFactory.getLog(WorkspaceComponentImpl.class);
     private static final String ENCRYPTION_STRATEGY_STRING = "encryptionStrategy";
     private static final String CIPHERTEXT_STRING = "ciphertext";
+    private static final String METADATA_CACHE_NAME = "structurizr.workspace.metadata";
 
     private final WorkspaceDao workspaceDao;
     private final String encryptionPassphrase;
+
+    private Cache<Long, WorkspaceMetaData> cache;
 
     WorkspaceComponentImpl() {
         String dataStorageImplementationName = Configuration.getInstance().getDataStorageImplementationName();
@@ -53,6 +64,11 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
         }
 
         encryptionPassphrase = Configuration.getInstance().getEncryptionPassphrase();
+
+        if (Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_METADATA_CACHING, false)) {
+            log.debug("Workspace metadata caching enabled - creating cache");
+            initCache();
+        }
     }
 
     WorkspaceComponentImpl(WorkspaceDao workspaceDao, String encryptionPassphrase) {
@@ -60,6 +76,15 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
         this.encryptionPassphrase = encryptionPassphrase;
     }
 
+    private void initCache() {
+        CachingProvider provider = Caching.getCachingProvider();
+        CacheManager cacheManager = provider.getCacheManager();
+        MutableConfiguration<Long, WorkspaceMetaData> configuration = new MutableConfiguration<Long, WorkspaceMetaData>()
+                .setTypes(Long.class, WorkspaceMetaData.class)
+                .setStoreByValue(false)
+                .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(Duration.FIVE_MINUTES));
+        cache = cacheManager.createCache(METADATA_CACHE_NAME, configuration);
+    }
 
     @Override
     public List<Long> getWorkspaceIds() throws WorkspaceComponentException {
@@ -132,12 +157,31 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
 
     @Override
     public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) throws WorkspaceComponentException {
-        return workspaceDao.getWorkspaceMetaData(workspaceId);
+        WorkspaceMetaData wmd = null;
+
+        if (cache != null) {
+            wmd = cache.get(workspaceId);
+        }
+
+        if (wmd == null) {
+            wmd = workspaceDao.getWorkspaceMetaData(workspaceId);
+            if (wmd != null) {
+                if (cache != null) {
+                    cache.put(workspaceId, wmd);
+                }
+            }
+        }
+
+        return wmd;
     }
 
     @Override
     public void putWorkspaceMetaData(WorkspaceMetaData workspaceMetaData) throws WorkspaceComponentException {
         workspaceDao.putWorkspaceMetaData(workspaceMetaData);
+
+        if (cache != null && workspaceMetaData != null) {
+            cache.put(workspaceMetaData.getId(), workspaceMetaData);
+        }
     }
 
     @Override

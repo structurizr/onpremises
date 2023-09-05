@@ -71,6 +71,9 @@ dependencies {
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.134'
 	implementation 'com.amazonaws:aws-java-sdk-sts:1.12.134'
 
+	implementation 'javax.cache:cache-api:1.1.1'
+	implementation 'org.ehcache:ehcache:3.10.8'
+
 	testImplementation 'org.testcontainers:elasticsearch:1.18.3'
 }
 

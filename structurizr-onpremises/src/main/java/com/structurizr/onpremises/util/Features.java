@@ -6,4 +6,6 @@ public class Features {
     public static final String UI_WORKSPACE_USERS = "structurizr.feature.ui.workspaceUsers";
     public static final String UI_WORKSPACE_SETTINGS = "structurizr.feature.ui.workspaceSettings";
 
+    public static final String WORKSPACE_METADATA_CACHING = "structurizr.feature.workspace.metadataCaching";
+
 }
