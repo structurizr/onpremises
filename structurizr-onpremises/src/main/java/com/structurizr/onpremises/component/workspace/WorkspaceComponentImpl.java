@@ -65,7 +65,7 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
 
         encryptionPassphrase = Configuration.getInstance().getEncryptionPassphrase();
 
-        if (Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_METADATA_CACHING, false)) {
+        if (Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_METADATA_CACHING)) {
             log.debug("Workspace metadata caching enabled - creating cache");
             initCache();
         }

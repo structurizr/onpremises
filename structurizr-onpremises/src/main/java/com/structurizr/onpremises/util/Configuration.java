@@ -64,6 +64,7 @@ public class Configuration extends ConfigLookup {
         features.put(Features.UI_WORKSPACE_USERS, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.UI_WORKSPACE_USERS, "true")));
         features.put(Features.UI_WORKSPACE_SETTINGS, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.UI_WORKSPACE_SETTINGS, "true")));
         features.put(Features.UI_DSL_EDITOR, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.UI_DSL_EDITOR, "false")));
+        features.put(Features.WORKSPACE_METADATA_CACHING, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.WORKSPACE_METADATA_CACHING, "false")));
 
         // for backwards compatibility
         if (!isDslEditorEnabled()) {
@@ -226,10 +227,6 @@ public class Configuration extends ConfigLookup {
 
     public boolean isFeatureEnabled(String feature) {
         return features.getOrDefault(feature, true);
-    }
-
-    public boolean isFeatureEnabled(String feature, boolean defaultValue) {
-        return features.getOrDefault(feature, defaultValue);
     }
 
     protected Class loadClass(String fqn) throws Exception {
