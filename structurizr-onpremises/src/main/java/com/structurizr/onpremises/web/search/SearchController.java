@@ -23,7 +23,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 @Controller
 public class SearchController extends AbstractController {
@@ -32,6 +36,8 @@ public class SearchController extends AbstractController {
 
     @Autowired
     private SearchComponent searchComponent;
+
+    private ExecutorService executorService;
 
     @PostConstruct
     public void rebuildSearchIndex() {
@@ -42,15 +48,26 @@ public class SearchController extends AbstractController {
             try {
                 searchComponent.clear();
 
+                executorService = Executors.newFixedThreadPool(10);
+
                 try {
                     Collection<WorkspaceMetaData> workspaces = workspaceComponent.getWorkspaces();
                     for (WorkspaceMetaData workspaceMetaData : workspaces) {
                         try {
                             if (!workspaceMetaData.isClientEncrypted()) {
-                                log.debug("Indexing workspace with ID " + workspaceMetaData.getId());
-                                String json = workspaceComponent.getWorkspace(workspaceMetaData.getId(), null);
-                                Workspace workspace = WorkspaceUtils.fromJson(json);
-                                searchComponent.index(workspace);
+                                Future future = executorService.submit(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            log.debug("Indexing workspace with ID " + workspaceMetaData.getId());
+                                            String json = workspaceComponent.getWorkspace(workspaceMetaData.getId(), null);
+                                            Workspace workspace = WorkspaceUtils.fromJson(json);
+                                            searchComponent.index(workspace);
+                                        } catch (Exception e) {
+                                            log.warn("Error indexing workspace with ID " + workspaceMetaData.getId(), e);
+                                        }
+                                    }
+                                });
                             } else {
                                 log.debug("Skipping workspace with ID " + workspaceMetaData.getId() + " because it's client-side encrypted");
                             }
@@ -65,6 +82,11 @@ public class SearchController extends AbstractController {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @PreDestroy
+    public void stop() {
+        executorService.shutdown();
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)
