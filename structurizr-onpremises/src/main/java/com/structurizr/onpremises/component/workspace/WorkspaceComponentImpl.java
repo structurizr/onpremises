@@ -32,6 +32,8 @@ import javax.cache.spi.CachingProvider;
 import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -223,8 +225,9 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
     public long createWorkspace(User user) throws WorkspaceComponentException {
         try {
             long workspaceId = workspaceDao.createWorkspace(user);
+            NumberFormat format = new DecimalFormat("0000");
 
-            Workspace workspace = new Workspace("Workspace " + workspaceId, "Description");
+            Workspace workspace = new Workspace("Workspace " + format.format(workspaceId), "Description");
             String json = WorkspaceUtils.toJson(workspace, false);
 
             putWorkspace(workspaceId, json);

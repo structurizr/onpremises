@@ -183,7 +183,7 @@ public class WorkspaceComponentImplTests {
         long workspaceId = workspaceComponent.createWorkspace(null);
 
         assertEquals(1, workspaceId);
-        assertEquals(String.format("{\"id\":1,\"name\":\"Workspace 1\",\"description\":\"Description\",\"revision\":1,\"lastModifiedDate\":\"%s\",\"model\":{},\"documentation\":{},\"views\":{\"configuration\":{\"branding\":{},\"styles\":{},\"terminology\":{}}}}", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate())), jsonBuffer.toString());
+        assertEquals(String.format("{\"id\":1,\"name\":\"Workspace 0001\",\"description\":\"Description\",\"revision\":1,\"lastModifiedDate\":\"%s\",\"model\":{},\"documentation\":{},\"views\":{\"configuration\":{\"branding\":{},\"styles\":{},\"terminology\":{}}}}", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate())), jsonBuffer.toString());
     }
 
     @Test
