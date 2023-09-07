@@ -61,7 +61,7 @@ public class ReviewControllerTests extends ControllerTestsBase {
                 return new String[0];
             }
         };
-        String result = controller.createReview(null, ReviewType.General, request, redirectAttributes);
+        String result = controller.createReview(null, ReviewType.General, request, redirectAttributes, null);
 
         assertEquals("redirect:/user/review/create", result);
         Messages messages = (Messages)redirectAttributes.getFlashAttributes().get("messages");
@@ -101,7 +101,7 @@ public class ReviewControllerTests extends ControllerTestsBase {
         });
         setUser("user@example.com");
 
-        String result = controller.createReview(null, ReviewType.Risk, request, redirectAttributes);
+        String result = controller.createReview(null, ReviewType.Risk, request, redirectAttributes, null);
 
         assertEquals("redirect:/review/1234567890", result);
         assertEquals("{\"id\":\"1234567890\",\"userId\":\"user@example.com\",\"type\":\"Risk\",\"locked\":false,\"diagrams\":[{\"id\":1,\"url\":\"file1\"},{\"id\":2,\"url\":\"file2\"},{\"id\":3,\"url\":\"file3\"}]}", buf.toString());
@@ -139,7 +139,7 @@ public class ReviewControllerTests extends ControllerTestsBase {
         });
         setUser("user@example.com");
 
-        String result = controller.createReview(123456L, ReviewType.STRIDE, request, redirectAttributes);
+        String result = controller.createReview(123456L, ReviewType.STRIDE, request, redirectAttributes, null);
 
         assertEquals("redirect:/review/1234567890", result);
         assertEquals("{\"id\":\"1234567890\",\"userId\":\"user@example.com\",\"workspaceId\":123456,\"type\":\"STRIDE\",\"locked\":false,\"diagrams\":[{\"id\":1,\"url\":\"file1\"},{\"id\":2,\"url\":\"file2\"},{\"id\":3,\"url\":\"file3\"}]}", buf.toString());

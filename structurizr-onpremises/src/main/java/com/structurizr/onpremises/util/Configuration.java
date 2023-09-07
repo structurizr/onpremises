@@ -66,6 +66,7 @@ public class Configuration extends ConfigLookup {
         features.put(Features.UI_DSL_EDITOR, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.UI_DSL_EDITOR, "false")));
         features.put(Features.WORKSPACE_ARCHIVING, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.WORKSPACE_ARCHIVING, "false")));
         features.put(Features.WORKSPACE_METADATA_CACHING, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.WORKSPACE_METADATA_CACHING, "false")));
+        features.put(Features.DIAGRAM_REVIEWS, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.DIAGRAM_REVIEWS, "true")));
 
         // for backwards compatibility
         if (!isDslEditorEnabled()) {

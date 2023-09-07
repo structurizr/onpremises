@@ -9,4 +9,6 @@ public class Features {
     public static final String WORKSPACE_ARCHIVING = "structurizr.feature.workspace.archiving";
     public static final String WORKSPACE_METADATA_CACHING = "structurizr.feature.workspace.metadataCaching";
 
+    public static final String DIAGRAM_REVIEWS = "structurizr.feature.diagramReviews";
+
 }

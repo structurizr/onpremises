@@ -8,6 +8,8 @@ import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.domain.review.Review;
 import com.structurizr.onpremises.domain.review.ReviewType;
 import com.structurizr.onpremises.domain.review.Session;
+import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.util.Features;
 import com.structurizr.onpremises.util.HtmlUtils;
 import com.structurizr.onpremises.util.JsonUtils;
 import com.structurizr.onpremises.web.AbstractController;
@@ -44,6 +46,10 @@ public class ReviewController extends AbstractController {
     @RequestMapping(value = "/user/review/create", method = RequestMethod.GET)
     @PreAuthorize("isAuthenticated()")
     public String showCreateReviewPage(ModelMap model) {
+        if (!Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_REVIEWS)) {
+            return showFeatureNotAvailablePage(model);
+        }
+
         addCommonAttributes(model, "Review", false);
 
         return "review-create";
@@ -55,8 +61,13 @@ public class ReviewController extends AbstractController {
             @RequestParam(name="workspace", required=false) Long workspaceId,
             @RequestParam(name="review", required=false) ReviewType reviewType,
             HttpServletRequest request,
-            RedirectAttributes redirectAttributes
+            RedirectAttributes redirectAttributes,
+            ModelMap model
     ) {
+        if (!Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_REVIEWS)) {
+            return showFeatureNotAvailablePage(model);
+        }
+
         try {
             Messages messages = new Messages();
             redirectAttributes.addFlashAttribute("messages", messages);
@@ -84,6 +95,10 @@ public class ReviewController extends AbstractController {
 
     @RequestMapping(value = "/review/{reviewId}", method = RequestMethod.GET)
     public String showReview(@PathVariable String reviewId, ModelMap model) throws Exception {
+        if (!Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_REVIEWS)) {
+            return showFeatureNotAvailablePage(model);
+        }
+
         User user = getUser();
 
         reviewId = HtmlUtils.filterHtml(reviewId);
@@ -111,6 +126,10 @@ public class ReviewController extends AbstractController {
 
     @RequestMapping(value = "/review/{reviewId}", method = RequestMethod.POST)
     public String submitReview(@PathVariable String reviewId, @RequestParam String json, ModelMap model) throws Exception {
+        if (!Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_REVIEWS)) {
+            return showFeatureNotAvailablePage(model);
+        }
+
         reviewId = HtmlUtils.filterHtml(reviewId);
         json = HtmlUtils.filterHtml(json);
         Session reviewSession = Session.fromJson(json);
@@ -208,7 +227,11 @@ public class ReviewController extends AbstractController {
     }
 
     @RequestMapping(value = "/review/{reviewId}/lock", method = RequestMethod.GET)
-    public String lockReview(@PathVariable String reviewId) {
+    public String lockReview(@PathVariable String reviewId, ModelMap model) {
+        if (!Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_REVIEWS)) {
+            return showFeatureNotAvailablePage(model);
+        }
+
         reviewId = HtmlUtils.filterHtml(reviewId);
         Review review = reviewComponent.getReview(reviewId);
         User user = getUser();
@@ -221,7 +244,11 @@ public class ReviewController extends AbstractController {
     }
 
     @RequestMapping(value = "/review/{reviewId}/unlock", method = RequestMethod.GET)
-    public String unlockReview(@PathVariable String reviewId) {
+    public String unlockReview(@PathVariable String reviewId, ModelMap model) {
+        if (!Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_REVIEWS)) {
+            return showFeatureNotAvailablePage(model);
+        }
+
         reviewId = HtmlUtils.filterHtml(reviewId);
         Review review = reviewComponent.getReview(reviewId);
         User user = getUser();
