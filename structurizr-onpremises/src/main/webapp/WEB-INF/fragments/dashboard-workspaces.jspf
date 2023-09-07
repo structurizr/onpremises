@@ -27,13 +27,20 @@
 
 <div class="section">
     <div class="centered">
-        <c:if test="${numberOfWorkspaces > 3}">
-            <div style="color: #444444; font-size: 11px;">
-                <a href="?sort=name" style="color: #444444;<c:if test="${sort eq 'name'}"> font-weight: bold;</c:if>">Name</a>
-                <img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/sort-down.svg" class="icon-sm" />
-                <a href="?sort=date" style="color: #444444;<c:if test="${sort eq 'date'}"> font-weight: bold;</c:if>">Date</a>
-            </div>
-        </c:if>
+
+        <div style="margin-bottom: 20px">
+            <c:if test="${numberOfWorkspaces > 0}">
+            <a href="?sort=name&pageSize=${pageSize}" style="color: #444444;<c:if test="${sort eq 'name'}"> font-weight: bold;</c:if>">Name</a>
+            <img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/sort-down.svg" class="icon-sm" />
+            <a href="?sort=date&pageSize=${pageSize}" style="color: #444444;<c:if test="${sort eq 'date'}"> font-weight: bold;</c:if>">Date</a>
+            </c:if>
+
+            <c:if test="${not empty pageNumber}">
+                <span style="padding-left: 20px; padding-right: 20px">|</span>
+                <%@ include file="dashboard-workspaces-page-control.jspf" %>
+            </c:if>
+        </div>
+
         <c:forEach var="workspace" items="${workspaces}" varStatus="status">
             <div class="workspaceSummary centered <c:if test="${not workspace.active}">inactive</c:if>">
                 <div>
@@ -62,7 +69,7 @@
             </div>
         </c:forEach>
 
-        <c:if test="${showAdminFeatures}">
+        <c:if test="${userCanCreateWorkspace}">
             <div class="workspaceSummary centered">
                 <div style="margin-top: 5px">
                     New workspace
@@ -76,7 +83,9 @@
                     </div>
                 </div>
             </div>
+        </c:if>
 
+        <c:if test="${userCanCreateDiagramReview}">
             <div class="workspaceSummary centered">
                 <div style="margin-top: 5px">
                     New diagram review
@@ -92,6 +101,18 @@
             </div>
         </c:if>
 
+        <c:if test="${not empty pageNumber}">
+        <div style="margin-top: 20px">
+            <%@ include file="dashboard-workspaces-page-control.jspf" %>
+            <span style="padding-left: 20px; padding-right: 20px">|</span>
+            Page size:
+            <a href="?sort=${sort}&pageNumber=1&pageSize=20">20</a>
+            |
+            <a href="?sort=${sort}&pageNumber=1&pageSize=50">50</a>
+            |
+            <a href="?sort=${sort}&pageNumber=1&pageSize=100">100</a>
+        </div>
+        </c:if>
     </div>
 </div>
 

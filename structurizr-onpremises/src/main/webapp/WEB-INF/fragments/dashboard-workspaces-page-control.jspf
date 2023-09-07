@@ -1,0 +1,19 @@
+<c:choose>
+    <c:when test="${not empty previousPage}">
+        <a href="?sort=${sort}&pageNumber=${previousPage}&pageSize=${pageSize}"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/arrow-left-square.svg" class="icon-sm" /></a>
+    </c:when>
+    <c:otherwise>
+        <img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/arrow-left-square.svg" class="icon-sm" style="opacity: 0.25" />
+    </c:otherwise>
+</c:choose>
+
+Page ${pageNumber}
+
+<c:choose>
+    <c:when test="${not empty nextPage}">
+        <a href="?sort=${sort}&pageNumber=${nextPage}&pageSize=${pageSize}"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/arrow-right-square.svg" class="icon-sm" /></a>
+    </c:when>
+    <c:otherwise>
+        <img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/arrow-right-square.svg" class="icon-sm" style="opacity: 0.25" />
+    </c:otherwise>
+</c:choose>

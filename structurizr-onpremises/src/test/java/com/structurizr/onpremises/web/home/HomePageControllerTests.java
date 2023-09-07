@@ -29,7 +29,7 @@ public class HomePageControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void show_WhenUnauthenticated() {
+    public void showUnauthenticatedHomePage_WhenUnauthenticated() {
         WorkspaceMetaData workspace1 = new WorkspaceMetaData(1);
 
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
@@ -40,7 +40,7 @@ public class HomePageControllerTests extends ControllerTestsBase {
         });
         clearUser();
 
-        String result = controller.show("", model);
+        String result = controller.showUnauthenticatedHomePage("", 1, 20, model);
 
         assertEquals(1, model.getAttribute("numberOfWorkspaces"));
         assertTrue(((Collection)model.getAttribute("workspaces")).contains(workspace1));
@@ -48,12 +48,76 @@ public class HomePageControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void show_WhenAuthenticated() {
+    public void showUnauthenticatedHomePage_WhenAuthenticated() {
         setUser("user@example.com");
 
-        String result = controller.show("", model);
+        String result = controller.showUnauthenticatedHomePage("", 1, 20, model);
 
         assertEquals("redirect:/dashboard", result);
     }
-    
+
+    @Test
+    public void showAuthenticatedDashboard_WhenAuthenticatedAndNoAdminUsersHaveBeenDefined() {
+        WorkspaceMetaData workspace1 = new WorkspaceMetaData(1);
+
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public Collection<WorkspaceMetaData> getWorkspaces(User user) {
+                return List.of(workspace1);
+            }
+        });
+        setUser("user@example.com");
+
+        String result = controller.showAuthenticatedDashboard("", 1, 20, model);
+
+        assertEquals(1, model.getAttribute("numberOfWorkspaces"));
+        assertTrue(((Collection)model.getAttribute("workspaces")).contains(workspace1));
+        assertEquals("dashboard", result);
+        assertEquals(true, model.getAttribute("userCanCreateWorkspace"));
+    }
+
+    @Test
+    public void showAuthenticatedDashboard_WhenAuthenticatedAndTheUserIsNotAnAdmin() {
+        WorkspaceMetaData workspace1 = new WorkspaceMetaData(1);
+
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public Collection<WorkspaceMetaData> getWorkspaces(User user) {
+                return List.of(workspace1);
+            }
+        });
+
+        Configuration.getInstance().setAdminUsersAndRoles("admin@exmaple.com");
+        setUser("user@example.com");
+
+        String result = controller.showAuthenticatedDashboard("", 1, 20, model);
+
+        assertEquals(1, model.getAttribute("numberOfWorkspaces"));
+        assertTrue(((Collection)model.getAttribute("workspaces")).contains(workspace1));
+        assertEquals("dashboard", result);
+        assertEquals(false, model.getAttribute("userCanCreateWorkspace"));
+    }
+
+    @Test
+    public void showAuthenticatedDashboard_WhenAuthenticatedAndTheUserIsAnAdmin() {
+        WorkspaceMetaData workspace1 = new WorkspaceMetaData(1);
+
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public Collection<WorkspaceMetaData> getWorkspaces(User user) {
+                return List.of(workspace1);
+            }
+        });
+
+        Configuration.getInstance().setAdminUsersAndRoles("admin@exmaple.com");
+        setUser("admin@example.com");
+
+        String result = controller.showAuthenticatedDashboard("", 1, 20, model);
+
+        assertEquals(1, model.getAttribute("numberOfWorkspaces"));
+        assertTrue(((Collection)model.getAttribute("workspaces")).contains(workspace1));
+        assertEquals("dashboard", result);
+        assertEquals(false, model.getAttribute("userCanCreateWorkspace"));
+    }
+
 }
