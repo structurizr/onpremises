@@ -74,6 +74,7 @@ dependencies {
 
 	implementation 'javax.cache:cache-api:1.1.1'
 	implementation 'org.ehcache:ehcache:3.10.8'
+//	implementation 'org.redisson:redisson:3.23.4'
 
 	// override transient dependency on 2.7.1 with critical CVEs
 	implementation 'xalan:xalan:2.7.3'
