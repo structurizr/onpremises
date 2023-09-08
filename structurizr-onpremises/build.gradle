@@ -49,30 +49,37 @@ dependencies {
 	implementation 'jstl:jstl:1.2'
 	implementation 'javax.annotation:javax.annotation-api:1.3.2'
 
-	implementation 'org.springframework:spring-webmvc:5.3.23'
-	implementation 'org.springframework.security:spring-security-web:5.6.2'
-	implementation 'org.springframework.security:spring-security-config:5.6.2'
-	implementation 'org.springframework.security:spring-security-ldap:5.6.2'
 	implementation 'org.springframework.security.extensions:spring-security-saml2-core:1.0.3.RELEASE'
-	implementation 'org.springframework.session:spring-session-data-redis:1.3.3.RELEASE'
+	implementation 'org.springframework:spring-webmvc:5.3.29'
+	implementation 'org.springframework.security:spring-security-web:5.8.6'
+	implementation 'org.springframework.security:spring-security-config:5.8.6'
+	implementation 'org.springframework.security:spring-security-ldap:5.8.6'
+	implementation 'org.springframework.session:spring-session-data-redis:2.7.3'
+	implementation 'redis.clients:jedis:3.10.0'
 
 	implementation 'org.apache.lucene:lucene-core:9.7.0'
 	implementation 'org.apache.lucene:lucene-queryparser:9.7.0'
 
-	implementation 'org.apache.logging.log4j:log4j-api:2.17.1'
-	implementation 'org.apache.logging.log4j:log4j-core:2.17.1'
-	implementation 'org.apache.logging.log4j:log4j-jcl:2.17.1'
-	implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.17.1'
+	implementation 'org.apache.logging.log4j:log4j-api:2.20.0'
+	implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
+	implementation 'org.apache.logging.log4j:log4j-jcl:2.20.0'
+	implementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.20.0'
 
 	implementation 'org.elasticsearch.client:elasticsearch-rest-client:7.9.0'
-	implementation 'org.apache.httpcomponents.client5:httpclient5:5.1.3'
-	implementation 'org.apache.httpcomponents:httpasyncclient:4.1.4'
+	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.1'
+	implementation 'org.apache.httpcomponents:httpasyncclient:4.1.5'
 
-	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.134'
-	implementation 'com.amazonaws:aws-java-sdk-sts:1.12.134'
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.470'
+	implementation 'com.amazonaws:aws-java-sdk-sts:1.12.471'
 
 	implementation 'javax.cache:cache-api:1.1.1'
 	implementation 'org.ehcache:ehcache:3.10.8'
+
+	// override transient dependency on 2.7.1 with critical CVEs
+	implementation 'xalan:xalan:2.7.3'
+
+	// override transient dependency on 2.0.1 with critical CVEs
+	implementation 'org.owasp.esapi:esapi:2.5.2.0'
 
 	testImplementation 'org.testcontainers:elasticsearch:1.18.3'
 }
@@ -96,6 +103,11 @@ sourceSets.main.resources {
 	include 'build.properties'
 }
 
+task getDependencies(type: Copy) {
+	from configurations.default
+	into 'build/dependencies'
+}
+
 task explodedWar(type: Sync) {
 	into "${buildDir}/exploded"
 	with war
@@ -104,4 +116,8 @@ task explodedWar(type: Sync) {
 configurations {
 	integrationTestImplementation.extendsFrom testImplementation
 	integrationTestRuntimeOnly.extendsFrom testRuntimeOnly
+}
+
+configurations.implementation {
+	exclude group: 'org.apache.xmlgraphics'
 }
