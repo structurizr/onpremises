@@ -6,7 +6,7 @@ import java.util.List;
 
 class PaginatedWorkspaceList {
 
-    static final int DEFAULT_PAGE_SIZE = 20;
+    static final int DEFAULT_PAGE_SIZE = 10;
 
     private final List<WorkspaceMetaData> workspaces;
     private final int pageNumber;
