@@ -54,4 +54,8 @@ class PaginatedWorkspaceList {
         return workspaces.subList(start, end);
     }
 
+    public int getMaxPage() {
+        return (int)Math.ceil((double)workspaces.size() / pageSize);
+    }
+
 }

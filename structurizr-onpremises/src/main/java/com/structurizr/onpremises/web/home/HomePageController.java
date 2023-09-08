@@ -90,6 +90,8 @@ public class HomePageController extends AbstractController {
                 model.addAttribute("nextPage", pageNumber + 1);
             }
 
+            model.addAttribute("maxPage", paginatedWorkspaceList.getMaxPage());
+
             model.addAttribute("pageSize", paginatedWorkspaceList.getPageSize());
 
             return paginatedWorkspaceList.getWorkspaces();
