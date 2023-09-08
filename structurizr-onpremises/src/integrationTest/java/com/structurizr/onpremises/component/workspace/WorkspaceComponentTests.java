@@ -49,7 +49,7 @@ public class WorkspaceComponentTests {
         assertEquals(1, workspaceId);
 
         WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(1);
-        String jsonV1 = String.format("{\"id\":1,\"name\":\"Workspace 1\",\"description\":\"Description\",\"revision\":1,\"lastModifiedDate\":\"%s\",\"model\":{},\"documentation\":{},\"views\":{\"configuration\":{\"branding\":{},\"styles\":{},\"terminology\":{}}}}", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()));
+        String jsonV1 = String.format("{\"id\":1,\"name\":\"Workspace 0001\",\"description\":\"Description\",\"revision\":1,\"lastModifiedDate\":\"%s\",\"model\":{},\"documentation\":{},\"views\":{\"configuration\":{\"branding\":{},\"styles\":{},\"terminology\":{}}}}", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()));
         assertEquals(jsonV1, workspaceComponent.getWorkspace(1, ""));
 
         Collection<WorkspaceMetaData> workspaces = workspaceComponent.getWorkspaces();
