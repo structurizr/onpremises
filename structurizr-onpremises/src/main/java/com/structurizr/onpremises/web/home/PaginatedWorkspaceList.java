@@ -16,16 +16,14 @@ class PaginatedWorkspaceList {
 
     PaginatedWorkspaceList(List<WorkspaceMetaData> workspaces, int pageNumber, int pageSize) {
         this.workspaces = workspaces;
-        this.pageNumber = pageNumber;
-        this.pageSize = pageSize;
 
-        pageNumber = Math.abs(pageNumber);
-        pageNumber = Math.max(1, pageNumber);
-        pageSize = Math.abs(pageSize);
-        pageSize = Math.min(pageSize, workspaces.size());
-        if (pageSize == 0) {
+        if (pageSize < 1) {
             pageSize = DEFAULT_PAGE_SIZE;
         }
+        this.pageSize = Math.min(pageSize, workspaces.size());
+
+        pageNumber = Math.max(1, pageNumber);
+        this.pageNumber = Math.min(getMaxPage(), pageNumber);
 
         start = (pageNumber - 1) * pageSize;
         start = Math.min(start, workspaces.size() - 1);
