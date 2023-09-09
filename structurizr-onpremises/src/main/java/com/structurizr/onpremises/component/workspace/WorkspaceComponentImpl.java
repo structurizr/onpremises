@@ -66,6 +66,7 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
     WorkspaceComponentImpl(WorkspaceDao workspaceDao, String encryptionPassphrase) {
         this.workspaceDao = workspaceDao;
         this.encryptionPassphrase = encryptionPassphrase;
+        this.workspaceMetadataCache = new NoOpWorkspaceMetadataCache();
     }
 
     private void initCache() {
