@@ -23,13 +23,6 @@ import com.structurizr.util.WorkspaceUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.cache.Cache;
-import javax.cache.CacheManager;
-import javax.cache.Caching;
-import javax.cache.configuration.MutableConfiguration;
-import javax.cache.expiry.CreatedExpiryPolicy;
-import javax.cache.expiry.Duration;
-import javax.cache.spi.CachingProvider;
 import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -37,7 +30,6 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 public class WorkspaceComponentImpl implements WorkspaceComponent {
 
@@ -45,13 +37,10 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
     private static final String ENCRYPTION_STRATEGY_STRING = "encryptionStrategy";
     private static final String CIPHERTEXT_STRING = "ciphertext";
 
-    private static final String METADATA_CACHE_NAME = "structurizr.workspace.metadata";
-
     private final WorkspaceDao workspaceDao;
     private final String encryptionPassphrase;
 
-    private CacheManager cacheManager;
-    private Cache<Long, WorkspaceMetaData> workspaceMetadataCache;
+    private WorkspaceMetadataCache workspaceMetadataCache;
 
     WorkspaceComponentImpl() {
         String dataStorageImplementationName = Configuration.getInstance().getDataStorageImplementationName();
@@ -81,53 +70,23 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
 
     private void initCache() {
         String cacheImplementation = Configuration.getInstance().getCacheImplementationName();
-        if (!StringUtils.isNullOrEmpty(cacheImplementation)) {
-            int expiryInMinutes = Integer.parseInt(StructurizrProperties.DEFAULT_CACHE_EXPIRY_IN_MINUTES);
-            try {
-                expiryInMinutes = Integer.parseInt(Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.CACHE_EXPIRY_IN_MINUTES_PROPERTY, StructurizrProperties.DEFAULT_CACHE_EXPIRY_IN_MINUTES));
-            } catch (NumberFormatException nfe) {
-                log.warn(nfe);
-            }
+        int expiryInMinutes = Integer.parseInt("" + WorkspaceMetadataCache.DEFAULT_CACHE_EXPIRY_IN_MINUTES);
+        try {
+            expiryInMinutes = Integer.parseInt(Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.CACHE_EXPIRY_IN_MINUTES_PROPERTY, "" + WorkspaceMetadataCache.DEFAULT_CACHE_EXPIRY_IN_MINUTES));
+        } catch (NumberFormatException nfe) {
+            log.warn(nfe);
+        }
 
-            log.debug("Creating cache for workspace metadata: implementation=" + cacheImplementation + "; expiry=" + expiryInMinutes + " minute(s)");
-
-            if (cacheImplementation.equalsIgnoreCase(StructurizrProperties.CACHE_VARIANT_LOCAL)) {
-                CachingProvider provider = Caching.getCachingProvider();
-                cacheManager = provider.getCacheManager();
-//            } else if (StructurizrProperties.CACHE_VARIANT_REDIS.equalsIgnoreCase(cacheImplementation)) {
-//                Config redissonConfig = new Config();
-//                redissonConfig.useSingleServer().setAddress("redis://localhost:6379");
-//                RedissonClient redisson = Redisson.create(redissonConfig);
-//
-//                cacheManager = new JCacheManager((Redisson) redisson, JCacheManager.class.getClassLoader(), null, null, null);
-            } else {
-                return;
-            }
-
-            MutableConfiguration<Long, WorkspaceMetaData> configuration = new MutableConfiguration<Long, WorkspaceMetaData>()
-                    .setTypes(Long.class, WorkspaceMetaData.class)
-                    .setStoreByValue(false)
-                    .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(new Duration(TimeUnit.MINUTES, expiryInMinutes)));
-            workspaceMetadataCache = cacheManager.createCache(METADATA_CACHE_NAME, configuration);
+        if (cacheImplementation.equalsIgnoreCase(StructurizrProperties.CACHE_VARIANT_LOCAL)) {
+            log.debug("Creating cache for workspace metadata: implementation=local; expiry=" + expiryInMinutes + " minute(s)");
+            workspaceMetadataCache = new LocalWorkspaceMetadataCache(expiryInMinutes);
+        } else {
+            workspaceMetadataCache = new NoOpWorkspaceMetadataCache();
         }
     }
 
     public void stop() {
-        if (cacheManager != null) {
-            try {
-                cacheManager.close();
-            } catch (Exception e) {
-                log.warn(e);
-            }
-        }
-
-        if (workspaceMetadataCache != null) {
-            try {
-                workspaceMetadataCache.close();
-            } catch (Exception e) {
-                log.warn(e);
-            }
-        }
+        workspaceMetadataCache.stop();
     }
 
     @Override
@@ -201,23 +160,12 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
 
     @Override
     public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) throws WorkspaceComponentException {
-        WorkspaceMetaData wmd = null;
-
-        if (workspaceMetadataCache != null) {
-            wmd = workspaceMetadataCache.get(workspaceId);
-            if (wmd != null) {
-                log.debug("Cache hit: " + workspaceId);
-            } else {
-                log.debug("Cache miss: " + workspaceId);
-            }
-        }
+        WorkspaceMetaData wmd = workspaceMetadataCache.get(workspaceId);
 
         if (wmd == null) {
             wmd = workspaceDao.getWorkspaceMetaData(workspaceId);
             if (wmd != null) {
-                if (workspaceMetadataCache != null) {
-                    workspaceMetadataCache.put(workspaceId, wmd);
-                }
+                workspaceMetadataCache.put(wmd);
             }
         }
 
@@ -232,8 +180,8 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
     public void putWorkspaceMetaData(WorkspaceMetaData workspaceMetaData) throws WorkspaceComponentException {
         workspaceDao.putWorkspaceMetaData(workspaceMetaData);
 
-        if (workspaceMetadataCache != null && workspaceMetaData != null) {
-            workspaceMetadataCache.put(workspaceMetaData.getId(), workspaceMetaData);
+        if (workspaceMetaData != null) {
+            workspaceMetadataCache.put(workspaceMetaData);
         }
     }
 

@@ -30,6 +30,5 @@ public class StructurizrProperties {
     public static final String CACHE_VARIANT_NONE = "none";
     public static final String CACHE_VARIANT_LOCAL = "local";
     public static final String CACHE_VARIANT_REDIS = "redis";
-    public static final String DEFAULT_CACHE_EXPIRY_IN_MINUTES = "5";
 
 }
