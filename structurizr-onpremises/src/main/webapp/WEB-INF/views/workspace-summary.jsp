@@ -103,6 +103,10 @@
                 <a id="exportJsonLink" href=""><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/filetype-json.svg" class="icon-sm" /> Export JSON</a>
             </div>
 
+            <div id="exportDslLinkNavItem" class="navigationItem">
+                <a id="exportDslLink" href=""><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/filetype-txt.svg" class="icon-sm" /> Export DSL</a>
+            </div>
+
             <c:if test="${workspace.editable && not workspace.locked}">
             <div class="navigationItem">
                 <a id="importJsonLink1" href=""><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/upload.svg" class="icon-sm" /> Import JSON</a>
@@ -241,8 +245,20 @@
     }
 
     addOnClickHandler('revertButton', revertToLoadedVersion);
+
     addOnClickHandler('exportJsonLink', function(e) {
         structurizr.util.exportWorkspace(structurizr.workspace.id, structurizr.workspace.getJson());
+        e.preventDefault();
+    });
+
+    addOnClickHandler('exportDslLink', function(e) {
+        var dslSource = structurizr.workspace.getProperty('structurizr.dsl');
+        if (dslSource !== undefined) {
+            dslSource = structurizr.util.atob(dslSource);
+            const filename = 'structurizr-' + structurizr.workspace.id + '-workspace.dsl';
+            structurizr.util.downloadFile(dslSource, "text/plain;charset=utf-8", filename);
+        }
+
         e.preventDefault();
     });
 
@@ -337,13 +353,17 @@
             $('#themeLink').removeClass('hidden');
         }
 
-        <c:if test="${workspace.editable}">
         if (!structurizr.workspace.hasElements() && !structurizr.workspace.hasViews() && !structurizr.workspace.hasDocumentation() && !structurizr.workspace.hasDecisions()) {
+            <c:if test="${workspace.editable}">
             $('#gettingStarted').removeClass('hidden');
+            </c:if>
             $('.workspaceContent').addClass('hidden');
             $('#exportJsonLinkNavItem').addClass('hidden');
         }
-        </c:if>
+
+        if (structurizr.workspace.getProperty('structurizr.dsl') === undefined) {
+            $('#exportDslLinkNavItem').addClass('hidden');
+        }
 
         progressMessage.hide();
     }
