@@ -122,7 +122,7 @@
 
             <c:if test="${workspace.editable eq true and workspace.locked eq true}">
             <div class="navigationItem">
-                <a href="" onclick="unlockWorkspace(event)"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/unlock.svg" class="icon-sm" /> Unlock</a>
+                <a id="unlockWorkspaceLink" href=""><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/unlock.svg" class="icon-sm" /> Unlock</a>
             </div>
             </c:if>
 
@@ -233,6 +233,8 @@
 
     progressMessage.show('<p>Loading workspace...</p>');
 
+    $('#unlockWorkspaceLink').click(function(event) { unlockWorkspace(event); });
+
     <c:if test="${not empty param.version}">
     $('#workspaceVersion').val("${workspace.internalVersion}");
     </c:if>
@@ -305,14 +307,14 @@
                     html += '<div class="centered" style="display: inline-block; margin: 10px 10px 40px 10px; width: ' + thumbnailSize + 'px;">';
 
                     if (view.type === structurizr.constants.IMAGE_VIEW_TYPE) {
-                        html += '  <a href="' + url + '"><img src="' + view.content + '" class="img-thumbnail" style="margin-bottom: 10px; max-height: ' + thumbnailSize + 'px" onerror="this.onerror = null; this.src=\'/static/img/thumbnail-not-available.png\';" /></a>';
+                        html += '  <a href="' + url + '"><img src="' + view.content + '" class="img-thumbnail viewThumbnail" style="margin-bottom: 10px; max-height: ' + thumbnailSize + 'px" /></a>';
                     } else {
                     <c:choose>
                     <c:when test="${not empty param.version}">
                     html += '  <a href="' + url + '"><img src="/static/img/thumbnail-not-available.png" class="img-thumbnail" style="margin-bottom: 10px" /></a>';
                     </c:when>
                     <c:otherwise>
-                    html += '  <a href="' + url + '"><img src="${thumbnailUrl}' + structurizr.util.escapeHtml(view.key) + '-thumbnail.png" class="img-thumbnail" style="margin-bottom: 10px; max-height: ' + thumbnailSize + 'px" onerror="this.onerror = null; this.src=\'/static/img/thumbnail-not-available.png\';" /></a>';
+                    html += '  <a href="' + url + '"><img src="${thumbnailUrl}' + structurizr.util.escapeHtml(view.key) + '-thumbnail.png" class="img-thumbnail viewThumbnail" style="margin-bottom: 10px; max-height: ' + thumbnailSize + 'px" /></a>';
                     </c:otherwise>
                     </c:choose>
                     }
@@ -332,6 +334,11 @@
 
             diagramsDiv.addClass('centered');
             diagramsDiv.append(html);
+
+            $('.viewThumbnail').on('error', function() {
+                $(this).on('error', undefined);
+                $(this).attr('src', '/static/img/thumbnail-not-available.png');
+            });
 
             $('#diagramsLink').removeClass('hidden');
             $('#imagesLink').removeClass('hidden');

@@ -10,7 +10,7 @@
 <%@ include file="/WEB-INF/fragments/progress-message.jspf" %>
 <%@ include file="/WEB-INF/fragments/dsl/introduction.jspf" %>
 
-<script>
+<script nonce="${scriptNonce}">
     progressMessage.show('<p>Loading workspace...</p>');
 </script>
 
@@ -68,15 +68,15 @@
         <div class="col-sm-10 small" style="padding: 18px 30px 10px 30px">
             <div class="form-group"style="margin-bottom: 10px;">
                 <div class="btn-group">
-                    <button class="btn btn-default" title="Return to dashboard" onclick="window.location.href='/dashboard'"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/house.svg" class="icon-btn" /></button>
-                    <button class="btn btn-default" title="Workspace summary" onclick="window.location.href='${urlPrefix}${urlSuffix}'"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/folder.svg" class="icon-btn" /></button>
-                    <button class="btn btn-default" id="sourceButton" title="Source" onclick="sourceButtonClicked()"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/code-slash.svg" class="icon-btn" /></button>
-                    <button class="btn btn-default" id="diagramsButton" title="Diagrams" onclick="diagramsButtonClicked()"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/bounding-box.svg" class="icon-btn" /></button>
-                    <button class="btn btn-default" id="helpButton" title="Help" onclick="window.open('https://structurizr.com/help/dsl');"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/question-circle.svg" class="icon-btn" /></button>
+                    <button id="dashboardButton" class="btn btn-default" title="Return to dashboard"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/house.svg" class="icon-btn" /></button>
+                    <button id="workspaceSummaryButton" class="btn btn-default" title="Workspace summary"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/folder.svg" class="icon-btn" /></button>
+                    <button id="sourceButton" class="btn btn-default" title="Source"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/code-slash.svg" class="icon-btn" /></button>
+                    <button id="diagramsButton" class="btn btn-default" title="Diagrams"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/bounding-box.svg" class="icon-btn" /></button>
+                    <button id="helpButton" class="btn btn-default" title="Help"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/question-circle.svg" class="icon-btn" /></button>
                 </div>
 
                 <div class="btn-group">
-                    <button class="btn btn-default" id="saveButton" title="Save workspace" onclick="saveWorkspace()" disabled="true" style="text-shadow: none"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/folder-check.svg" class="icon-btn icon-white" /></button>
+                    <button id="saveButton" class="btn btn-default" title="Save workspace" disabled="true" style="text-shadow: none"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/folder-check.svg" class="icon-btn icon-white" /></button>
                 </div>
 
                 <c:if test="${not empty param.version}">
@@ -103,9 +103,9 @@
                 <div style="float: right">
                     <label class="btn btn-default small">
                         <img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/cloud-upload.svg" class="icon-btn" />
-                        Upload <input type="file" style="display: none;" onchange="importSourceFile(this.files)">
+                        Upload <input id="uploadFileInput" type="file" style="display: none;">
                     </label>
-                    <button id="renderButton" class="btn btn-default" onclick="refresh()"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/play.svg" class="icon-btn" /> Render</button>
+                    <button id="renderButton" class="btn btn-default"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/play.svg" class="icon-btn" /> Render</button>
                 </div>
 
                 <div>
@@ -131,7 +131,7 @@
     </div>
 </div>
 
-<script>
+<script nonce="${scriptNonce}">
     var viewInFocus;
     var editor;
     var editorRendered = false;
@@ -139,6 +139,16 @@
     var sourceVisible = true;
     var diagramsVisible = true;
     var unsavedChanges = false;
+
+    $('#dashboardButton').click(function() { window.location.href='/dashboard'; });
+    $('#workspaceSummaryButton').click(function() { window.location.href='${urlPrefix}${urlSuffix}'; });
+    $('#sourceButton').click(function() { sourceButtonClicked(); });
+    $('#diagramsButton').click(function() { diagramsButtonClicked(); });
+    $('#helpButton').click(function() { window.open('https://structurizr.com/help/dsl'); });
+    $('#saveButton').click(function() { saveWorkspace(); });
+    $('#renderButton').click(function() { refresh(); });
+
+    $('#uploadFileInput').on('change', function() { importSourceFile(this.files); });
 
     function reloadWorkspace() {
         structurizrDiagramIframeRendered = false;

@@ -18,8 +18,8 @@
                     <input id="password" class="form-control" style="margin-top: 10px;" id="password" name="password" placeholder="Password" type="password" required="true" autocomplete="off" <c:if test="${usernameRemembered}">autofocus="true"</c:if> />
 
                     <div class="centered" style="margin-top: 10px;">
-                        <span id="showPassword" class="label structurizrBackgroundLighter" style="cursor:default;" onclick="showPassword();"><img src="/static/bootstrap-icons/eye.svg" class="icon-sm icon-white" /> Show password</span>
-                        <span id="hidePassword" class="label structurizrBackgroundLighter hidden" style="cursor:default;" onclick="hidePassword();"><img src="/static/bootstrap-icons/eye-slash.svg" class="icon-sm icon-white" /> Hide password</span>
+                        <span id="showPassword" class="label structurizrBackgroundLighter" style="cursor:default;"><img src="/static/bootstrap-icons/eye.svg" class="icon-sm icon-white" /> Show password</span>
+                        <span id="hidePassword" class="label structurizrBackgroundLighter hidden" style="cursor:default;"><img src="/static/bootstrap-icons/eye-slash.svg" class="icon-sm icon-white" /> Hide password</span>
                     </div>
 
                     <div class="centered" style="margin-top: 10px;">
@@ -46,7 +46,11 @@
 </div>
 
 
-<script>
+<script nonce="${scriptNonce}">
+
+    $('#showPassword').click(function() { showPassword(); });
+    $('#hidePassword').click(function() { hidePassword(); });
+
     if (window.location.hash) {
         $('#hash').val(window.location.hash);
     }

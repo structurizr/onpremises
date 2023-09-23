@@ -5,6 +5,7 @@ import com.structurizr.onpremises.component.workspace.WorkspaceComponent;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.util.RandomGuidGenerator;
 import com.structurizr.onpremises.util.Version;
 import com.structurizr.onpremises.web.security.SecurityUtils;
 import com.structurizr.util.StringUtils;
@@ -17,9 +18,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.TimeZone;
 
 public abstract class AbstractController {
+
+    private static final String CONTENT_SECURITY_POLICY_HEADER = "Content-Security-Policy";
+    private static final String REFERER_POLICY_HEADER = "Referrer-Policy";
+    private static final String REFERER_POLICY_VALUE = "strict-origin-when-cross-origin";
+    private static final String SCRIPT_NONCE_ATTRIBUTE = "scriptNonce";
 
     protected WorkspaceComponent workspaceComponent;
     protected SearchComponent searchComponent;
@@ -40,8 +48,13 @@ public abstract class AbstractController {
     }
 
     @ModelAttribute
-    protected void addSecurityHeaders(HttpServletResponse response) {
-        response.addHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+    protected void addSecurityHeaders(HttpServletResponse response, ModelMap model) {
+        response.addHeader(REFERER_POLICY_HEADER, REFERER_POLICY_VALUE);
+
+        String nonce = Base64.getEncoder().encodeToString(new RandomGuidGenerator().generate().getBytes(StandardCharsets.UTF_8));
+        model.addAttribute(SCRIPT_NONCE_ATTRIBUTE, nonce);
+
+        response.addHeader(CONTENT_SECURITY_POLICY_HEADER, String.format("script-src 'self' 'nonce-%s'", nonce));
     }
 
     @ModelAttribute

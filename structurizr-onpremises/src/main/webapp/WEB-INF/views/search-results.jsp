@@ -22,7 +22,7 @@
                             </select>
                         </div>
                         <div class="btn-group">
-                            <button class="btn btn-default" title="Search" onclick="$('#searchForm').submit();" style="height: 33px;"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/search.svg" class="icon-btn" /></button>
+                            <button id="searchButton" class="btn btn-default" title="Search" style="height: 33px;"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/search.svg" class="icon-btn" /></button>
                         </div>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                         <tr>
                             <td width="90px">
                                 <div>
-                                    <img src="${result.workspace.urlPrefix}/${result.workspaceId}/images/thumbnail.png" width="70px" alt="<c:out value='${result.workspace.name}' escapeXml='true' />" class="thumbnail" onerror="this.onerror = null; this.src='/static/img/thumbnail-not-available.png';" />
+                                    <img src="${result.workspace.urlPrefix}/${result.workspaceId}/images/thumbnail.png" width="70px" alt="<c:out value='${result.workspace.name}' escapeXml='true' />" class="thumbnail workspaceThumbnail" />
                                 </div>
                             </td>
                             <td>
@@ -80,3 +80,12 @@
         </c:choose>
     </div>
 </div>
+
+<script nonce="${scriptNonce}">
+    $('.workspaceThumbnail').on('error', function() {
+        $(this).on('error', undefined);
+        $(this).attr('src', '/static/img/thumbnail-not-available.png');
+    });
+
+    $('#searchButton').click(function() { $('#searchForm').submit(); });
+</script>
