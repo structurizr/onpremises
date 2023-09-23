@@ -1,0 +1,1 @@
+Docs have moved to [https://docs.structurizr.com/onpremises](https://docs.structurizr.com/onpremises).
