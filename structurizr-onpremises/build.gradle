@@ -80,7 +80,7 @@ dependencies {
 	implementation 'xalan:xalan:2.7.3'
 
 	// override transient dependency on 2.0.1 with critical CVEs
-	implementation 'org.owasp.esapi:esapi:2.5.2.0'
+//	implementation 'org.owasp.esapi:esapi:2.5.2.0'
 
 	testImplementation 'org.testcontainers:elasticsearch:1.18.3'
 }
