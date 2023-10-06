@@ -41,7 +41,7 @@
 
             <c:if test="${not empty param.version}">
             <div class="navigationItem">
-                <span class="label label-version"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-xs icon-white" /> ${workspace.internalVersion}</span>
+                <span class="label label-version"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-xs icon-white" /> <c:out value="${workspace.internalVersion}" /></span>
             </div>
             </c:if>
 
@@ -73,30 +73,30 @@
             
             <c:if test="${fn:startsWith(urlPrefix, '/workspace') && structurizrConfiguration.dslEditorEnabled}">
             <div class="navigationItem dslEditorNavigation">
-                <a href="${urlPrefix}/dsl${urlSuffix}"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/code-slash.svg" class="icon-sm" /> DSL editor</a>
+                <a href="<c:out value="${urlPrefix}" />/dsl<c:out value="${urlSuffix}" />"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/code-slash.svg" class="icon-sm" /> DSL editor</a>
             </div>
             </c:if>
 
             <div id="diagramsLink" class="navigationItem hidden">
-            <a href="${urlPrefix}/diagrams${urlSuffix}"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/bounding-box.svg" class="icon-sm" /> Diagrams</a>
+            <a href="<c:out value="${urlPrefix}" />/diagrams<c:out value="${urlSuffix}" />"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/bounding-box.svg" class="icon-sm" /> Diagrams</a>
             </div>
 
             <div id="documentationLink"  class="navigationItem hidden">
-                <a href="${urlPrefix}/documentation${urlSuffix}"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/book.svg" class="icon-sm" /> Documentation</a>
+                <a href="<c:out value="${urlPrefix}" />/documentation<c:out value="${urlSuffix}" />"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/book.svg" class="icon-sm" /> Documentation</a>
             </div>
             <div id="decisionsLink" class="navigationItem hidden">
-                <a href="${urlPrefix}/decisions${urlSuffix}"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/journal-text.svg" class="icon-sm" /> Decisions</a>
+                <a href="<c:out value="${urlPrefix}" />/decisions<c:out value="${urlSuffix}" />"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/journal-text.svg" class="icon-sm" /> Decisions</a>
             </div>
             <div id="exploreLink" class="navigationItem hidden">
-                <a href="${urlPrefix}/explore${urlSuffix}"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/diagram-3.svg" class="icon-sm" /> Explore</a>
+                <a href="<c:out value="${urlPrefix}" />/explore<c:out value="${urlSuffix}" />"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/diagram-3.svg" class="icon-sm" /> Explore</a>
             </div>
 
             <div id="themeLink" class="navigationItem hidden">
-                <a href="${urlPrefix}/theme${urlSuffix}" target="_blank"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/palette.svg" class="icon-sm" /> Theme</a>
+                <a href="<c:out value="${urlPrefix}" />/theme<c:out value="${urlSuffix}" />" target="_blank"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/palette.svg" class="icon-sm" /> Theme</a>
             </div>
 
             <div id="imagesLink" class="navigationItem hidden">
-                <a href="${urlPrefix}/images"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/filetype-png.svg" class="icon-sm" /> Published images</a>
+                <a href="<c:out value="${urlPrefix}" />/images"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/filetype-png.svg" class="icon-sm" /> Published images</a>
             </div>
 
             <div id="exportJsonLinkNavItem" class="navigationItem">
@@ -117,7 +117,7 @@
             <div class="navigationItemSeparator"></div>
             <c:if test="${fn:startsWith(urlPrefix, '/workspace')}">
             <div class="navigationItem">
-                <a href="${urlPrefix}/settings"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/gear.svg" class="icon-sm" /> Settings</a>
+                <a href="<c:out value="${urlPrefix}" />/settings"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/gear.svg" class="icon-sm" /> Settings</a>
             </div>
 
             <c:if test="${workspace.editable eq true and workspace.locked eq true}">
@@ -127,7 +127,7 @@
             </c:if>
 
             <div class="navigationItem">
-                <a href="${urlPrefix}/users"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/people.svg" class="icon-sm" /> Users</a>
+                <a href="<c:out value="${urlPrefix}" />/users"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/people.svg" class="icon-sm" /> Users</a>
             </div>
             </c:if>
         </div>
@@ -158,7 +158,7 @@
 
                 <c:if test="${fn:startsWith(urlPrefix, '/workspace') && not empty versions}">
                 <div class="centered" style="margin-top: 20px">
-                    <form class="form-inline" style="display: inline-block" method="get" action="${urlPrefix}">
+                    <form class="form-inline" style="display: inline-block" method="get" action="<c:out value="${urlPrefix}" />">
                         <select id="workspaceVersion" name="version" class="form-control">
                             <c:forEach var="version" items="${versions}">
                                 <option value="${version.versionId}"><fmt:formatDate value="${version.lastModifiedDate}" pattern="EEE dd MMM yyyy HH:mm:ss z" timeZone="${user.timeZone}" /></option>
@@ -167,7 +167,7 @@
                         <input type="submit" class="btn btn-default" value="Load version" style="height: 35.5px"/>
                     </form>
                     <c:if test="${not empty param.version && workspace.editable && not workspace.locked}">
-                        <button id="revertButton" class="btn btn-default small"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-btn" /> Revert to ${workspace.internalVersion}</button>
+                        <button id="revertButton" class="btn btn-default small"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-btn" /> Revert to <c:out value="${workspace.internalVersion}" /></button>
                     </c:if>
                 </div>
                 </c:if>
@@ -186,7 +186,7 @@
                         <div class="col-sm-4 centered">
                             <div style="padding: 10px; margin: 10px">
                                 <div style="margin-top: 5px; font-size: 20px">
-                                    <a href="${urlPrefix}/dsl"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/code-slash.svg" class="icon-lg"/> DSL editor</a>
+                                    <a href="<c:out value="${urlPrefix}" />/dsl"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/code-slash.svg" class="icon-lg"/> DSL editor</a>
                                 </div>
                                 <div class="small">
                                     Open the online DSL editor, and create your workspace using the Structurizr DSL.
@@ -206,7 +206,7 @@
                         <div class="col-sm-4 centered">
                             <div style="padding: 10px; margin: 10px">
                                 <div style="margin-top: 5px; font-size: 20px">
-                                    <a href="${urlPrefix}/settings#api"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/gear.svg" class="icon-lg" /> Settings</a>
+                                    <a href="<c:out value="${urlPrefix}" />/settings#api"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/gear.svg" class="icon-lg" /> Settings</a>
                                 </div>
                                 <div class="small">
                                     Use the workspace settings page to find your API key/secret, for uploading your workspace with the Structurizr CLI or code-based libraries.
@@ -236,7 +236,7 @@
     $('#unlockWorkspaceLink').click(function(event) { unlockWorkspace(event); });
 
     <c:if test="${not empty param.version}">
-    $('#workspaceVersion').val("${workspace.internalVersion}");
+    $('#workspaceVersion').val("<c:out value="${workspace.internalVersion}" />");
     </c:if>
 
     function addOnClickHandler(domId, handler) {
@@ -300,7 +300,7 @@
             var html = '';
 
             views.forEach(function(view) {
-                var url = '${urlPrefix}/diagrams${urlSuffix}#' + structurizr.util.escapeHtml(view.key);
+                var url = '<c:out value="${urlPrefix}" />/diagrams<c:out value="${urlSuffix}" />#' + structurizr.util.escapeHtml(view.key);
                 var title = structurizr.util.escapeHtml(structurizr.ui.getTitleForView(view));
 
                 if (count <= maxNumberOfViews) {
@@ -329,7 +329,7 @@
             });
 
             if (views.length > maxNumberOfViews) {
-                html += '<div class="small"><a href="${urlPrefix}/diagrams${urlSuffix}">More diagrams...</a></div>';
+                html += '<div class="small"><a href="<c:out value="${urlPrefix}" />/diagrams<c:out value="${urlSuffix}" />">More diagrams...</a></div>';
             }
 
             diagramsDiv.addClass('centered');
