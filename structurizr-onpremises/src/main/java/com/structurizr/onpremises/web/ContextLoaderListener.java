@@ -152,7 +152,6 @@ public class ContextLoaderListener implements ServletContextListener {
             log.info("Graphviz (dot): " + Configuration.getInstance().isGraphvizEnabled());
 
             log.info("DSL editor: " + Configuration.getInstance().isDslEditorEnabled());
-            log.info("Safe mode: " + Configuration.getInstance().isSafeMode());
 
             log.info("***********************************************************************************");
             log.info("MIT License");

@@ -82,7 +82,6 @@ public class DslEditorController extends AbstractWorkspaceEditorController {
         }
 
         try {
-            json = HtmlUtils.filterHtml(json);
             Workspace oldWorkspace = WorkspaceUtils.fromJson(json);
 
             String dsl = DslUtils.getDsl(oldWorkspace);

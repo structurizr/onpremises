@@ -42,7 +42,6 @@ public class Configuration extends ConfigLookup {
         setDataDirectory(new File(getDataDirectoryLocation()));
         setEncryptionPassphrase(getConfigurationParameter("structurizr.encryption", "STRUCTURIZR_ENCRYPTION", StructurizrProperties.ENCRYPTION_PASSPHRASE_PROPERTY, null));
         setWebUrl(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.URL_PROPERTY, ""));
-        setSafeMode(Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAFE_MODE_PROPERTY, "true")));
         setInternetConnection(Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.INTERNET_CONNECTION_PROPERTY, "true")));
         setApiKey(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.API_KEY_PROPERTY, ""));
 
@@ -154,14 +153,6 @@ public class Configuration extends ConfigLookup {
 
     public void setGraphvizEnabled(boolean graphvizEnabled) {
         this.graphvizEnabled = graphvizEnabled;
-    }
-
-    public boolean isSafeMode() {
-        return safeMode;
-    }
-
-    public void setSafeMode(boolean safeMode) {
-        this.safeMode = safeMode;
     }
 
     public boolean hasInternetConnection() {

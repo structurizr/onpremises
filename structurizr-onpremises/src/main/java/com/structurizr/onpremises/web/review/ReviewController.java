@@ -131,7 +131,6 @@ public class ReviewController extends AbstractController {
         }
 
         reviewId = HtmlUtils.filterHtml(reviewId);
-        json = HtmlUtils.filterHtml(json);
         Session reviewSession = Session.fromJson(json);
 
         User user = getUser();
