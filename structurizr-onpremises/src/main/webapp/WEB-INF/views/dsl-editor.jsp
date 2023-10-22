@@ -179,12 +179,7 @@
     });
 
     function workspaceLoaded() {
-        // if automatic layout (with Graphviz) needs to be executed, lets do this first
-        if (graphvizRequired()) {
-            runGraphvizForWorkspace(init);
-        } else {
-            init();
-        }
+        init();
     }
 
     function init() {
