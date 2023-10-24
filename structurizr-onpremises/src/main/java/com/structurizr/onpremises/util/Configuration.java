@@ -25,7 +25,6 @@ public class Configuration extends ConfigLookup {
     private String apiKey;
 
     private boolean graphvizEnabled = false;
-    private boolean safeMode = true;
     private boolean internetConnection = true;
 
     private final Map<String,Boolean> features = new HashMap<>();
@@ -155,6 +154,10 @@ public class Configuration extends ConfigLookup {
         this.graphvizEnabled = graphvizEnabled;
     }
 
+    public boolean isSafeMode() {
+        return false;
+    }
+    
     public boolean hasInternetConnection() {
         return internetConnection;
     }
