@@ -41,8 +41,8 @@ dependencies {
 
 	implementation project(':structurizr-onpremises-plugin')
 
-	implementation 'com.structurizr:structurizr-dsl:1.32.0'
-	implementation 'com.structurizr:structurizr-graphviz:2.2.1'
+	implementation 'com.structurizr:structurizr-dsl:1.33.0'
+	implementation 'com.structurizr:structurizr-graphviz:2.2.2'
 
 	implementation 'javax.servlet:javax.servlet-api:3.0.1'
 	implementation 'taglibs:standard:1.1.2'
@@ -57,8 +57,8 @@ dependencies {
 	implementation 'org.springframework.session:spring-session-data-redis:2.7.3'
 	implementation 'redis.clients:jedis:3.10.0'
 
-	implementation 'org.apache.lucene:lucene-core:9.7.0'
-	implementation 'org.apache.lucene:lucene-queryparser:9.7.0'
+	implementation 'org.apache.lucene:lucene-core:9.8.0'
+	implementation 'org.apache.lucene:lucene-queryparser:9.8.0'
 
 	implementation 'org.apache.logging.log4j:log4j-api:2.20.0'
 	implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
