@@ -14,7 +14,7 @@ public class CsrfSecurityRequestMatcher implements RequestMatcher {
             String uri = request.getRequestURI();
 
             if (
-                    uri.startsWith("/login")
+                    uri.startsWith("/login") || uri.startsWith("/workspace")
             ) {
                 return true;
             }

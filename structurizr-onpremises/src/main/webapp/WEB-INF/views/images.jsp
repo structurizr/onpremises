@@ -32,6 +32,7 @@
         <c:if test="${workspace.editable}">
         <div class="centered">
             <form id="deleteImagesForm" class="form-inline small centered" style="display: inline-block; margin-bottom: 5px" action="/workspace/${workspace.id}/images/delete" method="post">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                 <button class="btn btn-default" type="submit" name="action" value="delete" title="Delete published images"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/trash3.svg" class="icon-btn" /> Delete published images</button>
             </form>
         </div>
