@@ -6,7 +6,7 @@
 
     function publishAllViews() {
         numberOfPublishedImages = 0;
-        publishImages(structurizr.workspace.getViews().map(function(v) { return v.key; }));
+        publishImages(structurizr.workspace.getViews());
     }
 
     function publishViewsFinished() {
@@ -15,17 +15,16 @@
 
     function publishImages(viewsToExport) {
         if (viewsToExport && viewsToExport.length > 0) {
-            const viewToExport = viewsToExport[0];
+            const view = viewsToExport[0];
 
-            structurizr.diagram.changeView(viewToExport, function () {
+            changeView(view, function () {
                 structurizr.diagram.exportCurrentDiagramToPNG(true, false, function(diagramAsPNG) {
-                    publishImage(viewToExport, viewToExport + '.png', diagramAsPNG, function() {
+                    publishImage(view.key, view.key + '.png', diagramAsPNG, function() {
                         numberOfPublishedImages++;
 
-                        const view = structurizr.workspace.findViewByKey(viewToExport);
                         if (view.type !== structurizr.constants.IMAGE_VIEW_TYPE) {
                             structurizr.diagram.exportCurrentDiagramKeyToPNG(function (diagramKeyAsPNG) {
-                                publishImage(viewToExport, viewToExport + '-key.png', diagramKeyAsPNG, function () {
+                                publishImage(view.key, view.key + '-key.png', diagramKeyAsPNG, function () {
                                     viewsToExport.splice(0, 1);
                                     publishImages(viewsToExport);
                                 })
