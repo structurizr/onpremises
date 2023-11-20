@@ -318,7 +318,7 @@
 
     function changeView() {
         if (structurizr.workspace.hasViews()) {
-            document.getElementById('diagramEditorIframe').contentWindow.structurizr.diagram.changeView(viewInFocus);
+            document.getElementById('diagramEditorIframe').contentWindow.changeView(structurizr.workspace.findViewByKey(viewInFocus));
             $('#diagramEditorIframe').focus();
         }
     }
