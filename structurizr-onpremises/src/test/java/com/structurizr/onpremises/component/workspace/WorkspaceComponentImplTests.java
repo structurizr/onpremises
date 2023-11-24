@@ -3,6 +3,7 @@ package com.structurizr.onpremises.component.workspace;
 import com.structurizr.Workspace;
 import com.structurizr.configuration.Role;
 import com.structurizr.configuration.Visibility;
+import com.structurizr.configuration.WorkspaceScope;
 import com.structurizr.encryption.AesEncryptionStrategy;
 import com.structurizr.encryption.EncryptedWorkspace;
 import com.structurizr.encryption.EncryptionLocation;
@@ -809,6 +810,50 @@ public class WorkspaceComponentImplTests {
 
         workspaceComponent.unshareWorkspace(1);
         assertEquals("", workspaceMetaData.getSharingToken());
+    }
+
+    @Test
+    public void test_putWorkspace_ThrowsAnException_WhenWorkspaceScopeValidationIsStrictAndTheWorkspaceIsUnscoped() throws Exception {
+        Workspace workspace = new Workspace("Name", "Description");
+        workspace.getConfiguration().setScope(null);
+
+        String json = WorkspaceUtils.toJson(workspace, false);
+
+        final WorkspaceMetaData wmd = new WorkspaceMetaData(1);
+        wmd.setPublicWorkspace(false);
+
+        WorkspaceDao dao = new MockWorkspaceDao();
+
+        WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
+        try {
+            Configuration.getInstance().setFeatureEnabled(Features.WORKSPACE_SCOPE_VALIDATION);
+            workspaceComponent.putWorkspace(1, json);
+            fail();
+        } catch (WorkspaceComponentException e) {
+            assertEquals("Strict workspace scope validation has been enabled on this on-premises installation, but this workspace has no defined scope - see https://docs.structurizr.com/workspaces for more information.", e.getMessage());
+        }
+    }
+
+    @Test
+    public void test_putWorkspace_ThrowsAnException_WhenWorkspaceScopeValidationFails() throws Exception {
+        Workspace workspace = new Workspace("Name", "Description");
+        workspace.getConfiguration().setScope(WorkspaceScope.Landscape);
+        workspace.getModel().addSoftwareSystem("A").addContainer("AA");
+
+        String json = WorkspaceUtils.toJson(workspace, false);
+
+        final WorkspaceMetaData wmd = new WorkspaceMetaData(1);
+        wmd.setPublicWorkspace(false);
+
+        WorkspaceDao dao = new MockWorkspaceDao();
+
+        WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
+        try {
+            workspaceComponent.putWorkspace(1, json);
+            fail();
+        } catch (WorkspaceComponentException e) {
+            assertEquals("Workspace is landscape scoped, but the software system named A has containers.", e.getMessage());
+        }
     }
 
 }

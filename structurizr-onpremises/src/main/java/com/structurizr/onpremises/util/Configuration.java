@@ -17,6 +17,9 @@ public class Configuration extends ConfigLookup {
 
     private static final String PLUGINS_DIRECTORY_NAME = "plugins";
 
+    private static final String WORKSPACE_SCOPE_STRICT = "strict";
+    private static final String WORKSPACE_SCOPE_RELAXED = "relaxed";
+
     private File dataDirectory;
     private String webUrl;
     private Set<String> adminUsersAndRoles = new HashSet<>();
@@ -63,6 +66,7 @@ public class Configuration extends ConfigLookup {
         features.put(Features.UI_WORKSPACE_SETTINGS, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.UI_WORKSPACE_SETTINGS, "true")));
         features.put(Features.UI_DSL_EDITOR, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.UI_DSL_EDITOR, "false")));
         features.put(Features.WORKSPACE_ARCHIVING, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.WORKSPACE_ARCHIVING, "false")));
+        features.put(Features.WORKSPACE_SCOPE_VALIDATION, getConfigurationParameterFromStructurizrPropertiesFile(Features.WORKSPACE_SCOPE_VALIDATION, "relaxed").equalsIgnoreCase("strict"));
         features.put(Features.DIAGRAM_REVIEWS, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.DIAGRAM_REVIEWS, "true")));
 
         // for backwards compatibility

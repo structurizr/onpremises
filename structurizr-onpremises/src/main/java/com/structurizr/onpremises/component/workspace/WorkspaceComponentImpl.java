@@ -5,6 +5,7 @@ import com.structurizr.Workspace;
 import com.structurizr.configuration.Role;
 import com.structurizr.configuration.Visibility;
 import com.structurizr.configuration.WorkspaceConfiguration;
+import com.structurizr.configuration.WorkspaceScope;
 import com.structurizr.encryption.AesEncryptionStrategy;
 import com.structurizr.encryption.EncryptedWorkspace;
 import com.structurizr.encryption.EncryptionLocation;
@@ -20,6 +21,8 @@ import com.structurizr.onpremises.util.Features;
 import com.structurizr.onpremises.util.StructurizrProperties;
 import com.structurizr.util.StringUtils;
 import com.structurizr.util.WorkspaceUtils;
+import com.structurizr.validation.WorkspaceScopeValidationException;
+import com.structurizr.validation.WorkspaceScopeValidatorFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -224,6 +227,11 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
             NumberFormat format = new DecimalFormat("0000");
 
             Workspace workspace = new Workspace("Workspace " + format.format(workspaceId), "Description");
+
+            if (Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_SCOPE_VALIDATION)) {
+                workspace.getConfiguration().setScope(WorkspaceScope.SoftwareSystem);
+            }
+
             String json = WorkspaceUtils.toJson(workspace, false);
 
             putWorkspace(workspaceId, json);
@@ -303,6 +311,9 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
                 jsonToBeStored = stringWriter.toString();
             } else {
                 Workspace workspace = WorkspaceUtils.fromJson(json);
+
+                validateWorkspaceScope(workspace);
+
                 workspace.setId(workspaceId);
                 workspace.setLastModifiedDate(DateUtils.removeMilliseconds(DateUtils.getNow()));
 
@@ -394,6 +405,18 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
             e.printStackTrace();
             throw new WorkspaceComponentException(e.getMessage(), e);
         }
+    }
+
+    private void validateWorkspaceScope(Workspace workspace) throws WorkspaceScopeValidationException {
+        // if workspace scope validation is enabled, reject workspaces without a defined scope
+        if (Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_SCOPE_VALIDATION)) {
+            if (workspace.getConfiguration().getScope() == null) {
+                throw new WorkspaceScopeValidationException("Strict workspace scope validation has been enabled on this on-premises installation, but this workspace has no defined scope - see https://docs.structurizr.com/workspaces for more information.");
+            }
+        }
+
+        // validate workspace scope
+        WorkspaceScopeValidatorFactory.getValidator(workspace).validate(workspace);
     }
 
     private WorkspaceEvent createWorkspaceEvent(WorkspaceMetaData workspaceMetaData, String workspaceAsJson) {

@@ -7,6 +7,7 @@ public class Features {
     public static final String UI_WORKSPACE_SETTINGS = "structurizr.feature.ui.workspaceSettings";
 
     public static final String WORKSPACE_ARCHIVING = "structurizr.feature.workspace.archiving";
+    public static final String WORKSPACE_SCOPE_VALIDATION = "structurizr.feature.workspace.scope";
 
     public static final String DIAGRAM_REVIEWS = "structurizr.feature.diagramReviews";
 
