@@ -1,5 +1,7 @@
 workspace "Structurizr on-premises installation" "The software architecture model for the Structurizr on-premises installation." {
 
+    !docs docs
+
     model {
         anonymousUser = person "Anonymous User" "An anonymous, unauthenticated, user."
         workspaceReader = person "Workspace Reader" "An authenticated user with read-only access to one or more workspaces."

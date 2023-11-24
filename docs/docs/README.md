@@ -1,0 +1,1 @@
+See [https://docs.structurizr.com/onpremises](https://docs.structurizr.com/onpremises) for the on-premises installation documentation.
