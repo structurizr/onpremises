@@ -15,10 +15,7 @@ import com.structurizr.io.json.EncryptedJsonWriter;
 import com.structurizr.onpremises.domain.Image;
 import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 import com.structurizr.onpremises.domain.User;
-import com.structurizr.onpremises.util.Configuration;
-import com.structurizr.onpremises.util.DateUtils;
-import com.structurizr.onpremises.util.Features;
-import com.structurizr.onpremises.util.StructurizrProperties;
+import com.structurizr.onpremises.util.*;
 import com.structurizr.util.StringUtils;
 import com.structurizr.util.WorkspaceUtils;
 import com.structurizr.validation.WorkspaceScopeValidationException;
@@ -312,7 +309,7 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
             } else {
                 Workspace workspace = WorkspaceUtils.fromJson(json);
 
-                validateWorkspaceScope(workspace);
+                WorkspaceValidationUtils.validateWorkspaceScope(workspace);
 
                 workspace.setId(workspaceId);
                 workspace.setLastModifiedDate(DateUtils.removeMilliseconds(DateUtils.getNow()));
@@ -405,18 +402,6 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
             e.printStackTrace();
             throw new WorkspaceComponentException(e.getMessage(), e);
         }
-    }
-
-    private void validateWorkspaceScope(Workspace workspace) throws WorkspaceScopeValidationException {
-        // if workspace scope validation is enabled, reject workspaces without a defined scope
-        if (Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_SCOPE_VALIDATION)) {
-            if (workspace.getConfiguration().getScope() == null) {
-                throw new WorkspaceScopeValidationException("Strict workspace scope validation has been enabled on this on-premises installation, but this workspace has no defined scope - see https://docs.structurizr.com/workspaces for more information.");
-            }
-        }
-
-        // validate workspace scope
-        WorkspaceScopeValidatorFactory.getValidator(workspace).validate(workspace);
     }
 
     private WorkspaceEvent createWorkspaceEvent(WorkspaceMetaData workspaceMetaData, String workspaceAsJson) {

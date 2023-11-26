@@ -8,8 +8,11 @@ import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.HtmlUtils;
+import com.structurizr.onpremises.util.WorkspaceValidationUtils;
 import com.structurizr.util.StringUtils;
 import com.structurizr.util.WorkspaceUtils;
+import com.structurizr.validation.WorkspaceScopeValidationException;
+import com.structurizr.validation.WorkspaceScopeValidatorFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -98,7 +101,7 @@ public class DslEditorController extends AbstractWorkspaceEditorController {
                 newWorkspace.getViews().getConfiguration().copyConfigurationFrom(oldWorkspace.getViews().getConfiguration());
 
                 return new DslEditorResponse(WorkspaceUtils.toJson(newWorkspace, false));
-            } catch (StructurizrDslParserException e) {
+            } catch (StructurizrDslParserException | WorkspaceScopeValidationException e) {
                 String errorMessage = e.getMessage();
 
                 return new DslEditorResponse(false, errorMessage);
@@ -112,7 +115,7 @@ public class DslEditorController extends AbstractWorkspaceEditorController {
         }
     }
 
-    private Workspace fromDsl(String dsl) throws StructurizrDslParserException {
+    private Workspace fromDsl(String dsl) throws StructurizrDslParserException, WorkspaceScopeValidationException {
         StructurizrDslParser parser = new StructurizrDslParser();
         parser.setRestricted(true);
         parser.parse(dsl);
@@ -124,6 +127,8 @@ public class DslEditorController extends AbstractWorkspaceEditorController {
         if (!workspace.getModel().isEmpty() && workspace.getViews().isEmpty()) {
             workspace.getViews().createDefaultViews();
         }
+
+        WorkspaceValidationUtils.validateWorkspaceScope(workspace);
 
         return workspace;
     }
