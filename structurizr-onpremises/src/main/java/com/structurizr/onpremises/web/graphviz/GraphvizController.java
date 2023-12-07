@@ -17,11 +17,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.Arrays;
 
 @RestController
 public class GraphvizController {
 
     private static final Log log = LogFactory.getLog(GraphvizController.class);
+
+    private static final String PREBUILT_THEME_URL = "https://static.structurizr.com";
 
     @PostMapping(value = "/graphviz", consumes = "application/json", produces = "application/json; charset=UTF-8")
     public String post(@RequestBody String json,
@@ -38,9 +41,11 @@ public class GraphvizController {
                 Workspace workspace = WorkspaceUtils.fromJson(json);
 
                 if (configuration.hasInternetConnection()) {
-                    log.debug("Loading themes");
                     try {
-                        ThemeUtils.loadThemes(workspace);
+                        if (themesNeedToBeLoaded(workspace)) {
+                            log.debug("Loading themes");
+                            ThemeUtils.loadThemes(workspace);
+                        }
                     } catch (Exception e) {
                         log.warn("Ignoring themes: " + e.getMessage());
                     }
@@ -128,6 +133,12 @@ public class GraphvizController {
             e.printStackTrace();
             return e.getMessage();
         }
+    }
+
+    private boolean themesNeedToBeLoaded(Workspace workspace) {
+        // the pre-built themes at https://static.structurizr.com do not include any element width/height definitions,
+        // and therefore don't need to be loaded in order to run automatic layout
+        return Arrays.stream(workspace.getViews().getConfiguration().getThemes()).anyMatch(t -> !t.startsWith(PREBUILT_THEME_URL));
     }
 
 }
