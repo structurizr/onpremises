@@ -1,6 +1,7 @@
 package com.structurizr.onpremises.web.security;
 
 import com.structurizr.onpremises.web.AbstractController;
+import jakarta.servlet.Filter;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -12,8 +13,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import javax.servlet.Filter;
 
 @Controller
 public class SignInController extends AbstractController implements ApplicationContextAware {

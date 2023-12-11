@@ -1,11 +1,10 @@
 package com.structurizr.onpremises.web;
 
 import com.structurizr.onpremises.util.Version;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.servlet.http.HttpServletResponse;
 
 @RestController
 public class BuildInformationController {

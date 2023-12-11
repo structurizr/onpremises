@@ -6,9 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.saml.SAMLCredential;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -41,22 +39,23 @@ public final class SecurityUtils {
 
                 return new User(username, roles, AuthenticationMethod.LOCAL);
             } else {
-                if (authentication.getCredentials() instanceof SAMLCredential) {
-                    SAMLCredential samlCredential = (SAMLCredential) authentication.getCredentials();
-                    String emailAddress = samlCredential.getAttributeAsString(SAML_EMAIL_ADDRESS_ATTRIBUTE);
-
-                    String[] groups = samlCredential.getAttributeAsStringArray(SAML_GROUP_ATTRIBUTE);
-                    if (groups != null) {
-                        roles.addAll(Arrays.asList(groups));
-                    }
-
-                    String[] auth0Roles = samlCredential.getAttributeAsStringArray(SAML_AUTH0_ROLES_ATTRIBUTE);
-                    if (auth0Roles != null) {
-                        roles.addAll(Arrays.asList(auth0Roles));
-                    }
-
-                    user = new User(emailAddress, roles, AuthenticationMethod.SAML);
-                }
+                // todo
+//                if (authentication.getCredentials() instanceof SAMLCredential) {
+//                    SAMLCredential samlCredential = (SAMLCredential) authentication.getCredentials();
+//                    String emailAddress = samlCredential.getAttributeAsString(SAML_EMAIL_ADDRESS_ATTRIBUTE);
+//
+//                    String[] groups = samlCredential.getAttributeAsStringArray(SAML_GROUP_ATTRIBUTE);
+//                    if (groups != null) {
+//                        roles.addAll(Arrays.asList(groups));
+//                    }
+//
+//                    String[] auth0Roles = samlCredential.getAttributeAsStringArray(SAML_AUTH0_ROLES_ATTRIBUTE);
+//                    if (auth0Roles != null) {
+//                        roles.addAll(Arrays.asList(auth0Roles));
+//                    }
+//
+//                    user = new User(emailAddress, roles, AuthenticationMethod.SAML);
+//                }
             }
         }
 

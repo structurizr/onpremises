@@ -26,6 +26,7 @@
         <!-- comment this out if you don't want to use Spring's remember me functionality -->
         <!-- (you can also change the key if you like; it's used to hash information in the resulting client-side cookie) -->
         <remember-me key="BnWANqCT5mdgbkqHmz2UfrWXhwiPlm"/>
+        <intercept-url pattern="/**" access="permitAll" />
     </http>
 
     <!--

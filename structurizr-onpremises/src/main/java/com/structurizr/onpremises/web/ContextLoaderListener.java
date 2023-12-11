@@ -6,13 +6,13 @@ import com.structurizr.graphviz.GraphvizAutomaticLayout;
 import com.structurizr.importer.documentation.DefaultDocumentationImporter;
 import com.structurizr.onpremises.util.*;
 import com.structurizr.util.StringUtils;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;

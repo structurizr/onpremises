@@ -1,18 +1,16 @@
 package com.structurizr.onpremises.web.api;
 
-import com.structurizr.Workspace;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.web.AbstractController;
 import com.structurizr.util.StringUtils;
-import com.structurizr.util.WorkspaceUtils;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
 
 @RestController

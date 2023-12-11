@@ -1,8 +1,9 @@
 package com.structurizr.onpremises.web;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.WriteListener;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -42,16 +43,6 @@ public class MockHttpServletResponse implements HttpServletResponse {
 
     @Override
     public String encodeRedirectURL(String s) {
-        return null;
-    }
-
-    @Override
-    public String encodeUrl(String s) {
-        return null;
-    }
-
-    @Override
-    public String encodeRedirectUrl(String s) {
         return null;
     }
 
@@ -114,11 +105,6 @@ public class MockHttpServletResponse implements HttpServletResponse {
     }
 
     @Override
-    public void setStatus(int i, String s) {
-
-    }
-
-    @Override
     public String getCharacterEncoding() {
         return null;
     }
@@ -134,6 +120,15 @@ public class MockHttpServletResponse implements HttpServletResponse {
             @Override
             public void write(int b) throws IOException {
                 bytes.add(b);
+            }
+
+            @Override
+            public boolean isReady() {
+                return false;
+            }
+
+            @Override
+            public void setWriteListener(WriteListener writeListener) {
             }
         };
     }
@@ -207,4 +202,10 @@ public class MockHttpServletResponse implements HttpServletResponse {
     public Collection<String> getHeaderNames() {
         return null;
     }
+
+    @Override
+    public void setContentLengthLong(long len) {
+
+    }
+
 }

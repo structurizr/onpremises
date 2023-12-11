@@ -1,6 +1,7 @@
 package com.structurizr.onpremises.web;
 
-import javax.servlet.*;
+import jakarta.servlet.*;
+
 import java.io.IOException;
 
 public class NoOpSpringSessionRepositoryFilter implements Filter {

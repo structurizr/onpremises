@@ -1,7 +1,7 @@
 package com.structurizr.onpremises.web;
 
-import javax.servlet.*;
-import javax.servlet.http.*;
+import jakarta.servlet.*;
+import jakarta.servlet.http.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
@@ -158,11 +158,6 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     @Override
-    public boolean isRequestedSessionIdFromUrl() {
-        return false;
-    }
-
-    @Override
     public Object getAttribute(String s) {
         return null;
     }
@@ -286,11 +281,6 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     @Override
-    public String getRealPath(String s) {
-        return null;
-    }
-
-    @Override
     public int getRemotePort() {
         return 0;
     }
@@ -369,4 +359,35 @@ public class MockHttpServletRequest implements HttpServletRequest {
     public DispatcherType getDispatcherType() {
         return null;
     }
+
+    @Override
+    public String changeSessionId() {
+        return null;
+    }
+
+    @Override
+    public <T extends HttpUpgradeHandler> T upgrade(Class<T> handlerClass) throws IOException, ServletException {
+        return null;
+    }
+
+    @Override
+    public long getContentLengthLong() {
+        return 0;
+    }
+
+    @Override
+    public String getRequestId() {
+        return null;
+    }
+
+    @Override
+    public String getProtocolRequestId() {
+        return null;
+    }
+
+    @Override
+    public ServletConnection getServletConnection() {
+        return null;
+    }
+
 }

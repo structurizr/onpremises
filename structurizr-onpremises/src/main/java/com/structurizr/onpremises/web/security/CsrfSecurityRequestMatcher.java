@@ -2,7 +2,7 @@ package com.structurizr.onpremises.web.security;
 
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class CsrfSecurityRequestMatcher implements RequestMatcher {
 
