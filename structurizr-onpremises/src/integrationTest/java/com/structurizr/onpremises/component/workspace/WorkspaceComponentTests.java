@@ -49,7 +49,7 @@ public class WorkspaceComponentTests {
         assertEquals(1, workspaceId);
 
         WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(1);
-        String jsonV1 = String.format("{\"id\":1,\"name\":\"Workspace 0001\",\"description\":\"Description\",\"revision\":1,\"lastModifiedDate\":\"%s\",\"model\":{},\"documentation\":{},\"views\":{\"configuration\":{\"branding\":{},\"styles\":{},\"terminology\":{}}}}", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()));
+        String jsonV1 = String.format("{\"id\":1,\"name\":\"Workspace 0001\",\"description\":\"Description\",\"revision\":1,\"lastModifiedDate\":\"%s\",\"configuration\":{},\"model\":{},\"documentation\":{},\"views\":{\"configuration\":{\"branding\":{},\"styles\":{},\"terminology\":{}}}}", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()));
         assertEquals(jsonV1, workspaceComponent.getWorkspace(1, ""));
 
         Collection<WorkspaceMetaData> workspaces = workspaceComponent.getWorkspaces();
@@ -69,7 +69,7 @@ public class WorkspaceComponentTests {
         workspaceComponent.putWorkspace(1, json);
 
         workspaceMetaData = workspaceComponent.getWorkspaceMetaData(1);
-        String jsonV2 = String.format("{\"id\":1,\"name\":\"Financial Risk System\",\"description\":\"...\",\"revision\":2,\"lastModifiedDate\":\"%s\",\"model\":{},\"documentation\":{},\"views\":{\"configuration\":{\"branding\":{},\"styles\":{},\"terminology\":{}}}}", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()));
+        String jsonV2 = String.format("{\"id\":1,\"name\":\"Financial Risk System\",\"description\":\"...\",\"revision\":2,\"lastModifiedDate\":\"%s\",\"configuration\":{},\"model\":{},\"documentation\":{},\"views\":{\"configuration\":{\"branding\":{},\"styles\":{},\"terminology\":{}}}}", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()));
         assertEquals(jsonV2, workspaceComponent.getWorkspace(1, ""));
 
         workspaceVersions = workspaceComponent.getWorkspaceVersions(1, 10);
