@@ -292,6 +292,7 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
                 // also remove the workspace configuration
                 configuration = encryptedWorkspace.getConfiguration();
                 encryptedWorkspace.clearConfiguration();
+                encryptedWorkspace.getConfiguration().setScope(configuration.getScope());
 
                 // copy the last modified details from the workspace
                 workspaceMetaData.setLastModifiedDate(encryptedWorkspace.getLastModifiedDate());
@@ -325,6 +326,7 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
                 // also remove the configuration
                 configuration = workspace.getConfiguration();
                 workspace.clearConfiguration();
+                workspace.getConfiguration().setScope(configuration.getScope());
 
                 // copy the last modified details from the workspace
                 workspaceMetaData.setLastModifiedDate(workspace.getLastModifiedDate());

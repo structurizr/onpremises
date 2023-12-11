@@ -42,6 +42,7 @@ dependencies {
 	implementation project(':structurizr-onpremises-plugin')
 
 	implementation 'com.structurizr:structurizr-dsl:1.34.0'
+	implementation 'com.structurizr:structurizr-client:1.28.1'
 	implementation 'com.structurizr:structurizr-graphviz:2.2.2'
 
 	implementation 'javax.servlet:javax.servlet-api:3.0.1'
