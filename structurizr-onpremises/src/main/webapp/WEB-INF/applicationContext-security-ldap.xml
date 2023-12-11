@@ -19,6 +19,7 @@
         </headers>
 
         <csrf disabled="true" />
+        <intercept-url pattern="/**" access="permitAll" />
     </http>
 
     <!--
