@@ -116,7 +116,7 @@
             <div id="sourceTextArea"></div>
 
             <div class="smaller" style="margin-top: 5px">
-                Structurizr DSL <a href="https://github.com/structurizr/dsl/blob/master/docs/changelog.md" target="_blank">v${dslVersion}</a> - some features (e.g. <code>!docs</code>, <code>!adrs</code>, <code>!script</code>, etc) are unavailable via this browser-based editor; see <a href="https://structurizr.com/help/dsl" target="_blank">Help - DSL</a> for details.
+                Structurizr DSL <a href="https://github.com/structurizr/dsl/blob/master/docs/changelog.md" target="_blank">v${dslVersion}</a> - some features (e.g. <code>!docs</code>, <code>!adrs</code>, <code>!script</code>, etc) are unavailable via this browser-based editor; see <a href="https://docs.structurizr.com/dsl" target="_blank">DSL</a> for details.
             </div>
         </div>
         <div id="diagramsPanel" class="col-sm-6 centered">
