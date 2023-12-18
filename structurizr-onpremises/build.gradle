@@ -9,6 +9,9 @@ targetCompatibility = '17'
 
 repositories {
 	mavenCentral()
+	maven {
+		url "https://build.shibboleth.net/maven/releases/"
+	}
 }
 
 testing {
@@ -56,6 +59,7 @@ dependencies {
 	implementation 'org.springframework.security:spring-security-web:6.2.0'
 	implementation 'org.springframework.security:spring-security-config:6.2.0'
 	implementation 'org.springframework.security:spring-security-ldap:6.2.0'
+	implementation 'org.springframework.security:spring-security-saml2-service-provider:6.2.0'
 	implementation 'org.springframework.session:spring-session-data-redis:3.2.0'
 	implementation 'redis.clients:jedis:5.1.0'
 
