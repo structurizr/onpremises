@@ -104,7 +104,6 @@ sourceSets.main.resources {
 	srcDirs = ['src/main/java','src/main/resources']
 	include '**/*.xml'
 	include 'log4j2.properties'
-	include 'samlKeystore.jks'
 	include 'build.properties'
 }
 

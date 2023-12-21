@@ -6,12 +6,11 @@ import com.structurizr.onpremises.component.workspace.WorkspaceEventListener;
 import com.structurizr.util.StringUtils;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class Configuration extends ConfigLookup {
 
@@ -30,6 +29,7 @@ public class Configuration extends ConfigLookup {
     private boolean graphvizEnabled = false;
     private boolean internetConnection = true;
 
+    private Properties properties = new Properties();
     private final Map<String,Boolean> features = new HashMap<>();
 
     private WorkspaceEventListener workspaceEventListener;
@@ -62,6 +62,15 @@ public class Configuration extends ConfigLookup {
             e.printStackTrace();
         }
 
+        try {
+            File propertiesFile = new File(dataDirectory, StructurizrProperties.FILENAME);
+            if (propertiesFile.exists()) {
+                properties.load(new FileReader(propertiesFile));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         features.put(Features.UI_WORKSPACE_USERS, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.UI_WORKSPACE_USERS, "true")));
         features.put(Features.UI_WORKSPACE_SETTINGS, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.UI_WORKSPACE_SETTINGS, "true")));
         features.put(Features.UI_DSL_EDITOR, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.UI_DSL_EDITOR, "false")));
@@ -77,6 +86,10 @@ public class Configuration extends ConfigLookup {
 
     public static Configuration getInstance() {
         return INSTANCE;
+    }
+
+    public String getProperty(String name) {
+        return properties.getProperty(name);
     }
 
     public String getEncryptionPassphrase() {
