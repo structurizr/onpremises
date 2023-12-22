@@ -65,21 +65,26 @@ class Configuration {
 
 	@Bean
 	RelyingPartyRegistrationRepository relyingPartyRegistrationRepository() {
-		String registrationId = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.STRUCTURIZR_SAML_REGISTRATION_ID, DEFAULT_REGISTRATION_ID);
-		String entityId = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.STRUCTURIZR_SAML_ENTITY_ID);
-		String metadata = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.STRUCTURIZR_SAML_METADATA);
-		String signingCertificate = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.STRUCTURIZR_SAML_SIGNING_CERTIFICATE);
-		String privateKey = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.STRUCTURIZR_SAML_SIGNING_PRIVATE_KEY);
+		String registrationId = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.SAML_REGISTRATION_ID, DEFAULT_REGISTRATION_ID);
+		String entityId = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.SAML_ENTITY_ID);
+		String metadata = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.SAML_METADATA);
+		String signingCertificate = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.SAML_SIGNING_CERTIFICATE);
+		String privateKey = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.SAML_SIGNING_PRIVATE_KEY);
 
+		String attributeNameForUsername = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.SAML_ATTRIBUTE_USERNAME, StructurizrProperties.DEFAULT_SAML_ATTRIBUTE_USERNAME);
+		String attributeNameForRole = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.SAML_ATTRIBUTE_ROLE, StructurizrProperties.DEFAULT_SAML_ATTRIBUTE_ROLE);
+		
 		log.debug("Configuring SAML authentication...");
-		log.debug(StructurizrProperties.STRUCTURIZR_SAML_REGISTRATION_ID + ": " + registrationId);
-		log.debug(StructurizrProperties.STRUCTURIZR_SAML_ENTITY_ID + ": " + entityId);
-		log.debug(StructurizrProperties.STRUCTURIZR_SAML_METADATA + ": " + metadata);
-		log.debug(StructurizrProperties.STRUCTURIZR_SAML_SIGNING_CERTIFICATE + ": " + signingCertificate);
-		log.debug(StructurizrProperties.STRUCTURIZR_SAML_SIGNING_PRIVATE_KEY + ": " + privateKey);
+		log.debug(StructurizrProperties.SAML_REGISTRATION_ID + ": " + registrationId);
+		log.debug(StructurizrProperties.SAML_ENTITY_ID + ": " + entityId);
+		log.debug(StructurizrProperties.SAML_METADATA + ": " + metadata);
+		log.debug(StructurizrProperties.SAML_SIGNING_CERTIFICATE + ": " + signingCertificate);
+		log.debug(StructurizrProperties.SAML_SIGNING_PRIVATE_KEY + ": " + privateKey);
+		log.debug(StructurizrProperties.SAML_ATTRIBUTE_USERNAME + ": " + attributeNameForUsername);
+		log.debug(StructurizrProperties.SAML_ATTRIBUTE_ROLE + ": " + attributeNameForRole);
 
 		if (StringUtils.isNullOrEmpty(metadata)) {
-			String message = "A property named " + StructurizrProperties.STRUCTURIZR_SAML_METADATA + " is missing from your structurizr.properties file";
+			String message = "A property named " + StructurizrProperties.SAML_METADATA + " is missing from your structurizr.properties file";
 			log.fatal(message);
 			throw new RuntimeException(message);
 		}

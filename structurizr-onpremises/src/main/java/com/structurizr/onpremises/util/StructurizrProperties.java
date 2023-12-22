@@ -22,11 +22,16 @@ public class StructurizrProperties {
     public static final String DSL_EDITOR_PROPERTY = "structurizr.dslEditor";
     public static final String INTERNET_CONNECTION_PROPERTY = "structurizr.internetConnection";
 
-    public static final String STRUCTURIZR_SAML_REGISTRATION_ID = "structurizr.saml.registrationId";
-    public static final String STRUCTURIZR_SAML_ENTITY_ID = "structurizr.saml.entityId";
-    public static final String STRUCTURIZR_SAML_METADATA = "structurizr.saml.metadata";
-    public static final String STRUCTURIZR_SAML_SIGNING_CERTIFICATE = "structurizr.saml.signing.certificate";
-    public static final String STRUCTURIZR_SAML_SIGNING_PRIVATE_KEY = "structurizr.saml.signing.privateKey";
+    public static final String SAML_REGISTRATION_ID = "structurizr.saml.registrationId";
+    public static final String SAML_ENTITY_ID = "structurizr.saml.entityId";
+    public static final String SAML_METADATA = "structurizr.saml.metadata";
+    public static final String SAML_SIGNING_CERTIFICATE = "structurizr.saml.signing.certificate";
+    public static final String SAML_SIGNING_PRIVATE_KEY = "structurizr.saml.signing.privateKey";
+    public static final String SAML_ATTRIBUTE_USERNAME = "structurizr.saml.attribute.username";
+    public static final String SAML_ATTRIBUTE_ROLE = "structurizr.saml.attribute.role";
+
+    public static final String DEFAULT_SAML_ATTRIBUTE_USERNAME = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress";
+    public static final String DEFAULT_SAML_ATTRIBUTE_ROLE = "http://schemas.xmlsoap.org/claims/Group";
 
     public static final String DEFAULT_AUTHENTICATION_VARIANT = "file";
     public static final String DEFAULT_SESSION_VARIANT = "local";

@@ -2,7 +2,9 @@ package com.structurizr.onpremises.web.security;
 
 import com.structurizr.onpremises.domain.AuthenticationMethod;
 import com.structurizr.onpremises.domain.User;
+import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.RandomGuidGenerator;
+import com.structurizr.onpremises.util.StructurizrProperties;
 import com.structurizr.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,10 +26,6 @@ import java.util.Set;
 public final class SecurityUtils {
 
     private static final Log log = LogFactory.getLog(SecurityUtils.class);
-
-    static final String SAML_EMAIL_ADDRESS_ATTRIBUTE = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress";
-    static final String SAML_GROUP_ATTRIBUTE = "http://schemas.xmlsoap.org/claims/Group";
-    static final String SAML_AUTH0_ROLES_ATTRIBUTE = "http://schemas.auth0.com/roles";
 
     public static User getUser() {
         return getUser(SecurityContextHolder.getContext().getAuthentication());
@@ -63,28 +61,22 @@ public final class SecurityUtils {
                         }
                     }
 
-                    String emailAddress = saml2AuthenticatedPrincipal.getFirstAttribute(SAML_EMAIL_ADDRESS_ATTRIBUTE);
-
-                    if (StringUtils.isNullOrEmpty(emailAddress)) {
-                        log.error("Could not find a SAML attribute named " + SAML_EMAIL_ADDRESS_ATTRIBUTE);
-                        emailAddress = new RandomGuidGenerator().generate();
+                    String usernameAttribute = Configuration.getInstance().getProperty(StructurizrProperties.SAML_ATTRIBUTE_USERNAME, StructurizrProperties.DEFAULT_SAML_ATTRIBUTE_USERNAME);
+                    String username = saml2AuthenticatedPrincipal.getFirstAttribute(usernameAttribute);
+                    if (StringUtils.isNullOrEmpty(username)) {
+                        log.error("Could not find a SAML attribute named " + usernameAttribute);
+                        username = new RandomGuidGenerator().generate();
                     }
 
-                    List<Object> groups = saml2AuthenticatedPrincipal.getAttribute(SAML_GROUP_ATTRIBUTE);
+                    String roleAttribute = Configuration.getInstance().getProperty(StructurizrProperties.SAML_ATTRIBUTE_ROLE, StructurizrProperties.DEFAULT_SAML_ATTRIBUTE_ROLE);
+                    List<Object> groups = saml2AuthenticatedPrincipal.getAttribute(roleAttribute);
                     if (groups != null) {
                         for (Object g : groups) {
                             roles.add(g.toString());
                         }
                     }
 
-                    List<Object> auth0Roles = saml2AuthenticatedPrincipal.getAttribute(SAML_AUTH0_ROLES_ATTRIBUTE);
-                    if (auth0Roles != null) {
-                        for (Object r : auth0Roles) {
-                            roles.add(r.toString());
-                        }
-                    }
-
-                    user = new User(emailAddress, roles, AuthenticationMethod.SAML);
+                    user = new User(username, roles, AuthenticationMethod.SAML);
                 }
             }
         }
