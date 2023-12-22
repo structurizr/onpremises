@@ -49,7 +49,7 @@ class Configuration {
 
 	private static final Log log = LogFactory.getLog(Configuration.class);
 
-	private static final String DEFAULT_REGISTRATION_ID = "default";
+	private static final String DEFAULT_REGISTRATION_ID = "structurizr";
 
 	@Bean
 	SecurityFilterChain app(HttpSecurity http) throws Exception {
