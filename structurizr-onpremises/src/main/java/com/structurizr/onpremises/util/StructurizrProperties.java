@@ -22,7 +22,8 @@ public class StructurizrProperties {
     public static final String DSL_EDITOR_PROPERTY = "structurizr.dslEditor";
     public static final String INTERNET_CONNECTION_PROPERTY = "structurizr.internetConnection";
 
-    public static final String STRUCTURIZR_SAML_ENTITYID = "structurizr.saml.entityId";
+    public static final String STRUCTURIZR_SAML_REGISTRATION_ID = "structurizr.saml.registrationId";
+    public static final String STRUCTURIZR_SAML_ENTITY_ID = "structurizr.saml.entityId";
     public static final String STRUCTURIZR_SAML_METADATA = "structurizr.saml.metadata";
     public static final String STRUCTURIZR_SAML_SIGNING_CERTIFICATE = "structurizr.saml.signing.certificate";
     public static final String STRUCTURIZR_SAML_SIGNING_PRIVATE_KEY = "structurizr.saml.signing.privateKey";

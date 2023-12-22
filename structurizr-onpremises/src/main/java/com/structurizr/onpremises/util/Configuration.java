@@ -92,6 +92,10 @@ public class Configuration extends ConfigLookup {
         return properties.getProperty(name);
     }
 
+    public String getProperty(String name, String defaultValue) {
+        return properties.getProperty(name, defaultValue);
+    }
+
     public String getEncryptionPassphrase() {
         return encryptionPassphrase;
     }

@@ -48,7 +48,8 @@ import org.springframework.security.web.SecurityFilterChain;
 class Configuration {
 
 	private static final Log log = LogFactory.getLog(Configuration.class);
-	private static final String REGISTRATION_ID = "default";
+
+	private static final String DEFAULT_REGISTRATION_ID = "default";
 
 	@Bean
 	SecurityFilterChain app(HttpSecurity http) throws Exception {
@@ -64,22 +65,18 @@ class Configuration {
 
 	@Bean
 	RelyingPartyRegistrationRepository relyingPartyRegistrationRepository() {
-		String entityId = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.STRUCTURIZR_SAML_ENTITYID);
+		String registrationId = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.STRUCTURIZR_SAML_REGISTRATION_ID, DEFAULT_REGISTRATION_ID);
+		String entityId = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.STRUCTURIZR_SAML_ENTITY_ID);
 		String metadata = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.STRUCTURIZR_SAML_METADATA);
 		String signingCertificate = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.STRUCTURIZR_SAML_SIGNING_CERTIFICATE);
 		String privateKey = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.STRUCTURIZR_SAML_SIGNING_PRIVATE_KEY);
 
-		log.debug("Configurating SAML authentication...");
-		log.debug(StructurizrProperties.STRUCTURIZR_SAML_ENTITYID + ": " + entityId);
+		log.debug("Configuring SAML authentication...");
+		log.debug(StructurizrProperties.STRUCTURIZR_SAML_REGISTRATION_ID + ": " + registrationId);
+		log.debug(StructurizrProperties.STRUCTURIZR_SAML_ENTITY_ID + ": " + entityId);
 		log.debug(StructurizrProperties.STRUCTURIZR_SAML_METADATA + ": " + metadata);
 		log.debug(StructurizrProperties.STRUCTURIZR_SAML_SIGNING_CERTIFICATE + ": " + signingCertificate);
 		log.debug(StructurizrProperties.STRUCTURIZR_SAML_SIGNING_PRIVATE_KEY + ": " + privateKey);
-
-		if (StringUtils.isNullOrEmpty(entityId)) {
-			String message = "A property named " + StructurizrProperties.STRUCTURIZR_SAML_ENTITYID + " is missing from your structurizr.properties file";
-			log.fatal(message);
-			throw new RuntimeException(message);
-		}
 
 		if (StringUtils.isNullOrEmpty(metadata)) {
 			String message = "A property named " + StructurizrProperties.STRUCTURIZR_SAML_METADATA + " is missing from your structurizr.properties file";
@@ -90,8 +87,11 @@ class Configuration {
 		RelyingPartyRegistration.Builder builder =
 				RelyingPartyRegistrations
 				.fromMetadataLocation(metadata)
-				.registrationId(REGISTRATION_ID)
-				.entityId(entityId);
+				.registrationId(registrationId);
+
+		if (!StringUtils.isNullOrEmpty(entityId)) {
+			builder.entityId(entityId);
+		}
 
 		if (!StringUtils.isNullOrEmpty(signingCertificate) && !StringUtils.isNullOrEmpty(privateKey)) {
 			builder.signingX509Credentials((c) -> c.add(Saml2X509Credential.signing(privateKey(privateKey), relyingPartyCertificate(signingCertificate))));

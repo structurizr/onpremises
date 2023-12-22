@@ -2,6 +2,8 @@ package com.structurizr.onpremises.web.security;
 
 import com.structurizr.onpremises.domain.AuthenticationMethod;
 import com.structurizr.onpremises.domain.User;
+import com.structurizr.onpremises.util.RandomGuidGenerator;
+import com.structurizr.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.security.core.Authentication;
@@ -62,6 +64,11 @@ public final class SecurityUtils {
                     }
 
                     String emailAddress = saml2AuthenticatedPrincipal.getFirstAttribute(SAML_EMAIL_ADDRESS_ATTRIBUTE);
+
+                    if (StringUtils.isNullOrEmpty(emailAddress)) {
+                        log.error("Could not find a SAML attribute named " + SAML_EMAIL_ADDRESS_ATTRIBUTE);
+                        emailAddress = new RandomGuidGenerator().generate();
+                    }
 
                     List<Object> groups = saml2AuthenticatedPrincipal.getAttribute(SAML_GROUP_ATTRIBUTE);
                     if (groups != null) {
