@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+
 @Controller
 public class DecisionsController extends AbstractWorkspaceController {
 
@@ -55,7 +58,7 @@ public class DecisionsController extends AbstractWorkspaceController {
             @PathVariable("component") String component,
             ModelMap model
     ) {
-        model.addAttribute("scope", toScope(softwareSystem, container, component));
+        model.addAttribute("scope", Base64.getEncoder().encodeToString(toScope(softwareSystem, container, component).getBytes(StandardCharsets.UTF_8)));
         model.addAttribute("showHeader", true);
 
         return showPublicView(VIEW, workspaceId, version, model, false);
@@ -104,7 +107,7 @@ public class DecisionsController extends AbstractWorkspaceController {
             @PathVariable("token") String token,
             ModelMap model
     ) {
-        model.addAttribute("scope", toScope(softwareSystem, container, component));
+        model.addAttribute("scope", Base64.getEncoder().encodeToString(toScope(softwareSystem, container, component).getBytes(StandardCharsets.UTF_8)));
         model.addAttribute("showHeader", true);
 
         return showSharedView(VIEW, workspaceId, token, version, model, false);
@@ -155,7 +158,7 @@ public class DecisionsController extends AbstractWorkspaceController {
             return show404Page(model);
         }
 
-        model.addAttribute("scope", toScope(softwareSystem, container, component));
+        model.addAttribute("scope", Base64.getEncoder().encodeToString(toScope(softwareSystem, container, component).getBytes(StandardCharsets.UTF_8)));
         model.addAttribute("showHeader", true);
 
         return showAuthenticatedView(VIEW, workspaceMetaData, version, model, false, false);
@@ -163,11 +166,11 @@ public class DecisionsController extends AbstractWorkspaceController {
 
     String toScope(String softwareSystem, String container, String component) {
         if (softwareSystem != null && container != null && component != null) {
-            return HtmlUtils.filterHtml(softwareSystem) + "/" + HtmlUtils.filterHtml(container) + "/" + HtmlUtils.filterHtml(component);
+            return softwareSystem + "/" + container + "/" + component;
         } else if (softwareSystem != null && container != null) {
-            return HtmlUtils.filterHtml(softwareSystem) + "/" + HtmlUtils.filterHtml(container);
+            return softwareSystem + "/" + container;
         } else if (softwareSystem != null) {
-            return HtmlUtils.filterHtml(softwareSystem);
+            return softwareSystem;
         } else {
             return WORKSPACE_SCOPE;
         }

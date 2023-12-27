@@ -78,7 +78,7 @@ public class DocumentationControllerTests extends ControllerTestsBase {
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
         assertEquals("/share/1", model.getAttribute("urlPrefix"));
-        assertEquals("*", model.getAttribute("scope"));
+        assertEquals("Kg==", model.getAttribute("scope"));
     }
 
     @Test
@@ -154,7 +154,7 @@ public class DocumentationControllerTests extends ControllerTestsBase {
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
         assertEquals("/share/1/token", model.getAttribute("urlPrefix"));
-        assertEquals("*", model.getAttribute("scope"));
+        assertEquals("Kg==", model.getAttribute("scope"));
     }
 
     @Test
@@ -213,7 +213,7 @@ public class DocumentationControllerTests extends ControllerTestsBase {
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
-        assertEquals("*", model.getAttribute("scope"));
+        assertEquals("Kg==", model.getAttribute("scope"));
     }
 
     @Test
@@ -238,7 +238,7 @@ public class DocumentationControllerTests extends ControllerTestsBase {
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
-        assertEquals("*", model.getAttribute("scope"));
+        assertEquals("Kg==", model.getAttribute("scope"));
     }
 
     @Test
@@ -263,7 +263,7 @@ public class DocumentationControllerTests extends ControllerTestsBase {
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
-        assertEquals("*", model.getAttribute("scope"));
+        assertEquals("Kg==", model.getAttribute("scope"));
     }
 
     @Test
