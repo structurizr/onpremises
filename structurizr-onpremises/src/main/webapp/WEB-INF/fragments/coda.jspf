@@ -3,7 +3,7 @@
     <c:if test="${showFooter eq true}">
     <div id="footer">
         <p>
-            <a href="https://structurizr.com/help/on-premises" target="_blank">Structurizr on-premises installation </a>
+            Structurizr on-premises installation
             |
             <a href="https://structurizr.com/help/changelog" target="_blank"><span id="buildNumber">Build ${version.buildNumber}</span></a> <!-- <fmt:formatDate value="${version.buildTimestamp}" pattern="EEE dd MMM yyyy HH:mm z" /> -->
             |
