@@ -26,6 +26,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 
 import com.structurizr.onpremises.util.StructurizrProperties;
+import com.structurizr.onpremises.web.security.CsrfSecurityRequestMatcher;
 import com.structurizr.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,12 +37,14 @@ import org.springframework.core.io.Resource;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.saml2.core.Saml2X509Credential;
 import org.springframework.security.saml2.provider.service.registration.InMemoryRelyingPartyRegistrationRepository;
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistration;
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository;
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrations;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @org.springframework.context.annotation.Configuration
 @EnableWebSecurity
@@ -57,6 +60,10 @@ class Configuration {
 				.authorizeHttpRequests((authorize) -> authorize
 						.anyRequest().permitAll()
 				)
+				.csrf((csrf) -> csrf
+						.requireCsrfProtectionMatcher(new CsrfSecurityRequestMatcher())
+				)
+				.headers((headers) -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
 				.saml2Login(Customizer.withDefaults())
 				.saml2Logout(Customizer.withDefaults());
 

@@ -7,6 +7,8 @@
         http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
     ">
 
+    <beans:bean id="csrfSecurityRequestMatcher" class="com.structurizr.onpremises.web.security.CsrfSecurityRequestMatcher" />
+
     <http>
         <form-login login-page="/signin"
                     default-target-url="/dashboard"
@@ -18,7 +20,7 @@
             <frame-options disabled="true" />
         </headers>
 
-        <csrf disabled="true" />
+        <csrf request-matcher-ref="csrfSecurityRequestMatcher" />
         <intercept-url pattern="/**" access="permitAll" />
     </http>
 
