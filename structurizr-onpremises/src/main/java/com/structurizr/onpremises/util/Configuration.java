@@ -16,9 +16,6 @@ public class Configuration extends ConfigLookup {
 
     private static final String PLUGINS_DIRECTORY_NAME = "plugins";
 
-    private static final String WORKSPACE_SCOPE_STRICT = "strict";
-    private static final String WORKSPACE_SCOPE_RELAXED = "relaxed";
-
     private File dataDirectory;
     private String webUrl;
     private Set<String> adminUsersAndRoles = new HashSet<>();
