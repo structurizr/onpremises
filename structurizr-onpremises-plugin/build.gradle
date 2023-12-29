@@ -9,7 +9,7 @@ repositories {
 }
 
 dependencies {
-    api 'com.structurizr:structurizr-client:1.26.1'
+    api 'com.structurizr:structurizr-client:1.29.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
 }
@@ -17,8 +17,8 @@ dependencies {
 compileJava.options.encoding = 'UTF-8'
 compileTestJava.options.encoding = 'UTF-8'
 
-sourceCompatibility = 11
-targetCompatibility = 11
+sourceCompatibility = 17
+targetCompatibility = 17
 
 description = 'Plugin APIs for the Structurizr on-premises installation'
 group = 'com.structurizr'
