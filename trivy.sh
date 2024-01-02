@@ -1,0 +1,1 @@
+docker run aquasec/trivy image structurizr/onpremises
