@@ -830,7 +830,7 @@ public class WorkspaceComponentImplTests {
             workspaceComponent.putWorkspace(1, json);
             fail();
         } catch (WorkspaceComponentException e) {
-            assertEquals("Strict workspace scope validation has been enabled on this on-premises installation, but this workspace has no defined scope - see https://docs.structurizr.com/workspaces for more information.", e.getMessage());
+            assertEquals("Strict workspace scope validation has been enabled for this on-premises installation. Unscoped workspaces are not permitted - see https://docs.structurizr.com/workspaces for more information.", e.getMessage());
         }
     }
 
