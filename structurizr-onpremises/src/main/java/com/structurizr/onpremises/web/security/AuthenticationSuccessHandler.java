@@ -26,6 +26,8 @@ public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticatio
         User user = SecurityUtils.getUser(authentication);
         log.info(user.getUsername() + " successfully authenticated");
 
+	request.getSession().setAttribute("username", user.getUsername());
+
         if (user.getAuthenticationMethod() == AuthenticationMethod.LOCAL) {
             Cookie cookie = new Cookie("structurizr.username", user.getUsername());
             cookie.setSecure(true);

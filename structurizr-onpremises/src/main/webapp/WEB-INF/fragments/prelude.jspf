@@ -34,9 +34,31 @@
     <script src="${structurizrConfiguration.cdnUrl}/js/bootstrap-3.3.7.min.js"></script>
     <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr${structurizrConfiguration.versionSuffix}.js"></script>
     <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr-util${structurizrConfiguration.versionSuffix}.js"></script>
+
+    <style>
+    	.banner {
+        	background-color: #1168BD;
+                color: white;
+                text-align: center;
+                padding: 5px;
+         }
+         .banner:empty {
+                display: none;
+         }
+    </style>
+
+    <script nonce="${scriptNonce}">
+         function setBanner() {
+                if (structurizr?.workspace?.getJson()?.properties?.banner) {
+                	document.getElementById('marking').innerHTML = structurizr.workspace.getJson().properties.banner.toUpperCase()
+                }
+          }
+    </script>
+
 </head>
 
 <body>
+    <div id='marking' class="banner"></div>
 
     <c:choose>
     <c:when test="${showHeader eq true}">
