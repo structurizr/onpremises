@@ -17,6 +17,13 @@
     <link href="${structurizrConfiguration.cdnUrl}/css/bootstrap-3.3.7.min.css" rel="stylesheet" media="screen" />
     <link href="${structurizrConfiguration.cdnUrl}/css/bootstrap-theme-3.3.7.min.css" rel="stylesheet" media="screen" />
     <link href="${structurizrConfiguration.cdnUrl}/css/structurizr.css" rel="stylesheet" media="screen" />
+
+    <c:if test="${not empty css}">
+    <style>
+    ${css}
+    </style>
+    </c:if>
+
     <c:if test="${embed eq true}">
     <link href="${structurizrConfiguration.cdnUrl}/css/structurizr-embed.css" rel="stylesheet" media="screen" />
     </c:if>
@@ -34,13 +41,20 @@
     <script src="${structurizrConfiguration.cdnUrl}/js/bootstrap-3.3.7.min.js"></script>
     <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr${structurizrConfiguration.versionSuffix}.js"></script>
     <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr-util${structurizrConfiguration.versionSuffix}.js"></script>
+
+    <c:if test="${not empty js}">
+    <script nonce="${scriptNonce}">
+    ${js}
+    </script>
+    </c:if>
 </head>
 
 <body>
-
     <c:choose>
     <c:when test="${showHeader eq true}">
     <div id="topNavigation">
+        <div id="banner"></div>
+        
         <div class="row">
             <div class="col-sm-2 hidden-xs hidden-sm" style="padding: 18px 20px 10px 20px">
                 <a id="brandingLogoAnchor" href="/"><img src="/static/img/structurizr-banner.png" alt="Structurizr" class="structurizrBannerLight img-responsive brandingLogo" /><img src="/static/img/structurizr-banner-dark.png" alt="Structurizr" class="structurizrBannerDark img-responsive brandingLogo" /></a>

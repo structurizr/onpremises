@@ -61,6 +61,7 @@
 </style>
 
 <div id="editorControls" class="centered">
+    <div id="banner"></div>
     <div class="row" style="padding-bottom: 0px">
         <div class="col-sm-2" style="padding: 18px 30px 10px 30px">
             <a href="/"><img src="${structurizrConfiguration.cdnUrl}/img/structurizr-banner.png" alt="Structurizr" class="structurizrBannerLight img-responsive brandingLogo" /><img src="${structurizrConfiguration.cdnUrl}/img/structurizr-banner-dark.png" alt="Structurizr" class="structurizrBannerDark img-responsive brandingLogo" /></a>
