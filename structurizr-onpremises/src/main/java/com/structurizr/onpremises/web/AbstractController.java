@@ -19,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,6 +28,7 @@ import java.nio.file.Files;
 import java.util.Base64;
 import java.util.TimeZone;
 
+@SessionAttributes("username")
 public abstract class AbstractController {
 
     private static final String CONTENT_SECURITY_POLICY_HEADER = "Content-Security-Policy";
@@ -81,7 +83,12 @@ public abstract class AbstractController {
         }
         model.addAttribute("version", new Version());
         model.addAttribute("authenticated", isAuthenticated());
-        model.addAttribute("user", getUser());
+        User user = getUser();
+        model.addAttribute("user", user);
+        if (user != null) {
+            model.addAttribute("username", user.getUsername());
+        }
+
         model.addAttribute("searchEnabled", searchComponent != null && searchComponent.isEnabled());
 
         File cssFile = new File(Configuration.getInstance().getDataDirectory(), STRUCTURIZR_CSS_FILENAME);
