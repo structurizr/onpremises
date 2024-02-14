@@ -41,4 +41,8 @@ public class StructurizrProperties {
     public static final String CACHE_VARIANT_LOCAL = "local";
     public static final String CACHE_VARIANT_REDIS = "redis";
 
+    public static final String REDIS_HOST = "structurizr.redis.host";
+    public static final String REDIS_PORT = "structurizr.redis.port";
+    public static final String REDIS_PASSWORD = "structurizr.redis.password";
+
 }

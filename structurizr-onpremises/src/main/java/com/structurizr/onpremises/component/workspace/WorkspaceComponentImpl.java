@@ -81,6 +81,14 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
         if (cacheImplementation.equalsIgnoreCase(StructurizrProperties.CACHE_VARIANT_LOCAL)) {
             log.debug("Creating cache for workspace metadata: implementation=local; expiry=" + expiryInMinutes + " minute(s)");
             workspaceMetadataCache = new LocalWorkspaceMetadataCache(expiryInMinutes);
+        } else if (cacheImplementation.equalsIgnoreCase(StructurizrProperties.CACHE_VARIANT_REDIS)) {
+            String host = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.REDIS_HOST, "localhost");
+            String port = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.REDIS_PORT, "6379");
+            String password = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.REDIS_PASSWORD, "");
+
+            log.debug("Creating cache for workspace metadata: implementation=redis; host=" + host + "; port=" + port + "; expiry=" + expiryInMinutes + " minute(s)");
+            workspaceMetadataCache = new RedisWorkspaceMetadataCache(host, Integer.parseInt(port), password, expiryInMinutes);
+
         } else {
             workspaceMetadataCache = new NoOpWorkspaceMetadataCache();
         }

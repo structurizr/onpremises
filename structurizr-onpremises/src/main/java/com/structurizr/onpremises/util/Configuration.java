@@ -223,8 +223,8 @@ public class Configuration extends ConfigLookup {
 
         if (StructurizrProperties.CACHE_VARIANT_LOCAL.equalsIgnoreCase(name)) {
             return StructurizrProperties.CACHE_VARIANT_LOCAL;
-//        } else if (StructurizrProperties.CACHE_VARIANT_REDIS.equalsIgnoreCase(name)) {
-//            return StructurizrProperties.CACHE_VARIANT_REDIS;
+        } else if (StructurizrProperties.CACHE_VARIANT_REDIS.equalsIgnoreCase(name)) {
+            return StructurizrProperties.CACHE_VARIANT_REDIS;
         } else {
             return StructurizrProperties.CACHE_VARIANT_NONE;
         }
