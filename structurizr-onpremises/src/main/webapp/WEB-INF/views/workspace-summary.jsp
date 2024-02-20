@@ -100,11 +100,11 @@
             </div>
 
             <div id="exportJsonLinkNavItem" class="navigationItem">
-                <a id="exportJsonLink" href=""><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/filetype-json.svg" class="icon-sm" /> Export JSON</a>
+                <img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/filetype-json.svg" class="icon-sm" /> JSON - <c:if test="${fn:startsWith(urlPrefix, '/share')}"><a href="<c:out value="${urlPrefix}" />/json<c:out value="${urlSuffix}" />" target="_blank">View</a> | </c:if><a id="exportJsonLink" href="">Export</a>
             </div>
 
             <div id="exportDslLinkNavItem" class="navigationItem">
-                <a id="exportDslLink" href=""><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/filetype-txt.svg" class="icon-sm" /> Export DSL</a>
+                <img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/filetype-txt.svg" class="icon-sm" /> DSL - <c:if test="${fn:startsWith(urlPrefix, '/share')}"><a href="<c:out value="${urlPrefix}" />/dsl<c:out value="${urlSuffix}" />" target="_blank">View</a> | </c:if><a id="exportDslLink" href="">Export</a>
             </div>
 
             <c:if test="${workspace.editable && not workspace.locked}">

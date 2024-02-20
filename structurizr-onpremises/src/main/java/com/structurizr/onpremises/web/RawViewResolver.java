@@ -8,7 +8,7 @@ public class RawViewResolver extends UrlBasedViewResolver {
 
     @Override
     protected boolean canHandle(String viewName, Locale locale) {
-        return "json".equals(viewName);
+        return "json".equals(viewName) || "plaintext".equals(viewName);
     }
 
 }
