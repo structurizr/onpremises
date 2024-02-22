@@ -9,7 +9,7 @@ repositories {
 }
 
 dependencies {
-    api 'com.structurizr:structurizr-client:1.29.0'
+    api 'com.structurizr:structurizr-client:2.0.0'
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
 }
@@ -22,7 +22,6 @@ targetCompatibility = 17
 
 description = 'Plugin APIs for the Structurizr on-premises installation'
 group = 'com.structurizr'
-version = '0.0.1'
 
 test {
     useJUnitPlatform()
