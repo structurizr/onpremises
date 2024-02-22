@@ -44,7 +44,11 @@
 
     <c:if test="${not empty js}">
     <script nonce="${scriptNonce}">
+        try {
     ${js}
+        } catch (err) {
+            console.error(err);
+        }
     </script>
     </c:if>
 </head>
