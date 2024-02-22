@@ -117,6 +117,10 @@
             <div class="navigationItemSeparator"></div>
             <c:if test="${fn:startsWith(urlPrefix, '/workspace')}">
             <div class="navigationItem">
+                <a href="<c:out value="${urlPrefix}" />/inspections"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clipboard-pulse.svg" class="icon-sm" /> Inspections</a>
+            </div>
+
+            <div class="navigationItem">
                 <a href="<c:out value="${urlPrefix}" />/settings"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/gear.svg" class="icon-sm" /> Settings</a>
             </div>
 

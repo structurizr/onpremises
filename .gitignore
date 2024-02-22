@@ -37,6 +37,7 @@ structurizr-onpremises/src/main/webapp/WEB-INF/views/dependencies.jsp
 structurizr-onpremises/src/main/webapp/WEB-INF/views/documentation.jsp
 structurizr-onpremises/src/main/webapp/WEB-INF/views/explore.jsp
 structurizr-onpremises/src/main/webapp/WEB-INF/views/graph.jsp
+structurizr-onpremises/src/main/webapp/WEB-INF/views/inspections.jsp
 structurizr-onpremises/src/main/webapp/WEB-INF/views/tree.jsp
 structurizr-onpremises/src/main/webapp/WEB-INF/views/review-create.jsp
 structurizr-onpremises/src/main/webapp/WEB-INF/views/review.jsp
