@@ -1,10 +1,9 @@
 package com.structurizr.onpremises.web.graphviz;
 
 import com.structurizr.Workspace;
-import com.structurizr.graphviz.GraphvizAutomaticLayout;
-import com.structurizr.graphviz.RankDirection;
+import com.structurizr.autolayout.graphviz.GraphvizAutomaticLayout;
+import com.structurizr.autolayout.graphviz.RankDirection;
 import com.structurizr.onpremises.util.Configuration;
-import com.structurizr.onpremises.web.api.ApiController;
 import com.structurizr.util.StringUtils;
 import com.structurizr.util.WorkspaceUtils;
 import com.structurizr.view.*;
