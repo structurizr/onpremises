@@ -83,6 +83,10 @@ public class ConfigLookup {
             value = defaultValue;
         }
 
+        if (value != null) {
+            value = value.trim();
+        }
+
         return value;
     }
 
