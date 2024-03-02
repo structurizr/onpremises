@@ -184,7 +184,8 @@ public class WorkspaceComponentImplTests {
         long workspaceId = workspaceComponent.createWorkspace(null);
 
         assertEquals(1, workspaceId);
-        assertEquals(String.format("{\"id\":1,\"name\":\"Workspace 0001\",\"description\":\"Description\",\"revision\":1,\"lastModifiedDate\":\"%s\",\"configuration\":{},\"model\":{},\"documentation\":{},\"views\":{\"configuration\":{\"branding\":{},\"styles\":{},\"terminology\":{}}}}", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate())), jsonBuffer.toString());
+        assertEquals(String.format("""
+                {"configuration":{},"description":"Description","documentation":{},"id":1,"lastModifiedDate":"%s","model":{},"name":"Workspace 0001","revision":1,"views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate())), jsonBuffer.toString());
     }
 
     @Test
@@ -263,7 +264,8 @@ public class WorkspaceComponentImplTests {
 
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "password");
         String json = workspaceComponent.getWorkspace(1, "");
-        assertEquals("{\"id\":1,\"name\":\"Name\",\"description\":\"Description\",\"configuration\":{},\"model\":{},\"documentation\":{},\"views\":{\"configuration\":{\"branding\":{},\"styles\":{},\"terminology\":{}}}}", json);
+        assertEquals("""
+                {"configuration":{},"description":"Description","documentation":{},"id":1,"model":{},"name":"Name","views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""", json);
     }
 
     @Test
@@ -312,15 +314,18 @@ public class WorkspaceComponentImplTests {
             }
         };
 
+        String expectedJson = """
+                {"configuration":{},"description":"Description","documentation":{},"id":1,"lastModifiedDate":"%s","model":{},"name":"Name","revision":%s,"views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""";
+
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
         workspaceComponent.putWorkspace(1, json);
-        assertEquals(String.format("{\"id\":1,\"name\":\"Name\",\"description\":\"Description\",\"revision\":1,\"lastModifiedDate\":\"%s\",\"configuration\":{},\"model\":{},\"documentation\":{},\"views\":{\"configuration\":{\"branding\":{},\"styles\":{},\"terminology\":{}}}}", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate())), jsonBuffer.toString());
+        assertEquals(String.format(expectedJson, DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()), "1"), jsonBuffer.toString());
 
         // and again, to increment the revision
         json = jsonBuffer.toString();
         jsonBuffer.setLength(0);
         workspaceComponent.putWorkspace(1, json);
-        assertEquals(String.format("{\"id\":1,\"name\":\"Name\",\"description\":\"Description\",\"revision\":2,\"lastModifiedDate\":\"%s\",\"configuration\":{},\"model\":{},\"documentation\":{},\"views\":{\"configuration\":{\"branding\":{},\"styles\":{},\"terminology\":{}}}}", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate())), jsonBuffer.toString());
+        assertEquals(String.format(expectedJson, DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()), "2"), jsonBuffer.toString());
     }
 
     @Test
@@ -344,14 +349,17 @@ public class WorkspaceComponentImplTests {
 
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "password");
         workspaceComponent.putWorkspace(1, json);
-        assertTrue(jsonBuffer.toString().startsWith(String.format("{\"id\":1,\"name\":\"Name\",\"description\":\"Description\",\"revision\":1,\"lastModifiedDate\":\"%s\",\"configuration\":{},\"ciphertext\"", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()))));
+        String pattern = """
+                "id":1,"lastModifiedDate":"%s","name":"Name","revision":%s}""";
+        assertTrue(jsonBuffer.toString().startsWith("{\"ciphertext\":\""));
+        assertTrue(jsonBuffer.toString().endsWith(String.format(pattern, DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()), "1")));
 
         // and again, to increment the revision
         json = jsonBuffer.toString();
         jsonBuffer.setLength(0);
         workspaceComponent.putWorkspace(1, json);
-        System.out.println(jsonBuffer);
-        assertTrue(jsonBuffer.toString().startsWith(String.format("{\"id\":1,\"name\":\"Name\",\"description\":\"Description\",\"revision\":2,\"lastModifiedDate\":\"%s\",\"configuration\":{},\"ciphertext\"", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()))));
+        assertTrue(jsonBuffer.toString().startsWith("{\"ciphertext\":\""));
+        assertTrue(jsonBuffer.toString().endsWith(String.format(pattern, DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()), "2")));
     }
 
     @Test
@@ -380,15 +388,17 @@ public class WorkspaceComponentImplTests {
 
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
         workspaceComponent.putWorkspace(1, json);
-        assertTrue(jsonBuffer.toString().startsWith(String.format("{\"id\":1,\"name\":\"Name\",\"description\":\"Description\",\"revision\":1,\"lastModifiedDate\":\"%s\",\"configuration\":{},\"ciphertext\"", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()))));
-        assertTrue(jsonBuffer.toString().endsWith((json.substring(json.indexOf("ciphertext")))));
+        String pattern = """
+                "id":1,"lastModifiedDate":"%s","name":"Name","revision":%s}""";
+        assertTrue(jsonBuffer.toString().startsWith("{\"ciphertext\":\""));
+        assertTrue(jsonBuffer.toString().endsWith(String.format(pattern, DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()), "1")));
 
         // and again, to increment the revision
         json = jsonBuffer.toString();
         jsonBuffer.setLength(0);
         workspaceComponent.putWorkspace(1, json);
-        assertTrue(jsonBuffer.toString().startsWith(String.format("{\"id\":1,\"name\":\"Name\",\"description\":\"Description\",\"revision\":2,\"lastModifiedDate\":\"%s\",\"configuration\":{},\"ciphertext\"", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()))));
-        assertTrue(jsonBuffer.toString().endsWith((json.substring(json.indexOf("ciphertext")))));
+        assertTrue(jsonBuffer.toString().startsWith("{\"ciphertext\":\""));
+        assertTrue(jsonBuffer.toString().endsWith(String.format(pattern, DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()), "2")));
     }
 
     @Test

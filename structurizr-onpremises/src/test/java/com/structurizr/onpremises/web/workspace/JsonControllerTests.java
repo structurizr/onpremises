@@ -86,7 +86,7 @@ public class JsonControllerTests extends ControllerTestsBase {
         String view = controller.showPublicJson(1, "version", model);
         assertEquals("json", view);
         assertEquals("""
-                {"id":0,"name":"Name","description":"Description","configuration":{},"model":{},"documentation":{},"views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""", model.getAttribute("json"));
+                {"configuration":{},"description":"Description","documentation":{},"id":0,"model":{},"name":"Name","views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""", model.getAttribute("json"));
     }
 
     @Test
@@ -160,7 +160,7 @@ public class JsonControllerTests extends ControllerTestsBase {
         String view = controller.showSharedJson(1, "version", "token", model);
         assertEquals("json", view);
         assertEquals("""
-                {"id":0,"name":"Name","description":"Description","configuration":{},"model":{},"documentation":{},"views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""", model.getAttribute("json"));
+                {"configuration":{},"description":"Description","documentation":{},"id":0,"model":{},"name":"Name","views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""", model.getAttribute("json"));
     }
 
 }

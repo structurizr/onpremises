@@ -219,7 +219,7 @@ public class ApiControllerTests {
         Workspace workspace = new Workspace("Name", "Description");
         String json = WorkspaceUtils.toJson(workspace, false);
 
-        request.addHeader(HttpHeaders.AUTHORIZATION, "key:ZDc3MTcxNGJjYmZhNjM4NmE4ODk0MmQ5OGQ1MmIwYzUyMjk3ODVmMDZiNjI1YWFiZTdlMjZmZmYyNmFmN2QzNw==");
+        request.addHeader(HttpHeaders.AUTHORIZATION, "key:YjUxOTBkNjg5NjI5MjRiMzZjNWQwZmEwYjE3ZmI4OWFmNjY4NmY3MjEzZWRkNGE5ZjJmZTFjMDhjZmU0OGNlZg==");
         request.addHeader(HttpHeaders.NONCE, "1234567890");
         request.addHeader(HttpHeaders.CONTENT_MD5, Base64.getEncoder().encodeToString(new Md5Digest().generate(json).getBytes()));
 
