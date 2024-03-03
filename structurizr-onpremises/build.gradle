@@ -45,9 +45,9 @@ dependencies {
 
 	implementation project(':structurizr-onpremises-plugin')
 
-	implementation 'com.structurizr:structurizr-dsl:2.1.0'
-	implementation 'com.structurizr:structurizr-inspection:2.1.0'
-	implementation 'com.structurizr:structurizr-autolayout:2.1.0'
+	implementation 'com.structurizr:structurizr-dsl:2.1.1'
+	implementation 'com.structurizr:structurizr-inspection:2.1.1'
+	implementation 'com.structurizr:structurizr-autolayout:2.1.1'
 
 	compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
