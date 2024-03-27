@@ -72,14 +72,14 @@ class Configuration {
 
 	@Bean
 	RelyingPartyRegistrationRepository relyingPartyRegistrationRepository() {
-		String registrationId = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.SAML_REGISTRATION_ID, DEFAULT_REGISTRATION_ID);
-		String entityId = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.SAML_ENTITY_ID);
-		String metadata = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.SAML_METADATA);
-		String signingCertificate = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.SAML_SIGNING_CERTIFICATE);
-		String privateKey = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.SAML_SIGNING_PRIVATE_KEY);
+		String registrationId = com.structurizr.onpremises.util.Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAML_REGISTRATION_ID, DEFAULT_REGISTRATION_ID);
+		String entityId = com.structurizr.onpremises.util.Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAML_ENTITY_ID, "");
+		String metadata = com.structurizr.onpremises.util.Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAML_METADATA, "");
+		String signingCertificate = com.structurizr.onpremises.util.Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAML_SIGNING_CERTIFICATE, "");
+		String privateKey = com.structurizr.onpremises.util.Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAML_SIGNING_PRIVATE_KEY, "");
 
-		String attributeNameForUsername = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.SAML_ATTRIBUTE_USERNAME, StructurizrProperties.DEFAULT_SAML_ATTRIBUTE_USERNAME);
-		String attributeNameForRole = com.structurizr.onpremises.util.Configuration.getInstance().getProperty(StructurizrProperties.SAML_ATTRIBUTE_ROLE, StructurizrProperties.DEFAULT_SAML_ATTRIBUTE_ROLE);
+		String attributeNameForUsername = com.structurizr.onpremises.util.Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAML_ATTRIBUTE_USERNAME, StructurizrProperties.DEFAULT_SAML_ATTRIBUTE_USERNAME);
+		String attributeNameForRole = com.structurizr.onpremises.util.Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAML_ATTRIBUTE_ROLE, StructurizrProperties.DEFAULT_SAML_ATTRIBUTE_ROLE);
 		
 		log.debug("Configuring SAML authentication...");
 		log.debug(StructurizrProperties.SAML_REGISTRATION_ID + ": " + registrationId);

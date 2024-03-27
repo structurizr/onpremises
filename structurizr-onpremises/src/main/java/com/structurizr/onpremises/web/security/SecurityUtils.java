@@ -61,14 +61,14 @@ public final class SecurityUtils {
                         }
                     }
 
-                    String usernameAttribute = Configuration.getInstance().getProperty(StructurizrProperties.SAML_ATTRIBUTE_USERNAME, StructurizrProperties.DEFAULT_SAML_ATTRIBUTE_USERNAME);
+                    String usernameAttribute = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAML_ATTRIBUTE_USERNAME, StructurizrProperties.DEFAULT_SAML_ATTRIBUTE_USERNAME);
                     String username = saml2AuthenticatedPrincipal.getFirstAttribute(usernameAttribute);
                     if (StringUtils.isNullOrEmpty(username)) {
                         log.error("Could not find a SAML attribute named " + usernameAttribute);
                         username = new RandomGuidGenerator().generate();
                     }
 
-                    String roleAttribute = Configuration.getInstance().getProperty(StructurizrProperties.SAML_ATTRIBUTE_ROLE, StructurizrProperties.DEFAULT_SAML_ATTRIBUTE_ROLE);
+                    String roleAttribute = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAML_ATTRIBUTE_ROLE, StructurizrProperties.DEFAULT_SAML_ATTRIBUTE_ROLE);
                     List<Object> groups = saml2AuthenticatedPrincipal.getAttribute(roleAttribute);
                     if (groups != null) {
                         for (Object g : groups) {

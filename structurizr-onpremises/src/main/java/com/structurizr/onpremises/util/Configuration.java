@@ -85,14 +85,6 @@ public class Configuration extends ConfigLookup {
         return INSTANCE;
     }
 
-    public String getProperty(String name) {
-        return properties.getProperty(name);
-    }
-
-    public String getProperty(String name, String defaultValue) {
-        return properties.getProperty(name, defaultValue);
-    }
-
     public String getEncryptionPassphrase() {
         return encryptionPassphrase;
     }
