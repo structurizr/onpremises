@@ -5,7 +5,6 @@ import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 import com.structurizr.onpremises.domain.User;
 
 import java.io.File;
-import java.util.Collection;
 import java.util.List;
 
 interface WorkspaceDao {

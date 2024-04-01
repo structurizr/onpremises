@@ -2,9 +2,7 @@ package com.structurizr.onpremises.web.workspace;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
-import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ModelMap;

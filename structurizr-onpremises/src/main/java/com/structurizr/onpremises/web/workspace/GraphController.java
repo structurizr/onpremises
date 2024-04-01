@@ -1,7 +1,6 @@
 package com.structurizr.onpremises.web.workspace;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
-import com.structurizr.onpremises.util.HtmlUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;

@@ -6,7 +6,6 @@ import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.Features;
 import com.structurizr.onpremises.web.ControllerTestsBase;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ModelMap;

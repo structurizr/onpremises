@@ -7,8 +7,6 @@ import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.DateUtils;
 import com.structurizr.onpremises.util.Features;
 import com.structurizr.util.WorkspaceUtils;
-
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +19,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 import static com.structurizr.onpremises.util.DateUtils.UTC_TIME_ZONE;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class WorkspaceComponentTests {

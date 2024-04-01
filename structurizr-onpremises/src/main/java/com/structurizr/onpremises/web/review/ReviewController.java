@@ -13,6 +13,8 @@ import com.structurizr.onpremises.util.Features;
 import com.structurizr.onpremises.util.HtmlUtils;
 import com.structurizr.onpremises.util.JsonUtils;
 import com.structurizr.onpremises.web.AbstractController;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +27,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Controller

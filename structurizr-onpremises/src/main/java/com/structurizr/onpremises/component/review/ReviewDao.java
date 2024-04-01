@@ -1,8 +1,8 @@
 package com.structurizr.onpremises.component.review;
 
+import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 import com.structurizr.onpremises.domain.review.Review;
 import com.structurizr.onpremises.domain.review.Session;
-import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 
 import java.util.Collection;
 

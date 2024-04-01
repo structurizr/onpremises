@@ -1,10 +1,10 @@
 package com.structurizr.onpremises.component.review;
 
+import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.domain.review.Review;
 import com.structurizr.onpremises.domain.review.ReviewType;
 import com.structurizr.onpremises.domain.review.Session;
-import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 
 /**
  * Provides access to and manages reviews.

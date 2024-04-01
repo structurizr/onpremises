@@ -1,12 +1,12 @@
 package com.structurizr.onpremises.component.review;
 
+import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.domain.review.Comment;
 import com.structurizr.onpremises.domain.review.Review;
 import com.structurizr.onpremises.domain.review.ReviewType;
 import com.structurizr.onpremises.domain.review.Session;
 import com.structurizr.onpremises.util.Configuration;
-import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 import com.structurizr.onpremises.util.RandomGuidGenerator;
 import com.structurizr.util.StringUtils;
 import org.apache.commons.logging.Log;

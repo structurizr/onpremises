@@ -7,7 +7,6 @@ import com.structurizr.onpremises.web.MockHttpServletRequest;
 import com.structurizr.onpremises.web.MockHttpServletResponse;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
 import com.structurizr.util.WorkspaceUtils;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

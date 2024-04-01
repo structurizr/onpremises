@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.ui.ModelMap;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class DslEditorControllerTests extends ControllerTestsBase {
 

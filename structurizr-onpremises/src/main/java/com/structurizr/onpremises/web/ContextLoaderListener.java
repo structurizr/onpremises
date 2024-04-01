@@ -1,8 +1,8 @@
 package com.structurizr.onpremises.web;
 
 import com.structurizr.Workspace;
-import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.autolayout.graphviz.GraphvizAutomaticLayout;
+import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.importer.documentation.DefaultDocumentationImporter;
 import com.structurizr.onpremises.util.*;
 import com.structurizr.util.StringUtils;

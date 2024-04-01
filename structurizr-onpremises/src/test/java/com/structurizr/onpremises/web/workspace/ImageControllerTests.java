@@ -6,7 +6,6 @@ import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 import com.structurizr.onpremises.web.ControllerTestsBase;
 import com.structurizr.onpremises.web.MockHttpServletResponse;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.Resource;

@@ -5,12 +5,6 @@ import org.apache.commons.logging.LogFactory;
 
 import javax.cache.Cache;
 import javax.cache.CacheManager;
-import javax.cache.Caching;
-import javax.cache.configuration.MutableConfiguration;
-import javax.cache.expiry.CreatedExpiryPolicy;
-import javax.cache.expiry.Duration;
-import javax.cache.spi.CachingProvider;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Workspace metadata cache implementation that uses an in-memory Ehcache cache, via the JCache API.

@@ -18,8 +18,6 @@ import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.util.*;
 import com.structurizr.util.StringUtils;
 import com.structurizr.util.WorkspaceUtils;
-import com.structurizr.validation.WorkspaceScopeValidationException;
-import com.structurizr.validation.WorkspaceScopeValidatorFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

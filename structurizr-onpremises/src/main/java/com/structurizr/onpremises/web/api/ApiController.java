@@ -8,13 +8,13 @@ import com.structurizr.onpremises.component.workspace.WorkspaceComponentExceptio
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.web.AbstractController;
 import com.structurizr.util.StringUtils;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.StringReader;
 import java.util.Base64;
 

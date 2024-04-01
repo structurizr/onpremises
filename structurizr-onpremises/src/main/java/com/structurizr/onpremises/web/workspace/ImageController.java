@@ -1,13 +1,12 @@
 package com.structurizr.onpremises.web.workspace;
 
-import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.domain.InputStreamAndContentLength;
-import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.util.HtmlUtils;
 import com.structurizr.onpremises.web.api.ApiException;
 import com.structurizr.onpremises.web.api.ApiResponse;
 import com.structurizr.util.StringUtils;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -18,7 +17,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;

@@ -8,7 +8,6 @@ import com.structurizr.onpremises.web.ControllerTestsBase;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
 import com.structurizr.util.WorkspaceUtils;
 import com.structurizr.view.Shape;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ModelMap;

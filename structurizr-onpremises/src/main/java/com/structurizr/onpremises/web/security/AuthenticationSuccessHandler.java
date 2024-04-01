@@ -2,6 +2,10 @@ package com.structurizr.onpremises.web.security;
 
 import com.structurizr.onpremises.domain.AuthenticationMethod;
 import com.structurizr.onpremises.domain.User;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.security.core.Authentication;
@@ -9,10 +13,6 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.SavedRequest;
 
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class AuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {

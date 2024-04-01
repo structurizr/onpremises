@@ -2,7 +2,6 @@ package com.structurizr.onpremises.web;
 
 import com.structurizr.Workspace;
 import com.structurizr.onpremises.component.search.SearchComponent;
-import com.structurizr.onpremises.component.search.SearchComponentException;
 import com.structurizr.onpremises.component.search.SearchResult;
 
 import java.util.List;

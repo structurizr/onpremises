@@ -1,14 +1,13 @@
 package com.structurizr.onpremises.web.security;
 
 import com.structurizr.util.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.AuthenticationException;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.security.core.AuthenticationException;
+
 import java.io.IOException;
 
 public class AuthenticationFailureHandler implements org.springframework.security.web.authentication.AuthenticationFailureHandler {

@@ -15,16 +15,6 @@
  */
 package com.structurizr.onpremises.authentication.saml;
 
-import java.io.File;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.security.KeyFactory;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
-import java.security.interfaces.RSAPrivateKey;
-import java.security.spec.PKCS8EncodedKeySpec;
-
 import com.structurizr.onpremises.util.StructurizrProperties;
 import com.structurizr.onpremises.web.security.CsrfSecurityRequestMatcher;
 import com.structurizr.util.StringUtils;
@@ -44,7 +34,16 @@ import org.springframework.security.saml2.provider.service.registration.RelyingP
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository;
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrations;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+
+import java.io.File;
+import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.security.KeyFactory;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.security.interfaces.RSAPrivateKey;
+import java.security.spec.PKCS8EncodedKeySpec;
 
 @org.springframework.context.annotation.Configuration
 @EnableWebSecurity

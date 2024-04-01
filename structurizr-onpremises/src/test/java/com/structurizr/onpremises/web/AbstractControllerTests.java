@@ -1,7 +1,6 @@
 package com.structurizr.onpremises.web;
 
 import com.structurizr.onpremises.web.home.HomePageController;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

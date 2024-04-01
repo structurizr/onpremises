@@ -1,9 +1,8 @@
 package com.structurizr.onpremises.component.workspace;
 
 import com.structurizr.onpremises.domain.Image;
-import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.domain.InputStreamAndContentLength;
-import com.structurizr.onpremises.util.DateUtils;
+import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

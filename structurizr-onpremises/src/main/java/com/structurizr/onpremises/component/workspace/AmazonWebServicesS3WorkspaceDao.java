@@ -14,7 +14,10 @@ import org.springframework.util.StreamUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * A workspace DAO implementation that uses the Amazon Web Services S3.
