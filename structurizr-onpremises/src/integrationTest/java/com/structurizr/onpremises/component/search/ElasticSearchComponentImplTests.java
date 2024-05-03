@@ -14,7 +14,7 @@ public class ElasticSearchComponentImplTests extends AbstractSearchComponentTest
 
     @BeforeAll
     public static void startElasticsearchTestContainer() {
-        elasticsearchContainer = new ElasticsearchContainer("docker.elastic.co/elasticsearch/elasticsearch:7.17.5")
+        elasticsearchContainer = new ElasticsearchContainer("elasticsearch:7.17.5")
                 .withExposedPorts(9200);
         elasticsearchContainer.start();
     }
