@@ -14,7 +14,7 @@
     <link rel="icon" href="/static/img/favicon.png" />
     <link rel="apple-touch-icon" href="/static/img/apple-touch-icon.png" />
 
-    <link href="${structurizrConfiguration.cdnUrl}/css/bootstrap-4.6.2.min.css" rel="stylesheet" media="screen" />
+    <link href="${structurizrConfiguration.cdnUrl}/css/bootstrap-5.3.3.min.css" rel="stylesheet" media="screen" />
     <link href="${structurizrConfiguration.cdnUrl}/css/structurizr.css" rel="stylesheet" media="screen" />
 
     <c:if test="${not empty css}">
@@ -37,7 +37,7 @@
     </c:choose>
 
     <script src="${structurizrConfiguration.cdnUrl}/js/jquery-3.6.3.min.js"></script>
-    <script src="${structurizrConfiguration.cdnUrl}/js/bootstrap-4.6.2.min.js"></script>
+    <script src="${structurizrConfiguration.cdnUrl}/js/bootstrap.bundle-5.3.3.min.js"></script>
     <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr${structurizrConfiguration.versionSuffix}.js"></script>
     <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr-util${structurizrConfiguration.versionSuffix}.js"></script>
 
@@ -59,7 +59,7 @@
         <div id="banner"></div>
         
         <div class="row">
-            <div class="col-sm-2 hidden-xs hidden-sm" style="padding: 18px 20px 10px 20px">
+            <div class="col-sm-2 d-none d-sm-block" style="padding: 18px 20px 10px 20px">
                 <a id="brandingLogoAnchor" href="/"><img src="/static/img/structurizr-banner.png" alt="Structurizr" class="structurizrBannerLight img-responsive brandingLogo" /><img src="/static/img/structurizr-banner-dark.png" alt="Structurizr" class="structurizrBannerDark img-responsive brandingLogo" /></a>
             </div>
             <div class="col-sm-10 centered" style="padding: 20px 20px 10px 20px; text-align: right;">
@@ -76,12 +76,12 @@
                 <c:choose>
                     <c:when test="${authenticated eq true}">
                         <span class="topNavigationItem" style="margin-right: 0">
-                            <a href="/dashboard"><span class="label structurizrBackgroundLight" style="font-size: 18px"><img src="/static/bootstrap-icons/person.svg" class="icon-sm icon-white" /> ${user.username}</span></a>
+                            <a href="/dashboard"><span class="badge structurizrBackgroundLight" style="font-size: 18px"><img src="/static/bootstrap-icons/person.svg" class="icon-sm icon-white" /> ${user.username}</span></a>
                         </span>
                     </c:when>
                     <c:otherwise>
                         <span class="topNavigationItem" style="margin-right: 0">
-                            <a href="/dashboard"><span class="label structurizrBackgroundBase" style="font-size: 18px"><img src="/static/bootstrap-icons/box-arrow-in-right.svg" class="icon-sm icon-white" /> Sign in</span></a>
+                            <a href="/dashboard"><span class="badge structurizrBackgroundBase" style="font-size: 18px"><img src="/static/bootstrap-icons/box-arrow-in-right.svg" class="icon-sm icon-white" /> Sign in</span></a>
                         </span>
                     </c:otherwise>
                 </c:choose>

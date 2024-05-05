@@ -41,7 +41,7 @@
 
             <c:if test="${not empty param.version}">
             <div class="navigationItem">
-                <span class="label label-version"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-xs icon-white" /> <c:out value="${workspace.internalVersion}" /></span>
+                <span class="badge label-version"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-xs icon-white" /> <c:out value="${workspace.internalVersion}" /></span>
             </div>
             </c:if>
 
