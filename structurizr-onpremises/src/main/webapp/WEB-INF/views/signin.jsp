@@ -36,7 +36,7 @@
                     </div>
 
                     <div class="centered" style="margin-top: 30px;">
-                        <button id="submit" type="submit" class="btn btn-default">Sign In</button>
+                        <button id="submit" type="submit" class="btn btn-primary">Sign In</button>
                     </div>
                 </form>
                 <div class="col-sm-4"></div>

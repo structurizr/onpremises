@@ -22,7 +22,7 @@
                             </select>
                         </div>
                         <div class="btn-group">
-                            <button id="searchButton" class="btn btn-default" title="Search" style="height: 33px;"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/search.svg" class="icon-btn" /></button>
+                            <button id="searchButton" class="btn btn-primary" title="Search" style="height: 33px;"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/search.svg" class="icon-btn" /></button>
                         </div>
                     </div>
                 </div>

@@ -64,7 +64,7 @@
                 </div>
 
                 <div class="centered">
-                    <button type="submit" class="btn btn-default">Update</button>
+                    <button type="submit" class="btn btn-primary">Update</button>
                 </div>
                 </form>
             </c:when>

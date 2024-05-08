@@ -168,10 +168,10 @@
                                 <option value="${version.versionId}"><fmt:formatDate value="${version.lastModifiedDate}" pattern="EEE dd MMM yyyy HH:mm:ss z" timeZone="${user.timeZone}" /></option>
                             </c:forEach>
                         </select>
-                        <input type="submit" class="btn btn-default" value="Load version" style="height: 35.5px"/>
+                        <input type="submit" class="btn btn-primary" value="Load version" style="height: 35.5px"/>
                     </form>
                     <c:if test="${not empty param.version && workspace.editable && not workspace.locked}">
-                        <button id="revertButton" class="btn btn-default small"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-btn" /> Revert to <c:out value="${workspace.internalVersion}" /></button>
+                        <button id="revertButton" class="btn btn-primary small"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-btn" /> Revert to <c:out value="${workspace.internalVersion}" /></button>
                     </c:if>
                 </div>
                 </c:if>
