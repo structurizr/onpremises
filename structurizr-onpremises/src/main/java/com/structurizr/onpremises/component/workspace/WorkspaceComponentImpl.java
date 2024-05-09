@@ -29,8 +29,6 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import static com.structurizr.onpremises.util.WorkspaceValidationUtils.enrichWithRemoteDocument;
-
 public class WorkspaceComponentImpl implements WorkspaceComponent {
 
     private static final Log log = LogFactory.getLog(WorkspaceComponentImpl.class);
@@ -219,17 +217,8 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
             }
         } else {
             // again, do nothing, the JSON was stored unencrypted
-            // TODO: вынести самописный код отдельно
-            try {
-                log.debug("TRY");
-                json =enrichWithRemoteDocument(json);
-            } catch (Exception e) {
-                log.debug("MAjot error ");
-                e.printStackTrace();
-            }
+
         }
-
-
 
         return json;
     }

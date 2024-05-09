@@ -8,7 +8,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.charset.Charset;
 import java.util.*;
+import java.util.function.Supplier;
 
 public class MockHttpServletResponse implements HttpServletResponse {
 
@@ -59,6 +61,21 @@ public class MockHttpServletResponse implements HttpServletResponse {
 
     @Override
     public void sendRedirect(String s) throws IOException {
+
+    }
+
+    @Override
+    public void sendRedirect(String location, boolean clearBuffer) throws IOException {
+        HttpServletResponse.super.sendRedirect(location, clearBuffer);
+    }
+
+    @Override
+    public void sendRedirect(String location, int sc) throws IOException {
+        HttpServletResponse.super.sendRedirect(location, sc);
+    }
+
+    @Override
+    public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
 
     }
 
@@ -145,6 +162,11 @@ public class MockHttpServletResponse implements HttpServletResponse {
     }
 
     @Override
+    public void setCharacterEncoding(Charset encoding) {
+        HttpServletResponse.super.setCharacterEncoding(encoding);
+    }
+
+    @Override
     public void setContentLength(int i) {
 
     }
@@ -202,6 +224,16 @@ public class MockHttpServletResponse implements HttpServletResponse {
     @Override
     public Collection<String> getHeaderNames() {
         return null;
+    }
+
+    @Override
+    public void setTrailerFields(Supplier<Map<String, String>> supplier) {
+        HttpServletResponse.super.setTrailerFields(supplier);
+    }
+
+    @Override
+    public Supplier<Map<String, String>> getTrailerFields() {
+        return HttpServletResponse.super.getTrailerFields();
     }
 
     @Override

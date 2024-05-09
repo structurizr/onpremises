@@ -11,6 +11,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ui.ModelMap;
 
+import static com.structurizr.onpremises.util.WorkspaceValidationUtils.enrichWithRemoteDocument;
+
 /**
  * Base class for all controllers underneath /share and /workspace (i.e. the workspace related controllers).
  */
@@ -122,6 +124,13 @@ public abstract class AbstractWorkspaceController extends AbstractController {
             } else {
                 workspaceMetaData.setEditable(false);
                 String json = workspaceComponent.getWorkspace(workspaceMetaData.getId(), version);
+                if (view.equals("documentation")) {
+                    try {
+                        json =enrichWithRemoteDocument(json);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
                 json = json.replaceAll("[\\n\\r\\f]", "");
                 model.addAttribute("workspaceAsJson", JsonUtils.base64(json));
                 workspaceMetaData.setApiKey("");

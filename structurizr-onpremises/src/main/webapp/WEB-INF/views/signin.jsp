@@ -10,7 +10,7 @@
         <div class="row">
             <div class="col-sm-4"></div>
             <div class="col-sm-4 centered">
-                <form class="form-horizontal" action="/login" method="post" role="form">
+                <form  action="/login" method="post" role="form">
                     <h1 class="centered">Sign in</h1>
                     <br />
 

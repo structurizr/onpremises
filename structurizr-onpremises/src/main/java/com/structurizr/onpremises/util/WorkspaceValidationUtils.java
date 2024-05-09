@@ -1,8 +1,6 @@
 package com.structurizr.onpremises.util;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.structurizr.Workspace;
 import com.structurizr.documentation.Format;
 import com.structurizr.documentation.Section;
@@ -21,11 +19,15 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.HashMap;
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class WorkspaceValidationUtils {
     private static final Log log = LogFactory.getLog(WorkspaceComponentImpl.class);
     private static final ObjectMapper mapper = new ObjectMapper();
+    private static final String BASE_URL = "https://wiki.moarse.ru/api/";
+    private static final String AUTHORIZATION_VALUE = "Bearer ol_api_8MjosoOPe7UMT3gmjJtxO7lJ9aObD0RtdxPJy9";
+
     public static void validateWorkspaceScope(Workspace workspace) throws WorkspaceScopeValidationException {
         // if workspace scope validation is enabled, reject workspaces without a defined scope
         if (Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_SCOPE_VALIDATION)) {
@@ -51,11 +53,15 @@ public class WorkspaceValidationUtils {
         }
 
         for (String documentId : wikiItems.keySet()) {
+            WikiItem wikiItem = wikiItems.get(documentId);
+            log.debug("Fetching remote document with ID: " + documentId+" for element: " + wikiItem.getName());
             try {
-                WikiItem wikiItem = wikiItems.get(documentId);
-                log.debug("Fetching remote document with ID: " + documentId+" for element: " + wikiItem.getName());
                 String documentation = fetchRemoteDocument(documentId);
-                workspace.getDocumentation().addSection(new Section(Format.Markdown, documentation));
+                if(documentation == null || documentation.length() <5) {
+                    throw new Exception("Could not fetch remote document");
+                }
+                wikiItem.getDocumentation().clear();
+                wikiItem.getDocumentation().addSection(new Section(Format.Markdown, documentation));
             } catch (Exception e) {
                 log.error("Error fetching remote document", e);
             }
@@ -66,14 +72,12 @@ public class WorkspaceValidationUtils {
 
     public static String fetchRemoteDocument(String documentId) throws IOException, InterruptedException {
         // Define constants or configuration properties
-        String apiUrl = "https://wiki.moarse.ru/api/";
-        String authorizationToken = "Bearer ol_api_8MjosoOPe7UMT3gmjJtxO7lJ9aObD0RtdxPJy9";
 
 
 
         // Create an HTTP client with a reusable configuration
         HttpClient client = HttpClient.newHttpClient();
-        HttpRequest request = createRequest(apiUrl + "documents.info", "{\"id\" : \""+documentId+"\"}", authorizationToken);
+        HttpRequest request = createRequest(BASE_URL + "documents.info", "{\"id\" : \""+documentId+"\"}");
         log.debug("Request 1:"+request.toString());
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
@@ -87,7 +91,7 @@ public class WorkspaceValidationUtils {
         String parentId = parent.get("id").asText();
 
 
-        request = createRequest(apiUrl + "documents.list", "{\"parentDocumentId\" : \""+parentId+"\"}", authorizationToken);
+        request = createRequest(BASE_URL + "documents.list", "{\"parentDocumentId\" : \""+parentId+"\"}");
         response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
         jsonNode = mapper.readTree(response.body());
@@ -96,19 +100,55 @@ public class WorkspaceValidationUtils {
         if (children.isArray()) {
             for (JsonNode subDocument : children) {
                 log.debug("Child: {}"+ subDocument);
-                intro += "\n" + subDocument.get("text").asText();
+                intro += "\n## "+subDocument.get("title").asText()+"\n" + subDocument.get("text").asText().replaceAll("\\\\","");
             }
         }
-        return intro;
+
+       return replaceAttachements(intro);
+
     }
 
-    private static HttpRequest createRequest(String url, String body, String authorizationToken) {
+    private static HttpRequest createRequest(String url, String body) {
         return HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .header("Content-Type", "application/json")
-                .header("Authorization", authorizationToken)
+                .header("Authorization", AUTHORIZATION_VALUE)
                 .method("POST", HttpRequest.BodyPublishers.ofString(body))
                 .build();
+    }
+
+    private static String replaceAttachements(String doc) {
+        Pattern pattern = Pattern.compile("!\\[.*?]\\((.*?)\\)");
+        Matcher matcher = pattern.matcher(doc);
+        HttpClient client = HttpClient.newHttpClient();
+        while (matcher.find()) {
+            String imageUrl = matcher.group(1);
+            if (imageUrl.startsWith("/api/attachments.redirect")) {
+                String id = imageUrl.substring("/api/attachments.redirect?id=".length());
+                String jsonBody = String.format("{\"id\": \"%s\"}", id);
+
+               HttpRequest request = createRequest(BASE_URL + "attachments.redirect", jsonBody);
+
+                String base64Image = "data:image/png;base64,";
+                try {
+                    HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                    System.out.println(response.body());
+                    base64Image+=response.body();
+//                    request = HttpRequest.newBuilder()
+//                            .uri(URI.create(response.body().substring(15,-1)))
+//                            .GET()
+//                            .build();
+                    //response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                    //System.out.println(response.body());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    continue;
+                }
+                doc = doc.replace(matcher.group(), "![" + id + "](" + base64Image + ")");
+                matcher.reset(doc);
+            }
+        }
+        return doc;
     }
 
 }

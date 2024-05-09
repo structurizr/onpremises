@@ -1,0 +1,333 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.structurizr</groupId>
+    <artifactId>structurizr-onpremises</artifactId>
+    <packaging>war</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <name>structurizr-onpremises</name>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.structurizr</groupId>
+            <artifactId>structurizr-core</artifactId>
+            <version>2.1.2</version>
+        </dependency>
+        <!-- structurizr dependencies -->
+        <dependency>
+            <groupId>com.structurizr</groupId>
+            <artifactId>structurizr-dsl</artifactId>
+            <version>2.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.structurizr</groupId>
+            <artifactId>structurizr-inspection</artifactId>
+            <version>2.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.structurizr</groupId>
+            <artifactId>structurizr-autolayout</artifactId>
+            <version>2.1.2</version>
+        </dependency>
+
+        <!-- servlet dependencies -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <version>6.1.0-M2</version>
+            <scope>provided</scope>
+        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>jakarta.servlet.jsp.jstl</groupId>-->
+<!--            <artifactId>jstl-api</artifactId>-->
+<!--            <version>3.0.0</version>-->
+<!--        </dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.glassfish.web/jstl-impl -->
+        <dependency>
+            <groupId>org.glassfish.web</groupId>
+            <artifactId>jstl-impl</artifactId>
+            <version>1.2</version>
+            <scope>runtime</scope>
+        </dependency>
+
+
+        <!-- annotation dependency -->
+        <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+            <version>1.3.2</version>
+        </dependency>
+
+        <!-- spring dependencies -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+            <version>6.1.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>6.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>6.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-ldap</artifactId>
+            <version>6.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-saml2-service-provider</artifactId>
+            <version>6.2.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.session</groupId>
+            <artifactId>spring-session-data-redis</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>5.1.0</version>
+        </dependency>
+
+        <!-- lucene dependencies -->
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-core</artifactId>
+            <version>9.8.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-queryparser</artifactId>
+            <version>9.8.0</version>
+        </dependency>
+
+        <!-- log4j dependencies -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>2.23.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>2.23.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-jcl</artifactId>
+            <version>2.23.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.23.0</version>
+        </dependency>
+
+        <!-- elasticsearch dependencies -->
+        <dependency>
+            <groupId>org.elasticsearch.client</groupId>
+            <artifactId>elasticsearch-rest-client</artifactId>
+            <version>7.9.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-s3</artifactId>
+            <version>1.12.716</version>
+        </dependency>
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-sts</artifactId>
+            <version>1.12.716</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.cache</groupId>
+            <artifactId>cache-api</artifactId>
+            <version>1.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <version>3.10.8</version>
+        </dependency>
+        <dependency>
+                <groupId>org.redisson</groupId>
+                <artifactId>redisson</artifactId>
+            <version>3.29.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+            <version>5.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpasyncclient</artifactId>
+            <version>4.1.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>elasticsearch</artifactId>
+            <version>1.19.7</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.structurizr</groupId>
+            <artifactId>structurizr-onpremises-plugin</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>5.11.0-M1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
+            <id>build.shibboleth.net</id>
+            <url>https://build.shibboleth.net/maven/releases/</url>
+        </repository>
+
+    </repositories>
+    <build>
+        <resources>
+            <resource>
+
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                </includes>
+            </resource>
+
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                <include>log4j2.properties</include>
+                <include>build.properties</include>
+                </includes>
+
+            </resource>
+        </resources>
+        <defaultGoal>clean package</defaultGoal>
+        <finalName>structurizr-onpremises</finalName>
+
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-clean-plugin</artifactId>
+                    <version>3.2.0</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>3.3.1</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.2.2</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version>
+                <executions>
+                    <execution>
+                        <phase>pre-site</phase>
+                        <configuration>
+                            <workDirectory>
+                                ${project.build.directory}/${project.build.finalName}
+                            </workDirectory>
+
+                        </configuration>
+                        <goals>
+                            <goal>exploded</goal>
+                        </goals>
+                    </execution>
+
+                </executions>
+                <configuration>
+                    <failOnMissingWebXml>false</failOnMissingWebXml>
+                    <warSourceDirectory>src/main/java</warSourceDirectory>
+                    <warSourceIncludes>*.xml</warSourceIncludes>
+                    <warSourceIncludes>*.jar</warSourceIncludes>
+                    <warSourceDirectory>${project.build.directory}/exploded</warSourceDirectory>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>21</source>
+                    <target>21</target>
+                    <compilerArgs>
+                        <arg>-parameters</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>get-dependencies</id>
+                        <phase>generate-resources </phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <copy todir="${project.build.directory}/exploded">
+                                    <fileset dir="src/main/webapp/">
+                                        <include name="**/*" />
+                                    </fileset>
+                                </copy>
+                            </target>
+                        </configuration>
+
+                    </execution>
+                    <execution>
+                        <id>explode-war</id>
+                        <phase>site</phase>
+                        <configuration>
+                            <target>
+                                <sync todir="${project.build.directory}/${project.build.finalName}">
+                                    <fileset dir="${project.build.directory}/exploded">
+                                        <include name="**/*" />
+                                    </fileset>
+                                </sync>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>
