@@ -7,6 +7,8 @@ import com.structurizr.model.Container;
 import com.structurizr.model.Element;
 import com.structurizr.model.SoftwareSystem;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 class WikiItem {
@@ -14,66 +16,88 @@ class WikiItem {
     private SoftwareSystem softwareSystem;
     private Container container;
     private Component component;
-    private String name;
+    private Element element;
+    private final String wikiDocumentId;
+    private final ElementType type;
 
     public WikiItem(Workspace workspace) {
         this.workspace = workspace;
-        this.name = workspace.getName();
+        type = ElementType.WORKSPACE;
+        this.wikiDocumentId = workspace.getProperties().get("wiki.document.id");
     }
 
-
-    public WikiItem(SoftwareSystem softwareSystem) {
-        this.softwareSystem = softwareSystem;
-        this.name = softwareSystem.getName();
-    }
-
-    public WikiItem(Container container) {
-        this.container = container;
-        this.name = container.getName();
-
-    }
-
-    public WikiItem(Component component) {
-        this.component = component;
-        this.name = component.getName();
-
-    }
-
-    public WikiItem(Element element) {
-        if (element instanceof SoftwareSystem) {
-            this.softwareSystem = (SoftwareSystem) element;
-        } else if (element instanceof Container) {
-            this.container = (Container) element;
-        } else if (element instanceof Component) {
-            this.component = (Component) element;
+    public WikiItem(Element element) throws IllegalArgumentException {
+        this.wikiDocumentId = element.getProperties().get("wiki.document.id");
+        if (wikiDocumentId == null) {
+            throw new IllegalArgumentException("Element " + element.getName() + " does not have a wiki document id");
         }
+        this.element = element;
+        switch ((Object) element) {
+            case SoftwareSystem s:
+                this.softwareSystem = s;
+                type = ElementType.SOFTWARE_SYSTEM;
+                break;
+            case Container c:
+                this.container = c;
+                type = ElementType.CONTAINER;
+                break;
+            case Component c:
+                this.component = c;
+                type = ElementType.COMPONENT;
+                break;
+            default:
+                throw new IllegalArgumentException("Unexpected value: " + element);
+        }
+
     }
     public String getName() {
-        return name;
+        if (type == ElementType.WORKSPACE) {
+            return workspace.getName();
+        } else {
+            return element.getName();
+        }
+    }
+    public String getWikiDocumentId() {
+        return wikiDocumentId;
     }
     public Map<String, String> getProperties() {
-        if (workspace != null) {
-            return workspace.getProperties();
-        } else if (softwareSystem != null) {
-            return softwareSystem.getProperties();
-        } else if (container != null) {
-            return container.getProperties();
-        } else if (component != null) {
-            return component.getProperties();
-        }
-        return null;
+        return switch (type) {
+            case WORKSPACE -> workspace.getProperties();
+            case SOFTWARE_SYSTEM -> softwareSystem.getProperties();
+            case CONTAINER -> container.getProperties();
+            case COMPONENT -> component.getProperties();
+        };
     }
 
     public Documentation getDocumentation() {
-        if (workspace != null) {
-            return workspace.getDocumentation();
-        } else if (softwareSystem != null) {
-            return softwareSystem.getDocumentation();
-        } else if (container != null) {
-            return container.getDocumentation();
-        } else if (component != null) {
-            return component.getDocumentation();
-        }
-        return null;
+        return switch (type) {
+            case WORKSPACE -> workspace.getDocumentation();
+            case SOFTWARE_SYSTEM -> softwareSystem.getDocumentation();
+            case CONTAINER -> container.getDocumentation();
+            case COMPONENT -> component.getDocumentation();
+        };
     }
+    public boolean inScope(List<String> urlScope){
+        if(type == ElementType.WORKSPACE && urlScope.size() == 1){
+            return true;
+        }else return type.getIndex() == urlScope.size() - 1 && Arrays.equals(urlScope.getLast().getBytes(), getName().getBytes());
+    }
+
+    private enum ElementType {
+        WORKSPACE(0),
+        SOFTWARE_SYSTEM(1),
+        CONTAINER(2),
+        COMPONENT(3);
+
+        private final int index;
+
+        ElementType(int index) {
+            this.index = index;
+        }
+
+        public int getIndex() {
+            return index;
+        }
+    }
+
 }

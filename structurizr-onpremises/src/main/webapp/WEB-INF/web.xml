@@ -139,13 +139,12 @@
         <location>/500</location>
     </error-page>
 
-    <!-- customize session timeouts, etc by uncommenting this block -->
-    <!--<session-config>-->
-        <!--<session-timeout>60</session-timeout>-->
-        <!--<cookie-config>-->
-            <!--<http-only>true</http-only>-->
-            <!--<secure>false</secure>-->
-        <!--</cookie-config>-->
-    <!--</session-config>-->
+    <session-config>
+        <session-timeout>2600</session-timeout>
+        <cookie-config>
+            <http-only>true</http-only>
+            <secure>false</secure>
+        </cookie-config>
+    </session-config>
 
 </web-app>

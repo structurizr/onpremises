@@ -16,7 +16,6 @@ import java.util.Base64;
 public class DecisionsController extends AbstractWorkspaceController {
 
     private static final String VIEW = "decisions";
-    private static final String WORKSPACE_SCOPE = "*";
 
     @RequestMapping(value = "/share/{workspaceId}/decisions", method = RequestMethod.GET)
     public String showPublicDecisions(
@@ -163,16 +162,5 @@ public class DecisionsController extends AbstractWorkspaceController {
         return showAuthenticatedView(VIEW, workspaceMetaData, version, model, false, false);
     }
 
-    String toScope(String softwareSystem, String container, String component) {
-        if (softwareSystem != null && container != null && component != null) {
-            return softwareSystem + "/" + container + "/" + component;
-        } else if (softwareSystem != null && container != null) {
-            return softwareSystem + "/" + container;
-        } else if (softwareSystem != null) {
-            return softwareSystem;
-        } else {
-            return WORKSPACE_SCOPE;
-        }
-    }
     
 }

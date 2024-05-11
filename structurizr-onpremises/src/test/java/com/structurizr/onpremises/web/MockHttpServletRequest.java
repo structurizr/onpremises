@@ -362,6 +362,21 @@ public class MockHttpServletRequest implements HttpServletRequest {
     }
 
     @Override
+    public String getRequestId() {
+        return null;
+    }
+
+    @Override
+    public String getProtocolRequestId() {
+        return null;
+    }
+
+    @Override
+    public ServletConnection getServletConnection() {
+        return null;
+    }
+
+    @Override
     public String changeSessionId() {
         return null;
     }
@@ -376,19 +391,6 @@ public class MockHttpServletRequest implements HttpServletRequest {
         return 0;
     }
 
-    @Override
-    public String getRequestId() {
-        return null;
-    }
 
-    @Override
-    public String getProtocolRequestId() {
-        return null;
-    }
-
-    @Override
-    public ServletConnection getServletConnection() {
-        return null;
-    }
 
 }

@@ -32,11 +32,12 @@ To then build a Docker image:
 
 ```
 cd structurizr-onpremises
-docker build . -t mytag
+docker build . -t ghcr.io/solvo-ru/solvo-structurizr:latest
 ```
 
 And to start a Docker container from this image (replace `/path/to/dataDirectory`):
 
 ```
-docker run -it --rm -p 8080:8080 -v /path/to/dataDirectory:/usr/local/structurizr mytag
+docker run -it  -p 8080:8080 -v /home/moarse/structurizr-local-data:/usr/local/structurizr -v /home/moarse/.local/share/tomcat:/usr/local/tomcat ghcr.io/solvo-ru/solvo-structurizr:latest   
+
 ```

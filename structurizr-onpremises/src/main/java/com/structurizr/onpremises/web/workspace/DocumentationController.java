@@ -16,7 +16,6 @@ import java.util.Base64;
 public class DocumentationController extends AbstractWorkspaceController {
 
     private static final String VIEW = "documentation";
-    private static final String WORKSPACE_SCOPE = "*";
 
     @RequestMapping(value = "/share/{workspaceId}/documentation", method = RequestMethod.GET)
     public String showPublicDocumentation(
@@ -60,7 +59,7 @@ public class DocumentationController extends AbstractWorkspaceController {
         model.addAttribute("scope", Base64.getEncoder().encodeToString(toScope(softwareSystem, container, component).getBytes(StandardCharsets.UTF_8)));
         model.addAttribute("showHeader", true);
 
-        return showPublicView(VIEW, workspaceId, version, model, false);
+        return showPublicView(VIEW, workspaceId, version, model, false, toFullScope(softwareSystem, container, component));
     }
 
     @RequestMapping(value = "/share/{workspaceId}/{token}/documentation", method = RequestMethod.GET)
@@ -109,7 +108,7 @@ public class DocumentationController extends AbstractWorkspaceController {
         model.addAttribute("scope", Base64.getEncoder().encodeToString(toScope(softwareSystem, container, component).getBytes(StandardCharsets.UTF_8)));
         model.addAttribute("showHeader", true);
 
-        return showSharedView(VIEW, workspaceId, token, version, model, false);
+        return showSharedView(VIEW, workspaceId, token, version, model, false, toFullScope(softwareSystem, container, component));
     }
 
     @RequestMapping(value = "/workspace/{workspaceId}/documentation", method = RequestMethod.GET)
@@ -160,19 +159,8 @@ public class DocumentationController extends AbstractWorkspaceController {
         model.addAttribute("scope", Base64.getEncoder().encodeToString(toScope(softwareSystem, container, component).getBytes(StandardCharsets.UTF_8)));
         model.addAttribute("showHeader", true);
 
-        return showAuthenticatedView(VIEW, workspaceMetaData, version, model, false, false);
+        return showAuthenticatedView(VIEW, workspaceMetaData, version, model, false, false, toFullScope(softwareSystem, container, component));
     }
 
-    String toScope(String softwareSystem, String container, String component) {
-        if (softwareSystem != null && container != null && component != null) {
-            return softwareSystem + "/" + container + "/" + component;
-        } else if (softwareSystem != null && container != null) {
-            return softwareSystem + "/" + container;
-        } else if (softwareSystem != null) {
-            return softwareSystem;
-        } else {
-            return WORKSPACE_SCOPE;
-        }
-    }
 
 }

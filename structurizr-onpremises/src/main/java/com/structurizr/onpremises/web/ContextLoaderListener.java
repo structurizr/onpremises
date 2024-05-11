@@ -22,7 +22,7 @@ import java.util.Properties;
 public class ContextLoaderListener implements ServletContextListener {
 
     private static final String LOGS_DIRECTORY_NAME = "logs";
-    private static final String LOG4J_PROPERTIES_FILENAME = "log4j2.properties";
+    private static final String LOG4J_PROPERTIES_FILENAME = "log4j2.xml";
 
     @Override
     public void contextInitialized(ServletContextEvent event) {

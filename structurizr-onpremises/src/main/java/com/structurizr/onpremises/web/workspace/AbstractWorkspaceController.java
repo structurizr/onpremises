@@ -11,6 +11,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ui.ModelMap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.structurizr.onpremises.util.WorkspaceValidationUtils.enrichWithRemoteDocument;
 
 /**
@@ -24,6 +27,10 @@ public abstract class AbstractWorkspaceController extends AbstractController {
     protected static final String URL_SUFFIX = "urlSuffix";
 
     protected final String showPublicView(String view, long workspaceId, String version, ModelMap model, boolean showHeaderAndFooter) {
+        return showPublicView(view, workspaceId, version, model, showHeaderAndFooter, null);
+    }
+
+    protected final String showPublicView(String view, long workspaceId, String version, ModelMap model, boolean showHeaderAndFooter, List<String> scope) {
         version = HtmlUtils.filterHtml(version);
 
         WorkspaceMetaData workspaceMetaData = null;
@@ -43,14 +50,16 @@ public abstract class AbstractWorkspaceController extends AbstractController {
                     model.addAttribute(URL_SUFFIX, "?version=" + version);
                 }
 
-                return showView(view, workspaceMetaData, version, model, false, showHeaderAndFooter);
+                return showView(view, workspaceMetaData, version, model, false, showHeaderAndFooter,scope);
             }
         }
 
         return show404Page(model);
     }
-
     protected final String showSharedView(String view, long workspaceId, String token, String version, ModelMap model, boolean showHeaderAndFooter) {
+        return showSharedView(view, workspaceId, token, version, model, showHeaderAndFooter, null);
+    }
+    protected final String showSharedView(String view, long workspaceId, String token, String version, ModelMap model, boolean showHeaderAndFooter, List<String> scope) {
         token = HtmlUtils.filterHtml(token);
         version = HtmlUtils.filterHtml(version);
 
@@ -71,14 +80,16 @@ public abstract class AbstractWorkspaceController extends AbstractController {
                     model.addAttribute(URL_SUFFIX, "?version=" + version);
                 }
 
-                return showView(view, workspaceMetaData, version, model, false, showHeaderAndFooter);
+                return showView(view, workspaceMetaData, version, model, false, showHeaderAndFooter,scope);
             }
         }
 
         return show404Page(model);
     }
-
     protected final String showAuthenticatedView(String view, WorkspaceMetaData workspaceMetaData, String version, ModelMap model, boolean showHeaderAndFooter, boolean editable) {
+        return showAuthenticatedView(view, workspaceMetaData, version, model, showHeaderAndFooter, editable, null);
+    }
+    protected final String showAuthenticatedView(String view, WorkspaceMetaData workspaceMetaData, String version, ModelMap model, boolean showHeaderAndFooter, boolean editable, List<String> scope) {
         version = HtmlUtils.filterHtml(version);
 
         User user = getUser();
@@ -104,16 +115,16 @@ public abstract class AbstractWorkspaceController extends AbstractController {
             }
 
             if (workspaceMetaData.hasNoUsersConfigured() || workspaceMetaData.isWriteUser(user)) {
-                return showView(view, workspaceMetaData, version, model, editable, showHeaderAndFooter);
+                return showView(view, workspaceMetaData, version, model, editable, showHeaderAndFooter,scope);
             } else if (workspaceMetaData.isReadUser(user)) {
-                return showView(view, workspaceMetaData, version, model, false, showHeaderAndFooter);
+                return showView(view, workspaceMetaData, version, model, false, showHeaderAndFooter,scope);
             }
         }
 
         return show404Page(model);
     }
 
-    protected final String showView(String view, WorkspaceMetaData workspaceMetaData, String version, ModelMap model, boolean editable, boolean showHeaderAndFooter) {
+    protected final String showView(String view, WorkspaceMetaData workspaceMetaData, String version, ModelMap model, boolean editable, boolean showHeaderAndFooter, List<String> scope) {
         try {
             if (editable) {
                 workspaceMetaData.setEditable(true);
@@ -126,7 +137,7 @@ public abstract class AbstractWorkspaceController extends AbstractController {
                 String json = workspaceComponent.getWorkspace(workspaceMetaData.getId(), version);
                 if (view.equals("documentation")) {
                     try {
-                        json =enrichWithRemoteDocument(json);
+                        json =enrichWithRemoteDocument(json, scope);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -154,5 +165,26 @@ public abstract class AbstractWorkspaceController extends AbstractController {
             return "500";
         }
     }
-
+    String toScope(String softwareSystem, String container, String component) {
+        return toFullScope(softwareSystem, container, component).getFirst();
+    }
+    List<String> toFullScope(String softwareSystem, String container, String component) {
+        List<String> scope = new ArrayList<>();
+        if (softwareSystem != null && container != null && component != null) {
+            scope.add(softwareSystem + "/" + container + "/" + component);
+            scope.add(softwareSystem);
+            scope.add(container);
+            scope.add(component);
+        } else if (softwareSystem != null && container != null) {
+            scope.add(softwareSystem + "/" + container);
+            scope.add(softwareSystem);
+            scope.add(container);
+        } else if (softwareSystem != null) {
+            scope.add(softwareSystem);
+            scope.add(softwareSystem);
+        } else {
+            scope.add("*");
+        }
+        return scope;
+    }
 }

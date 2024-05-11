@@ -217,7 +217,6 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
             }
         } else {
             // again, do nothing, the JSON was stored unencrypted
-
         }
 
         return json;

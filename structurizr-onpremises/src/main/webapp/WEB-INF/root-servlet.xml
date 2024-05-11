@@ -9,7 +9,7 @@
 		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
 	<bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
-		<property name="favorPathExtension" value="false" />
+<!--		<property name="favorPathExtension" value="false" />-->
 	</bean>
 
 	<bean id="viewResolver" class="com.structurizr.onpremises.web.RawViewResolver">

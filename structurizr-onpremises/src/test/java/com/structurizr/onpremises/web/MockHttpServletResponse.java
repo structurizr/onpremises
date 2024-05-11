@@ -64,20 +64,8 @@ public class MockHttpServletResponse implements HttpServletResponse {
 
     }
 
-    @Override
-    public void sendRedirect(String location, boolean clearBuffer) throws IOException {
-        HttpServletResponse.super.sendRedirect(location, clearBuffer);
-    }
 
-    @Override
-    public void sendRedirect(String location, int sc) throws IOException {
-        HttpServletResponse.super.sendRedirect(location, sc);
-    }
 
-    @Override
-    public void sendRedirect(String location, int sc, boolean clearBuffer) throws IOException {
-
-    }
 
     @Override
     public void setDateHeader(String s, long l) {
@@ -161,10 +149,7 @@ public class MockHttpServletResponse implements HttpServletResponse {
 
     }
 
-    @Override
-    public void setCharacterEncoding(Charset encoding) {
-        HttpServletResponse.super.setCharacterEncoding(encoding);
-    }
+
 
     @Override
     public void setContentLength(int i) {
