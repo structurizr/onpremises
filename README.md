@@ -40,3 +40,8 @@ And to start a Docker container from this image (replace `/path/to/dataDirectory
 ```
 docker run -it --rm -p 8080:8080 -v /path/to/dataDirectory:/usr/local/structurizr mytag
 ```
+
+To start a Docker container from this image with a different port(can be needed if run with `--network=host`):
+```
+docker run -it --rm --env PORT=8082 --expose 8082 -p 8080:8082 -v /path/to/dataDirectory:/usr/local/structurizr mytag
+```
