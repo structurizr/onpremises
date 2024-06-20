@@ -45,4 +45,7 @@ public class StructurizrProperties {
     public static final String REDIS_PORT = "structurizr.redis.port";
     public static final String REDIS_PASSWORD = "structurizr.redis.password";
 
+    public static final String WIKI_URL = "structurizr.wiki.url";
+    public static final String WIKI_TOKEN = "structurizr.wiki.token";
+
 }

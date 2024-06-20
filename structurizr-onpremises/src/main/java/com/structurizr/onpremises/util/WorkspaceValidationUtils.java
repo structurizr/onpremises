@@ -26,11 +26,15 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.structurizr.onpremises.util.ConfigLookup.getConfigurationParameterFromStructurizrPropertiesFile;
+
 public class WorkspaceValidationUtils {
     private static final Log log = LogFactory.getLog(WorkspaceComponentImpl.class);
     private static final ObjectMapper mapper = new ObjectMapper();
-    private static final String BASE_URL = "https://wiki.moarse.ru/api/";
-    private static final String AUTHORIZATION_VALUE = "Bearer ol_api_8MjosoOPe7UMT3gmjJtxO7lJ9aObD0RtdxPJy9";
+    private static final String BASE_URL = "https://"+getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.WIKI_URL,"outline.moarse.ru")+"/api/";
+    private static final String AUTHORIZATION_VALUE = "Bearer "+getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.WIKI_TOKEN,"ol_api_8MjosoOPe7UMT3gmjJtxO7lJ9aObD0RtdxPJy9");
+    private static final String STRUCTURIZR_URL = getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.URL_PROPERTY,"");
+    private static Workspace workspace;
 
     public static void validateWorkspaceScope(Workspace workspace) throws WorkspaceScopeValidationException {
         // if workspace scope validation is enabled, reject workspaces without a defined scope
@@ -45,7 +49,7 @@ public class WorkspaceValidationUtils {
     }
 
     public static String enrichWithRemoteDocument(String json, List<String> scope) throws Exception {
-        Workspace workspace = WorkspaceUtils.fromJson(json);
+        workspace = WorkspaceUtils.fromJson(json);
         HashMap<String,WikiItem> wikiItems = new HashMap<>();
 
 
@@ -113,7 +117,7 @@ public class WorkspaceValidationUtils {
                 intro += "\n"+part;
             }
         }
-       return cleanEmbeds(replaceAttachments(intro.replaceAll("\\\\", "")));
+       return replaceStructurizrEmbeds(replaceAttachments(intro.replaceAll("\\\\", "")));
 
     }
 
@@ -125,18 +129,7 @@ public class WorkspaceValidationUtils {
                 .POST(HttpRequest.BodyPublishers.ofString(body))
                 .build();
     }
-    private static String cleanEmbeds(String doc) {
-        Pattern pattern = Pattern.compile("!\\[(.*?)]\\(__(embed.*?)__\\)");
-        Matcher matcher = pattern.matcher(doc);
-        StringBuilder sb = new StringBuilder();
-        log.info("doc: " + doc);
-        while (matcher.find()) {
-            matcher.appendReplacement(sb, "![" + matcher.group(1) + "](" + matcher.group(2) + ")");
-        }
-        matcher.appendTail(sb);
 
-        return sb.toString();//.replaceAll("\\\\\\s*$", "");
-    }
     private static String replaceAttachments(String doc) {
         Pattern pattern = Pattern.compile("!\\[.*?]\\((.*?)\\)");
         Matcher matcher = pattern.matcher(doc);
@@ -152,6 +145,7 @@ public class WorkspaceValidationUtils {
                 String base64Image = "data:image/png;base64,";
                 try {
                     HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                    log.info(response.body());
                     String redirectUrl = response.headers().firstValue("Location").get();
                     HttpRequest redirectRequest = HttpRequest.newBuilder(URI.create(redirectUrl))
                             .version(HttpClient.Version.HTTP_2)
@@ -175,6 +169,30 @@ public class WorkspaceValidationUtils {
                     continue;
                 }
                 doc = doc.replace(matcher.group(1),  base64Image );
+                matcher.reset(doc);
+            }
+
+        }
+        return doc;
+    }
+
+    private static String replaceStructurizrEmbeds(String doc) {
+        Pattern pattern = Pattern.compile("\\[.*?]\\((.*?)\\)");
+        Matcher matcher = pattern.matcher(doc);
+        while (matcher.find()) {
+            String embedUrl = matcher.group(1);
+            if (embedUrl.startsWith(STRUCTURIZR_URL)) {
+                String[] splitter = embedUrl.substring(STRUCTURIZR_URL.length()+1).split("/");
+                String workspaceId = splitter[1];
+                String diagram = splitter[2].split("#")[1];
+                if (workspaceId.equals(workspace.getId()+"")){
+                    doc = doc.replace(matcher.group(0),"![](embed:"+diagram+")");
+                } else {
+                    String id = "embed-"+Math.floor(1000000 * Math.random());
+                    String normalizedUrl = STRUCTURIZR_URL+"/embed/"+splitter[0]+"?diagram="+diagram+"&diagramSelector=false&iframe="+id;
+                    String iframe = "<iframe id=\""+id+"\" src=\""+normalizedUrl+"\" width=\"100%\" marginwidth=\"0\" marginheight=\"0\" frameborder=\"0\" scrolling=\"no\" allowfullscreen=\"true\"></iframe>";
+                    doc = doc.replace(matcher.group(0),iframe);
+                }
                 matcher.reset(doc);
             }
         }

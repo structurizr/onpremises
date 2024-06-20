@@ -166,7 +166,7 @@ public abstract class AbstractWorkspaceController extends AbstractController {
         }
     }
     String toScope(String softwareSystem, String container, String component) {
-        return toFullScope(softwareSystem, container, component).getFirst();
+        return toFullScope(softwareSystem, container, component).get(0);
     }
     List<String> toFullScope(String softwareSystem, String container, String component) {
         List<String> scope = new ArrayList<>();
