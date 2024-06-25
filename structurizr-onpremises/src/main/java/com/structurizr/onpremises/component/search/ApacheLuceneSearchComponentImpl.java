@@ -66,6 +66,8 @@ class ApacheLuceneSearchComponentImpl extends AbstractSearchComponentImpl {
         IndexWriterConfig iwc = new IndexWriterConfig(analyzer);
         iwc.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
 
+        IndexSearcher.setMaxClauseCount(9999);
+
         try {
             Directory dir = FSDirectory.open(indexDirectory.toPath());
             indexWriter = new IndexWriter(dir, iwc);
