@@ -82,12 +82,14 @@
                                 <c:when test="${workspace.publicWorkspace}">
                                     <form id="privateWorkspaceForm" class="form-inline small centered" style="display: inline-block; margin-bottom: 5px" action="/workspace/${workspace.id}/private" method="post">
                                         <input type="hidden" name="workspaceId" value="${workspace.id}" />
+                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                         <button class="btn btn-default small" type="submit" name="action" value="private" title="Make workspace private"><img src="/static/bootstrap-icons/lock.svg" class="icon-btn" /> Make private</button>
                                     </form>
                                 </c:when>
                                 <c:otherwise>
                                     <form id="publicWorkspaceForm" class="form-inline small centered" style="display: inline-block; margin-bottom: 5px" action="/workspace/${workspace.id}/public" method="post">
                                         <input type="hidden" name="workspaceId" value="${workspace.id}" />
+                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                         <button class="btn btn-default small" type="submit" name="action" value="public" title="Make workspace public"><img src="/static/bootstrap-icons/unlock.svg" class="icon-btn" /> Make public</button>
                                     </form>
                                 </c:otherwise>
@@ -110,12 +112,14 @@
                                 <c:when test="${not empty workspace.sharingToken}">
                                     <form id="unshareWorkspaceForm" class="form-inline small centered" style="display: inline-block; margin-bottom: 5px" action="/workspace/${workspace.id}/unshare" method="post">
                                         <input type="hidden" name="workspaceId" value="${workspace.id}" />
+                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                         <button class="btn btn-default small" type="submit" name="action" value="unshare" title="Disable sharing link"><img src="/static/bootstrap-icons/link.svg" class="icon-btn" /> Disable sharing link</button>
                                     </form>
                                 </c:when>
                                 <c:otherwise>
                                     <form id="shareWorkspaceForm" class="form-inline small centered" style="display: inline-block; margin-bottom: 5px" action="/workspace/${workspace.id}/share" method="post">
                                         <input type="hidden" name="workspaceId" value="${workspace.id}" />
+                                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                                         <button class="btn btn-default small" type="submit" name="action" value="share" title="Enable sharing link"><img src="/static/bootstrap-icons/link.svg" class="icon-btn" /> Enable sharing link</button>
                                     </form>
                                 </c:otherwise>
@@ -135,6 +139,7 @@
                         <button id="exportWorkspaceButton" class="btn btn-default small" title="Export workspace as JSON"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/filetype-json.svg" class="icon-btn" /> Export workspace</button>
                         <form id="deleteWorkspaceForm" class="form-inline small centered" style="display: inline-block; margin-bottom: 5px" action="/workspace/${workspace.id}/delete" method="post">
                             <input type="hidden" name="workspaceId" value="${workspace.id}" />
+                            <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
                             <button class="btn btn-danger small" type="submit" name="action" value="remove" title="Delete workspace"><img src="/static/bootstrap-icons/folder-x.svg" class="icon-white icon-btn" /> Delete workspace</button>
                         </form>
                     </c:if>
