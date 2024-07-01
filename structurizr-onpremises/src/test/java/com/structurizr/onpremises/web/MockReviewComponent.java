@@ -7,10 +7,17 @@ import com.structurizr.onpremises.domain.review.Review;
 import com.structurizr.onpremises.domain.review.ReviewType;
 import com.structurizr.onpremises.domain.review.Session;
 
+import java.util.Collection;
+
 public class MockReviewComponent implements ReviewComponent {
 
     @Override
     public Review createReview(User user, Long workspaceId, String[] files, ReviewType type) {
+        return null;
+    }
+
+    @Override
+    public Collection<Review> getReviews() {
         return null;
     }
 

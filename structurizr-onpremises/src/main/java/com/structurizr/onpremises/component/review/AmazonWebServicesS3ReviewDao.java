@@ -15,10 +15,7 @@ import org.springframework.util.StreamUtils;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
+import java.util.*;
 
 class AmazonWebServicesS3ReviewDao implements ReviewDao {
 
@@ -83,6 +80,12 @@ class AmazonWebServicesS3ReviewDao implements ReviewDao {
     }
 
     @Override
+    public Set<String> getReviewIds() throws ReviewComponentException {
+        // todo
+        return null;
+    }
+
+    @Override
     public void putReview(Review review) throws ReviewComponentException {
         try {
             String objectKey = getBaseObjectName(review.getId()) + REVIEW_JSON_FILENAME;
@@ -106,7 +109,7 @@ class AmazonWebServicesS3ReviewDao implements ReviewDao {
     }
 
     @Override
-    public String getReview(String reviewId) throws ReviewComponentException {
+    public Review getReview(String reviewId) throws ReviewComponentException {
         InputStream inputStream = null;
         try {
             String objectKey = getBaseObjectName(reviewId) + REVIEW_JSON_FILENAME;
@@ -114,7 +117,8 @@ class AmazonWebServicesS3ReviewDao implements ReviewDao {
 
             inputStream = amazonS3.getObject(getRequest).getObjectContent();
 
-            return StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+            String json = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
+            return Review.fromJson(json);
         } catch (Throwable t) {
             return null;
         } finally {

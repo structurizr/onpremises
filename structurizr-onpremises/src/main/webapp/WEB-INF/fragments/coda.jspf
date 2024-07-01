@@ -13,6 +13,8 @@
 
             <c:if test="${authenticated}">
             |
+            <a href="/review">Reviews</a>
+            |
             <a href="/user/profile">User profile</a>
             |
             <a href="/signout">Sign out</a>

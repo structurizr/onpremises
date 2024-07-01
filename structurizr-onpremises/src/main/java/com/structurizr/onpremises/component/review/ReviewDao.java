@@ -5,12 +5,15 @@ import com.structurizr.onpremises.domain.review.Session;
 import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 
 import java.util.Collection;
+import java.util.Set;
 
 interface ReviewDao {
 
+    Set<String> getReviewIds() throws ReviewComponentException;
+
     void putReview(Review review) throws ReviewComponentException;
 
-    String getReview(String reviewId) throws ReviewComponentException;
+    Review getReview(String reviewId) throws ReviewComponentException;
 
     void submitReview(String reviewId, Session reviewSession) throws ReviewComponentException;
 

@@ -6,6 +6,8 @@ import com.structurizr.onpremises.domain.review.ReviewType;
 import com.structurizr.onpremises.domain.review.Session;
 import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 
+import java.util.Collection;
+
 /**
  * Provides access to and manages reviews.
  */
@@ -15,6 +17,8 @@ public interface ReviewComponent {
     public static final String AMAZON_WEB_SERVICES_S3 = "aws-s3";
 
     Review createReview(User user, Long workspaceId, String[] files, ReviewType type);
+
+    Collection<Review> getReviews();
 
     Review getReview(String reviewId);
 

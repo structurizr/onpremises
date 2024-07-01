@@ -1,6 +1,5 @@
 package com.structurizr.onpremises.web.workspace;
 
-import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.domain.Message;
 import com.structurizr.onpremises.domain.Messages;
@@ -8,6 +7,7 @@ import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.domain.review.Review;
 import com.structurizr.onpremises.domain.review.ReviewType;
 import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.util.DateUtils;
 import com.structurizr.onpremises.web.ControllerTestsBase;
 import com.structurizr.onpremises.web.MockHttpServletRequest;
 import com.structurizr.onpremises.web.MockReviewComponent;
@@ -19,8 +19,12 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ReviewControllerTests extends ControllerTestsBase {
 
@@ -42,19 +46,13 @@ public class ReviewControllerTests extends ControllerTestsBase {
         Configuration.getInstance().setAdminUsersAndRoles();
         setUser("user@example.com");
 
-        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
-            @Override
-            public long createWorkspace(User user) throws WorkspaceComponentException {
-                return 1;
-            }
-        });
         String result = controller.showCreateReviewPage(model);
 
         assertEquals("review-create", result);
     }
 
     @Test
-    public void createWorkspace_ReturnsAnError_WhenNoImagesAreSpecified() {
+    public void createReview_ReturnsAnError_WhenNoImagesAreSpecified() {
         MockHttpServletRequest request = new MockHttpServletRequest() {
             @Override
             public String[] getParameterValues(String s) {
@@ -70,7 +68,7 @@ public class ReviewControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void createWorkspace_CreatesAPublicReview_WheImagesAreSpecified() {
+    public void createReview_CreatesAPublicReview_WheImagesAreSpecified() {
         MockHttpServletRequest request = new MockHttpServletRequest() {
             @Override
             public String[] getParameterValues(String s) {
@@ -108,7 +106,7 @@ public class ReviewControllerTests extends ControllerTestsBase {
     }
 
     @Test
-    public void createWorkspace_CreatesAPrivateReview_WheImagesAreSpecified() {
+    public void createReview_CreatesAPrivateReview_WheImagesAreSpecified() {
         MockHttpServletRequest request = new MockHttpServletRequest() {
             @Override
             public String[] getParameterValues(String s) {
@@ -360,6 +358,68 @@ public class ReviewControllerTests extends ControllerTestsBase {
         assertEquals("eyJpZCI6IjEyMzQ1Njc4OTAiLCJ1c2VySWQiOiJ1c2VyQGV4YW1wbGUuY29tIiwid29ya3NwYWNlSWQiOjEsInR5cGUiOiJHZW5lcmFsIiwibG9ja2VkIjpmYWxzZX0=", model.getAttribute("reviewAsJson"));
         assertEquals("write@example.com", model.getAttribute("reviewer"));
         assertEquals(false, model.getAttribute("admin"));
+    }
+
+    @Test
+    public void showReviews_ReturnsTheReviewsPage() throws Exception {
+        // standalone review - visible
+        final Review review1 = new Review("1", "user@example.com");
+        review1.setWorkspaceId(null);
+        review1.setDateCreated(DateUtils.getNow());
+
+        // review for open workspace - visible
+        final Review review2 = new Review("2", "user@example.com");
+        final WorkspaceMetaData workspaceMetaData2 = new WorkspaceMetaData(2);
+        review2.setWorkspaceId(2L);
+        review2.setDateCreated(DateUtils.getNow());
+
+        // review for public workspace - visible
+        final Review review3 = new Review("3", "user@example.com");
+        final WorkspaceMetaData workspaceMetaData3 = new WorkspaceMetaData(3);
+        workspaceMetaData3.addWriteUser("write@example.com");
+        workspaceMetaData3.setPublicWorkspace(true);
+        review3.setWorkspaceId(3L);
+        review3.setDateCreated(DateUtils.getNow());
+
+        // review for private workspace - not visible
+        final Review review4 = new Review("4", "user@example.com");
+        final WorkspaceMetaData workspaceMetaData4 = new WorkspaceMetaData(4);
+        workspaceMetaData4.addWriteUser("write@example.com");
+        workspaceMetaData4.setPublicWorkspace(false);
+        review4.setWorkspaceId(4L);
+        review4.setDateCreated(DateUtils.getNow());
+
+        controller.setReviewComponent(new MockReviewComponent() {
+            @Override
+            public Collection<Review> getReviews() {
+                return Set.of(review1, review2, review3, review4);
+            }
+        });
+
+        controller.setWorkspaceComponent(new MockWorkspaceComponent() {
+            @Override
+            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
+                return Set.of(workspaceMetaData2, workspaceMetaData3, workspaceMetaData4).stream().filter(wmd -> wmd.getId() == workspaceId).findFirst().get();
+            }
+        });
+
+        clearUser();
+        String view = controller.showReviews(model);
+        assertEquals("reviews", view);
+        Collection<Review> reviews = (Collection<Review>)model.getAttribute("reviews");
+        assertEquals(3, reviews.size());
+        assertTrue(reviews.contains(review1));
+        assertTrue(reviews.contains(review2));
+        assertTrue(reviews.contains(review3));
+
+        setUser("write@example.com");
+        controller.showReviews(model);
+        reviews = (Collection<Review>)model.getAttribute("reviews");
+        assertEquals(4, reviews.size());
+        assertTrue(reviews.contains(review1));
+        assertTrue(reviews.contains(review2));
+        assertTrue(reviews.contains(review3));
+        assertTrue(reviews.contains(review4));
     }
 
 }

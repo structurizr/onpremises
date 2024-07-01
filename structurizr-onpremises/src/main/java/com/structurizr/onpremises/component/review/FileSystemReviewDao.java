@@ -10,9 +10,9 @@ import org.apache.commons.logging.LogFactory;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
+import java.util.*;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 class FileSystemReviewDao implements ReviewDao {
 
@@ -20,8 +20,20 @@ class FileSystemReviewDao implements ReviewDao {
 
     private static final String REVIEWS_DIRECTORY_NAME = "reviews";
     private static final String REVIEW_JSON_FILENAME = "review.json";
+    private static final Pattern REVIEW_ID_PATTERN = Pattern.compile("[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}");
 
     FileSystemReviewDao() {
+    }
+
+    @Override
+    public Set<String> getReviewIds() {
+        File reviewsDirectory = getReviewsDirectory();
+        File[] files = reviewsDirectory.listFiles(file -> file.isDirectory() && REVIEW_ID_PATTERN.matcher(file.getName()).matches());
+        if (files != null) {
+            return Arrays.stream(files).map(File::getName).collect(Collectors.toSet());
+        } else {
+            return Collections.emptySet();
+        }
     }
 
     public void putReview(Review review) throws ReviewComponentException {
@@ -40,10 +52,17 @@ class FileSystemReviewDao implements ReviewDao {
         }
     }
 
-    public String getReview(String reviewId) throws ReviewComponentException {
+    public Review getReview(String reviewId) throws ReviewComponentException {
         try {
             File file = new File(getReviewDirectory(reviewId), REVIEW_JSON_FILENAME);
-            return new String(Files.readAllBytes(file.toPath()));
+            String json = new String(Files.readAllBytes(file.toPath()));
+            Review review = Review.fromJson(json);
+
+            if (review.getDateCreated() == null) {
+                review.setDateCreated(new Date(file.lastModified()));
+            }
+
+            return review;
         } catch (Throwable t) {
             return null;
         }
@@ -109,8 +128,12 @@ class FileSystemReviewDao implements ReviewDao {
         return null;
     }
 
+    private File getReviewsDirectory() {
+        return new File(Configuration.getInstance().getDataDirectory(), REVIEWS_DIRECTORY_NAME);
+    }
+
     private File getReviewDirectory(String reviewId) {
-        File directory = new File(new File(Configuration.getInstance().getDataDirectory(), REVIEWS_DIRECTORY_NAME), reviewId);
+        File directory = new File(getReviewsDirectory(), reviewId);
         directory.mkdirs();
 
         return directory;

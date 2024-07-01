@@ -159,7 +159,7 @@ public abstract class AbstractController {
 
     protected boolean userCanAccessWorkspace(WorkspaceMetaData workspaceMetaData) {
         User user = getUser();
-        return workspaceMetaData.hasNoUsersConfigured() || workspaceMetaData.isWriteUser(user) || workspaceMetaData.isReadUser(user);
+        return workspaceMetaData.isOpen() || workspaceMetaData.isWriteUser(user) || workspaceMetaData.isReadUser(user);
     }
 
 }

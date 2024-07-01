@@ -28,6 +28,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.List;
 
 @Controller
 public class ReviewController extends AbstractController {
@@ -91,6 +95,28 @@ public class ReviewController extends AbstractController {
         }
 
         return "redirect:/user/review/create";
+    }
+
+    @RequestMapping(value = "/review", method = RequestMethod.GET)
+    public String showReviews(ModelMap model) throws Exception {
+        if (!Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_REVIEWS)) {
+            return showFeatureNotAvailablePage(model);
+        }
+
+        Collection<Review> reviews = reviewComponent.getReviews();
+        List<Review> filteredReviews = new ArrayList<>();
+        for (Review review : reviews) {
+            if (userCanAccessReview(review)) {
+                filteredReviews.add(review);
+            }
+        }
+
+        filteredReviews.sort((r1, r2) -> r2.getDateCreated().compareTo(r1.getDateCreated()));
+
+        model.addAttribute("reviews", filteredReviews);
+        addCommonAttributes(model, "Reviews", true);
+
+        return "reviews";
     }
 
     @RequestMapping(value = "/review/{reviewId}", method = RequestMethod.GET)

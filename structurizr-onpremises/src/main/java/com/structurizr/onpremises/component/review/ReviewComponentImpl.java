@@ -7,16 +7,14 @@ import com.structurizr.onpremises.domain.review.ReviewType;
 import com.structurizr.onpremises.domain.review.Session;
 import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.domain.InputStreamAndContentLength;
+import com.structurizr.onpremises.util.DateUtils;
 import com.structurizr.onpremises.util.RandomGuidGenerator;
 import com.structurizr.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 class ReviewComponentImpl implements ReviewComponent {
 
@@ -81,6 +79,7 @@ class ReviewComponentImpl implements ReviewComponent {
             Review review = new Review(reviewId, user.getUsername());
             review.setType(type);
             review.setWorkspaceId(workspaceId);
+            review.setDateCreated(DateUtils.getNow());
 
             int count = 1;
             for (FileTypeAndContent diagram : diagrams) {
@@ -100,19 +99,41 @@ class ReviewComponentImpl implements ReviewComponent {
     }
 
     @Override
-    public Review getReview(String reviewId) {
+    public Collection<Review> getReviews() {
         try {
-            String json = reviewDao.getReview(reviewId);
-            Review review = Review.fromJson(json);
+            List<Review> reviews = new ArrayList<>();
 
-            Collection<Session> reviewSessions = reviewDao.getReviewSessions(reviewId);
-            for (Session reviewSession : reviewSessions) {
-                for (Comment comment : reviewSession.getComments()) {
-                    if (!StringUtils.isNullOrEmpty(reviewSession.getAuthor())) {
-                        comment.setAuthor(reviewSession.getAuthor());
+            Set<String> reviewIds = reviewDao.getReviewIds();
+            for (String reviewId : reviewIds) {
+                reviews.add(getReview(reviewId, false));
+            }
+
+            return reviews;
+        } catch (Exception e) {
+            log.error("There was a problem getting the reviews", e);
+            throw new ReviewException("There was a problem getting the reviews");
+        }
+    }
+
+    @Override
+    public Review getReview(String reviewId) {
+        return getReview(reviewId, true);
+    }
+
+    private Review getReview(String reviewId, boolean includeComments) {
+        try {
+            Review review = reviewDao.getReview(reviewId);
+
+            if (includeComments) {
+                Collection<Session> reviewSessions = reviewDao.getReviewSessions(reviewId);
+                for (Session reviewSession : reviewSessions) {
+                    for (Comment comment : reviewSession.getComments()) {
+                        if (!StringUtils.isNullOrEmpty(reviewSession.getAuthor())) {
+                            comment.setAuthor(reviewSession.getAuthor());
+                        }
+
+                        review.addComment(comment);
                     }
-
-                    review.addComment(comment);
                 }
             }
 
@@ -146,8 +167,7 @@ class ReviewComponentImpl implements ReviewComponent {
     @Override
     public void lockReview(String reviewId) {
         try {
-            String json = reviewDao.getReview(reviewId);
-            Review review = Review.fromJson(json);
+            Review review = reviewDao.getReview(reviewId);
             review.setLocked(true);
 
             reviewDao.putReview(review);
@@ -160,8 +180,7 @@ class ReviewComponentImpl implements ReviewComponent {
     @Override
     public void unlockReview(String reviewId) {
         try {
-            String json = reviewDao.getReview(reviewId);
-            Review review = Review.fromJson(json);
+            Review review = reviewDao.getReview(reviewId);
             review.setLocked(false);
 
             reviewDao.putReview(review);
