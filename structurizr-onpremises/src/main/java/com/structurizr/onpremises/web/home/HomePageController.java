@@ -63,7 +63,6 @@ public class HomePageController extends AbstractController {
         model.addAttribute("sort", sort);
 
         model.addAttribute("userCanCreateWorkspace", Configuration.getInstance().getAdminUsersAndRoles().isEmpty() || getUser().isAdmin());
-        model.addAttribute("userCanCreateDiagramReview", Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_REVIEWS));
 
         addCommonAttributes(model, "", true);
 

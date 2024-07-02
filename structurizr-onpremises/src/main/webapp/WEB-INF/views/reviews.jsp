@@ -35,8 +35,6 @@
 
         <br />
 
-        <c:choose>
-        <c:when test="${not empty reviews}">
         <div class="centered">
         <c:forEach var="review" items="${reviews}">
             <div class="review">
@@ -62,14 +60,23 @@
                 </p>
             </div>
         </c:forEach>
+
+        <c:if test="${authenticated && empty workspaceId}">
+            <div class="review">
+                <div style="margin-top: 5px">
+                    New review
+                </div>
+
+                <br /><br /><br />
+
+                <div class="">
+                    <div class="reviewThumbnail" style="padding-top: 30px">
+                        <a href="/user/review/create"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/plus.svg" class="icon-xxl" /></a>
+                    </div>
+                </div>
+            </div>
+        </c:if>
         </div>
 
-        </c:when>
-            <c:otherwise>
-        <p class="centered smaller" style="margin-top: 40px">
-            No reviews have been created yet.
-        </p>
-            </c:otherwise>
-        </c:choose>
     </div>
 </div>

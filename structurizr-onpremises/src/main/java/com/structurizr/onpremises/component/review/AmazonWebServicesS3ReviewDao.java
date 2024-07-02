@@ -5,21 +5,26 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
+import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 import com.structurizr.onpremises.domain.review.Review;
 import com.structurizr.onpremises.domain.review.Session;
-import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 import com.structurizr.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StreamUtils;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.regex.Pattern;
 
 class AmazonWebServicesS3ReviewDao implements ReviewDao {
 
     private static final Log log = LogFactory.getLog(AmazonWebServicesS3ReviewDao.class);
+
+    private static final Pattern REVIEW_ID_PATTERN = Pattern.compile("[0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12}");
 
     static final String ACCESS_KEY_ID_PROPERTY = "aws-s3.accessKeyId";
     static final String SECRET_ACCESS_KEY_PROPERTY = "aws-s3.secretAccessKey";
@@ -81,8 +86,31 @@ class AmazonWebServicesS3ReviewDao implements ReviewDao {
 
     @Override
     public Set<String> getReviewIds() throws ReviewComponentException {
-        // todo
-        return null;
+        Set<String> reviewIds = new HashSet<>();
+
+        try {
+            String folderKey = getBaseObjectName();
+
+            ObjectListing listing = amazonS3.listObjects(bucketName, folderKey);
+            List<S3ObjectSummary> files = listing.getObjectSummaries();
+
+            while (listing.isTruncated()) {
+                listing = amazonS3.listNextBatchOfObjects(listing);
+                files.addAll(listing.getObjectSummaries());
+            }
+
+            for (S3ObjectSummary file : files) {
+                String name = file.getKey().substring(folderKey.length() + 1);
+                name = name.substring(0, name.indexOf("/"));
+                if (REVIEW_ID_PATTERN.matcher(name).matches()) {
+                    reviewIds.add(name);
+                }
+            }
+        } catch (Exception e) {
+            log.info(e.getMessage());
+        }
+
+        return reviewIds;
     }
 
     @Override
@@ -115,10 +143,17 @@ class AmazonWebServicesS3ReviewDao implements ReviewDao {
             String objectKey = getBaseObjectName(reviewId) + REVIEW_JSON_FILENAME;
             GetObjectRequest getRequest = new GetObjectRequest(bucketName, objectKey);
 
-            inputStream = amazonS3.getObject(getRequest).getObjectContent();
+            S3Object s3Object = amazonS3.getObject(getRequest);
+            inputStream = s3Object.getObjectContent();
 
             String json = StreamUtils.copyToString(inputStream, StandardCharsets.UTF_8);
-            return Review.fromJson(json);
+            Review review = Review.fromJson(json);
+
+            if (review.getDateCreated() == null) {
+                review.setDateCreated(s3Object.getObjectMetadata().getLastModified());
+            }
+
+            return review;
         } catch (Throwable t) {
             return null;
         } finally {

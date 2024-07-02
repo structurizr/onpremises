@@ -12,9 +12,7 @@
             <a href="https://structurizr.com/help/support" target="_blank">Help and Support</a>
 
             <c:if test="${authenticated}">
-            |
-            <a href="/review">Reviews</a>
-            |
+            <br />
             <a href="/user/profile">User profile</a>
             |
             <a href="/signout">Sign out</a>

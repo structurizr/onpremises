@@ -85,22 +85,6 @@
             </div>
         </c:if>
 
-        <c:if test="${userCanCreateDiagramReview}">
-            <div class="workspaceSummary centered">
-                <div style="margin-top: 5px">
-                    New diagram review
-                </div>
-
-                <br /><br /><br />
-
-                <div class="">
-                    <div class="workspaceThumbnail" style="padding-top: 30px">
-                        <a href="/user/review/create"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/chat.svg" class="icon-xxl" /></a>
-                    </div>
-                </div>
-            </div>
-        </c:if>
-
         <c:if test="${not empty pageNumber}">
         <div style="margin-top: 20px">
             <%@ include file="dashboard-workspaces-page-control.jspf" %>

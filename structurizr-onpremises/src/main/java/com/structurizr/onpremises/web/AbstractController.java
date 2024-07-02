@@ -5,6 +5,7 @@ import com.structurizr.onpremises.component.workspace.WorkspaceComponent;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.util.Features;
 import com.structurizr.onpremises.util.RandomGuidGenerator;
 import com.structurizr.onpremises.util.Version;
 import com.structurizr.onpremises.web.security.SecurityUtils;
@@ -114,6 +115,8 @@ public abstract class AbstractController {
         } else {
             model.addAttribute("pageTitle", "Structurizr - " + pageTitle);
         }
+
+        model.addAttribute("diagramReviewFeatureEnabled", Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_REVIEWS));
     }
 
     protected String showError(String view, ModelMap model) {

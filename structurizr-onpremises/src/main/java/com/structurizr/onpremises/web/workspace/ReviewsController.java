@@ -3,6 +3,8 @@ package com.structurizr.onpremises.web.workspace;
 import com.structurizr.onpremises.component.review.ReviewComponent;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.domain.review.Review;
+import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.util.Features;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -35,6 +37,10 @@ public class ReviewsController extends AbstractWorkspaceController {
             ModelMap model
     ) {
 
+        if (!Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_REVIEWS)) {
+            return showFeatureNotAvailablePage(model);
+        }
+
         model.addAttribute("reviews", getReviews(workspaceId));
 
         return showPublicView(VIEW, workspaceId, version, model, true);
@@ -47,6 +53,10 @@ public class ReviewsController extends AbstractWorkspaceController {
             @PathVariable("token") String token,
             ModelMap model
     ) {
+
+        if (!Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_REVIEWS)) {
+            return showFeatureNotAvailablePage(model);
+        }
 
         model.addAttribute("reviews", getReviews(workspaceId));
 
@@ -61,6 +71,11 @@ public class ReviewsController extends AbstractWorkspaceController {
             @RequestParam(required = false) String view,
             ModelMap model
     ) {
+
+        if (!Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_REVIEWS)) {
+            return showFeatureNotAvailablePage(model);
+        }
+
         WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(workspaceId);
         if (workspaceMetaData == null) {
             return show404Page(model);

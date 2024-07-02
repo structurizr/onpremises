@@ -97,7 +97,7 @@ public class ReviewController extends AbstractController {
         return "redirect:/user/review/create";
     }
 
-    @RequestMapping(value = "/review", method = RequestMethod.GET)
+    @RequestMapping(value = "/reviews", method = RequestMethod.GET)
     public String showReviews(ModelMap model) throws Exception {
         if (!Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_REVIEWS)) {
             return showFeatureNotAvailablePage(model);
