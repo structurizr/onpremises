@@ -256,7 +256,16 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
 
         try {
             String folderKey = getBaseObjectName();
-            for (S3ObjectSummary file : amazonS3.listObjects(bucketName, folderKey).getObjectSummaries()) {
+
+            ObjectListing listing = amazonS3.listObjects(bucketName, folderKey);
+            List<S3ObjectSummary> files = listing.getObjectSummaries();
+
+            while (listing.isTruncated()) {
+                listing = amazonS3.listNextBatchOfObjects(listing);
+                files.addAll(listing.getObjectSummaries());
+            }
+
+            for (S3ObjectSummary file : files) {
                 String name = file.getKey().substring(folderKey.length());
                 if (name.matches("/\\d*/" + WORKSPACE_PROPERTIES_FILENAME)) {
                     long id = Long.parseLong(name.substring(1, name.lastIndexOf('/')));
