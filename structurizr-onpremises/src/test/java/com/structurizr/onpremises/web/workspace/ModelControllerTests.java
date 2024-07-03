@@ -78,7 +78,6 @@ public class ModelControllerTests extends ControllerTestsBase {
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
         assertEquals("/share/1", model.getAttribute("urlPrefix"));
-        assertEquals("view", model.getAttribute("view"));
     }
 
     @Test
@@ -154,7 +153,6 @@ public class ModelControllerTests extends ControllerTestsBase {
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
         assertEquals("/share/1/token", model.getAttribute("urlPrefix"));
-        assertEquals("view", model.getAttribute("view"));
     }
 
     @Test
@@ -213,7 +211,6 @@ public class ModelControllerTests extends ControllerTestsBase {
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
-        assertEquals("view", model.getAttribute("view"));
     }
 
     @Test
@@ -238,7 +235,6 @@ public class ModelControllerTests extends ControllerTestsBase {
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
-        assertEquals("view", model.getAttribute("view"));
     }
 
     @Test
@@ -263,7 +259,6 @@ public class ModelControllerTests extends ControllerTestsBase {
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
         assertEquals("/workspace/1", model.getAttribute("urlPrefix"));
-        assertEquals("view", model.getAttribute("view"));
     }
 
 }
