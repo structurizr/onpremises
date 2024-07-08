@@ -18,32 +18,31 @@ public class GraphController extends AbstractWorkspaceController {
     @RequestMapping(value = "/share/{workspaceId}/explore/graph", method = RequestMethod.GET)
     public String showPublicGraph(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             @RequestParam(required = false) String view,
             ModelMap model
     ) {
         model.addAttribute("view", view);
 
-        return showPublicView(VIEW, workspaceId, version, model, true);
+        return showPublicView(VIEW, workspaceId, model, true);
     }
 
     @RequestMapping(value = "/share/{workspaceId}/{token}/explore/graph", method = RequestMethod.GET)
     public String showSharedGraph(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             @RequestParam(required = false) String view,
             @PathVariable("token") String token,
             ModelMap model
     ) {
         model.addAttribute("view", view);
 
-        return showSharedView(VIEW, workspaceId, token, version, model, true);
+        return showSharedView(VIEW, workspaceId, token, model, true);
     }
 
     @RequestMapping(value = "/workspace/{workspaceId}/explore/graph", method = RequestMethod.GET)
     @PreAuthorize("isAuthenticated()")
     public String showAuthenticatedGraph(
             @PathVariable("workspaceId") long workspaceId,
+            @RequestParam(required = false) String branch,
             @RequestParam(required = false) String version,
             @RequestParam(required = false) String view,
             ModelMap model
@@ -55,7 +54,7 @@ public class GraphController extends AbstractWorkspaceController {
 
         model.addAttribute("view", view);
 
-        return showAuthenticatedView(VIEW, workspaceMetaData, version, model, true, false);
+        return showAuthenticatedView(VIEW, workspaceMetaData, branch, version, model, true, false);
     }
 
 }

@@ -19,7 +19,6 @@ public class JsonController extends AbstractWorkspaceController {
     @RequestMapping(value = "/share/{workspaceId}/json", method = RequestMethod.GET)
     public String showPublicJson(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             ModelMap model
     ) {
         WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(workspaceId);
@@ -28,20 +27,19 @@ public class JsonController extends AbstractWorkspaceController {
         }
 
         try {
-            String workspaceAsJson = workspaceComponent.getWorkspace(workspaceId, version);
+            String workspaceAsJson = workspaceComponent.getWorkspace(workspaceId, null, null);
             model.addAttribute("json", workspaceAsJson);
         } catch (Exception e) {
             log.error(e);
             throw new RuntimeException(e);
         }
 
-        return showPublicView(VIEW, workspaceId, version, model, false);
+        return showPublicView(VIEW, workspaceId, model, false);
     }
 
     @RequestMapping(value = "/share/{workspaceId}/{token}/json", method = RequestMethod.GET)
     public String showSharedJson(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             @PathVariable("token") String token,
             ModelMap model
     ) {
@@ -51,14 +49,14 @@ public class JsonController extends AbstractWorkspaceController {
         }
 
         try {
-            String workspaceAsJson = workspaceComponent.getWorkspace(workspaceId, version);
+            String workspaceAsJson = workspaceComponent.getWorkspace(workspaceId, null, null);
             model.addAttribute("json", workspaceAsJson);
         } catch (Exception e) {
             log.error(e);
             throw new RuntimeException(e);
         }
 
-        return showSharedView(VIEW, workspaceId, token, version, model, false);
+        return showSharedView(VIEW, workspaceId, token, model, false);
     }
 
 }

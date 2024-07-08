@@ -34,7 +34,7 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showPublicWorkspaceSummary(1, "version", model);
+        String view = controller.showPublicWorkspaceSummary(1, model);
         assertEquals("404", view);
     }
 
@@ -49,12 +49,12 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
-        String view = controller.showPublicWorkspaceSummary(1, "version", model);
+        String view = controller.showPublicWorkspaceSummary(1, model);
         assertEquals("404", view);
     }
 
@@ -68,12 +68,12 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
-        String view = controller.showPublicWorkspaceSummary(1, "version", model);
+        String view = controller.showPublicWorkspaceSummary(1, model);
         assertEquals("workspace-summary", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
@@ -93,12 +93,12 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
-        String view = controller.showPublicWorkspaceSummary(1, "version", model);
+        String view = controller.showPublicWorkspaceSummary(1, model);
         assertEquals("workspace-summary", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
@@ -115,7 +115,7 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showSharedWorkspaceSummary(1, "version", "token", model);
+        String view = controller.showSharedWorkspaceSummary(1, "token", model);
         assertEquals("404", view);
     }
 
@@ -129,12 +129,12 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
-        String view = controller.showSharedWorkspaceSummary(1, "version", "token", model);
+        String view = controller.showSharedWorkspaceSummary(1, "token", model);
         assertEquals("404", view);
     }
 
@@ -149,12 +149,12 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
-        String view = controller.showSharedWorkspaceSummary(1, "version", "token", model);
+        String view = controller.showSharedWorkspaceSummary(1, "token", model);
         assertEquals("404", view);
     }
 
@@ -169,12 +169,12 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
-        String view = controller.showSharedWorkspaceSummary(1, "version", "token", model);
+        String view = controller.showSharedWorkspaceSummary(1, "token", model);
         assertEquals("workspace-summary", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
@@ -192,7 +192,7 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedWorkspaceSummary(1, "version", model);
+        String view = controller.showAuthenticatedWorkspaceSummary(1, "branch", "version", model);
         assertEquals("404", view);
     }
 
@@ -207,13 +207,13 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedWorkspaceSummary(1, "version", model);
+        String view = controller.showAuthenticatedWorkspaceSummary(1, "branch", "version", model);
         assertEquals("404", view);
     }
 
@@ -227,13 +227,13 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedWorkspaceSummary(1, "version", model);
+        String view = controller.showAuthenticatedWorkspaceSummary(1, "branch", "version", model);
         assertEquals("workspace-summary", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertTrue(workspaceMetaData.isEditable());
@@ -253,13 +253,13 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedWorkspaceSummary(1, "version", model);
+        String view = controller.showAuthenticatedWorkspaceSummary(1, "branch", "version", model);
         assertEquals("workspace-summary", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertTrue(workspaceMetaData.isEditable());
@@ -279,13 +279,13 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedWorkspaceSummary(1, "version", model);
+        String view = controller.showAuthenticatedWorkspaceSummary(1, "branch", "version", model);
         assertEquals("workspace-summary", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));

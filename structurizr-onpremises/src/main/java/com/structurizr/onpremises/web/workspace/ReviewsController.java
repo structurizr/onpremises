@@ -33,7 +33,6 @@ public class ReviewsController extends AbstractWorkspaceController {
     @RequestMapping(value = "/share/{workspaceId}/reviews", method = RequestMethod.GET)
     public String showPublicReviews(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             ModelMap model
     ) {
 
@@ -43,13 +42,12 @@ public class ReviewsController extends AbstractWorkspaceController {
 
         model.addAttribute("reviews", getReviews(workspaceId));
 
-        return showPublicView(VIEW, workspaceId, version, model, true);
+        return showPublicView(VIEW, workspaceId, model, true);
     }
 
     @RequestMapping(value = "/share/{workspaceId}/{token}/reviews", method = RequestMethod.GET)
     public String showSharedReviews(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             @PathVariable("token") String token,
             ModelMap model
     ) {
@@ -60,15 +58,13 @@ public class ReviewsController extends AbstractWorkspaceController {
 
         model.addAttribute("reviews", getReviews(workspaceId));
 
-        return showSharedView(VIEW, workspaceId, token, version, model, true);
+        return showSharedView(VIEW, workspaceId, token, model, true);
     }
 
     @RequestMapping(value = "/workspace/{workspaceId}/reviews", method = RequestMethod.GET)
     @PreAuthorize("isAuthenticated()")
     public String showAuthenticatedModel(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
-            @RequestParam(required = false) String view,
             ModelMap model
     ) {
 
@@ -83,7 +79,7 @@ public class ReviewsController extends AbstractWorkspaceController {
 
         model.addAttribute("reviews", getReviews(workspaceId));
 
-        return showAuthenticatedView(VIEW, workspaceMetaData, version, model, true, false);
+        return showAuthenticatedView(VIEW, workspaceMetaData, null, null, model, true, false);
     }
 
     private Collection<Review> getReviews(long workspaceId) {

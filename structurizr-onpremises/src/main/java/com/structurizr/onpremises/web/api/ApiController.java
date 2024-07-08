@@ -43,11 +43,21 @@ public class ApiController extends AbstractController {
     public String getWorkspace(@PathVariable("workspaceId") long workspaceId,
                                @RequestParam(required = false) String version,
                                HttpServletRequest request, HttpServletResponse response) {
+
+        return getWorkspace(workspaceId, null, version, request, response);
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/api/workspace/{workspaceId}/branch/{branch}", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+    public String getWorkspace(@PathVariable("workspaceId") long workspaceId,
+                               @PathVariable("branch") String branch,
+                               @RequestParam(required = false) String version,
+                               HttpServletRequest request, HttpServletResponse response) {
         try {
             if (workspaceId > 0) {
-                authoriseRequest(workspaceId, "GET", getPath(request, workspaceId), null, request, response);
+                authoriseRequest(workspaceId, "GET", getPath(request, workspaceId, branch), null, request, response);
 
-                return workspaceComponent.getWorkspace(workspaceId, version);
+                return workspaceComponent.getWorkspace(workspaceId, branch, version);
             } else {
                 throw new ApiException("Workspace ID must be greater than 1");
             }
@@ -59,12 +69,26 @@ public class ApiController extends AbstractController {
 
     @CrossOrigin
     @RequestMapping(value = "/api/workspace/{workspaceId}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json; charset=UTF-8")
-    public @ResponseBody ApiResponse putWorkspace(@PathVariable("workspaceId")long workspaceId, @RequestBody String json, HttpServletRequest request, HttpServletResponse response) {
+    public @ResponseBody ApiResponse putWorkspace(@PathVariable("workspaceId")long workspaceId,
+                                                  @RequestBody String json,
+                                                  HttpServletRequest request,
+                                                  HttpServletResponse response) {
+
+        return putWorkspace(workspaceId, null, json, request, response);
+    }
+
+    @CrossOrigin
+    @RequestMapping(value = "/api/workspace/{workspaceId}/branch/{branch}", method = RequestMethod.PUT, consumes = "application/json", produces = "application/json; charset=UTF-8")
+    public @ResponseBody ApiResponse putWorkspace(@PathVariable("workspaceId")long workspaceId,
+                                                  @PathVariable("branch") String branch,
+                                                  @RequestBody String json,
+                                                  HttpServletRequest request,
+                                                  HttpServletResponse response) {
         try {
             if (workspaceId > 0) {
-                authoriseRequest(workspaceId, "PUT", getPath(request, workspaceId), json, request, response);
+                authoriseRequest(workspaceId, "PUT", getPath(request, workspaceId, branch), json, request, response);
 
-                workspaceComponent.putWorkspace(workspaceId, json);
+                workspaceComponent.putWorkspace(workspaceId, branch, json);
 
                 if (json.contains("encryptionStrategy") && json.contains("ciphertext")) {
                     // remove client-side encrypted workspaces from the search index
@@ -109,7 +133,7 @@ public class ApiController extends AbstractController {
                                                    HttpServletRequest request, HttpServletResponse response) {
         try {
             if (workspaceId > 0) {
-                authoriseRequest(workspaceId, "PUT", getPath(request, workspaceId) + "/lock?user=" + user + "&agent=" + agent, null, request, response);
+                authoriseRequest(workspaceId, "PUT", getPath(request, workspaceId, null) + "/lock?user=" + user + "&agent=" + agent, null, request, response);
 
                 if (workspaceComponent.lockWorkspace(workspaceId, user, agent)) {
                     return new ApiResponse("OK");
@@ -133,7 +157,7 @@ public class ApiController extends AbstractController {
                                                      HttpServletRequest request, HttpServletResponse response) {
         try {
             if (workspaceId > 0) {
-                authoriseRequest(workspaceId, "DELETE", getPath(request, workspaceId) + "/lock?user=" + user + "&agent=" + agent, null, request, response);
+                authoriseRequest(workspaceId, "DELETE", getPath(request, workspaceId, null) + "/lock?user=" + user + "&agent=" + agent, null, request, response);
 
                 if (workspaceComponent.unlockWorkspace(workspaceId)) {
                     return new ApiResponse("OK");
@@ -149,13 +173,17 @@ public class ApiController extends AbstractController {
         }
     }
 
-    private String getPath(HttpServletRequest request, long workspaceId) {
+    private String getPath(HttpServletRequest request, long workspaceId, String branch) {
         String contextPath = request.getContextPath();
         if (!contextPath.endsWith("/")) {
             contextPath = contextPath + "/";
         }
 
-        return contextPath + "api/workspace/" + workspaceId;
+        if (StringUtils.isNullOrEmpty(branch)) {
+            return contextPath + "api/workspace/" + workspaceId;
+        } else {
+            return contextPath + "api/workspace/" + workspaceId + "/branch/" + branch;
+        }
     }
 
     private void authoriseRequest(long workspaceId, String httpMethod, String path, String content, HttpServletRequest request, HttpServletResponse response) throws WorkspaceComponentException {

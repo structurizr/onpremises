@@ -44,7 +44,7 @@ public class UsersController extends AbstractWorkspaceController {
         model.addAttribute("readUsers", toNewlineSeparatedString(workspaceMetaData.getReadUsers()));
         model.addAttribute("writeUsers", toNewlineSeparatedString(workspaceMetaData.getWriteUsers()));
 
-        return showAuthenticatedView(VIEW, workspaceMetaData, null, model, true, editable);
+        return showAuthenticatedView(VIEW, workspaceMetaData, null, null, model, true, editable);
     }
 
     @RequestMapping(value = "/workspace/{workspaceId}/users", method = RequestMethod.POST)

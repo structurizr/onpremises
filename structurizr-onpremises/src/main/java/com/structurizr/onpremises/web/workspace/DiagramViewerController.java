@@ -18,7 +18,6 @@ public class DiagramViewerController extends AbstractWorkspaceController {
     @RequestMapping(value = "/share/{workspaceId}/diagrams", method = RequestMethod.GET)
     public String showPublicDiagramViewer(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             @RequestParam(required = false) String perspective,
             ModelMap model
     ) {
@@ -27,13 +26,12 @@ public class DiagramViewerController extends AbstractWorkspaceController {
         model.addAttribute("perspective", HtmlUtils.filterHtml(perspective));
         model.addAttribute("includeEditButton", false);
 
-        return showPublicView(VIEW, workspaceId, version, model, false);
+        return showPublicView(VIEW, workspaceId, model, false);
     }
 
     @RequestMapping(value = "/share/{workspaceId}/{token}/diagrams", method = RequestMethod.GET)
     public String showSharedDiagramViewer(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             @RequestParam(required = false) String perspective,
             @PathVariable("token") String token,
             ModelMap model
@@ -43,13 +41,14 @@ public class DiagramViewerController extends AbstractWorkspaceController {
         model.addAttribute("perspective", HtmlUtils.filterHtml(perspective));
         model.addAttribute("includeEditButton", false);
 
-        return showSharedView(VIEW, workspaceId, token, version, model, false);
+        return showSharedView(VIEW, workspaceId, token, model, false);
     }
 
     @RequestMapping(value = "/workspace/{workspaceId}/diagrams", method = RequestMethod.GET)
     @PreAuthorize("isAuthenticated()")
     public String showAuthenticatedDiagramViewer(
             @PathVariable("workspaceId") long workspaceId,
+            @RequestParam(required = false) String branch,
             @RequestParam(required = false) String version,
             @RequestParam(required = false) String perspective,
             ModelMap model
@@ -67,7 +66,7 @@ public class DiagramViewerController extends AbstractWorkspaceController {
         boolean editable = workspaceMetaData.hasNoUsersConfigured() || workspaceMetaData.isWriteUser(getUser());
         model.addAttribute("includeEditButton", editable);
 
-        return showAuthenticatedView(VIEW, workspaceMetaData, version, model, false, false);
+        return showAuthenticatedView(VIEW, workspaceMetaData, branch, version, model, false, false);
     }
 
 }

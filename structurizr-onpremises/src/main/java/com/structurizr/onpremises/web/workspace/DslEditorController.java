@@ -65,7 +65,7 @@ public class DslEditorController extends AbstractWorkspaceEditorController {
             }
         }
 
-        return lockWorkspaceAndShowAuthenticatedView(VIEW, workspaceMetaData, version, model, false);
+        return lockWorkspaceAndShowAuthenticatedView(VIEW, workspaceMetaData, null, version, model, false);
     }
 
     @RequestMapping(value = "/workspace/{workspaceId}/dsl", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")

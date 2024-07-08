@@ -19,6 +19,7 @@ public class DiagramEditorController extends AbstractWorkspaceEditorController {
     @PreAuthorize("isAuthenticated()")
     public String showAuthenticatedDiagramEditor(
             @PathVariable("workspaceId") long workspaceId,
+            @RequestParam(required = false) String branch,
             @RequestParam(required = false) String version,
             ModelMap model
     ) {
@@ -40,7 +41,7 @@ public class DiagramEditorController extends AbstractWorkspaceEditorController {
             }
         }
 
-        return lockWorkspaceAndShowAuthenticatedView(VIEW, workspaceMetaData, version, model, false);
+        return lockWorkspaceAndShowAuthenticatedView(VIEW, workspaceMetaData, branch, version, model, false);
     }
 
 }

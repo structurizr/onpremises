@@ -233,7 +233,7 @@ public class WorkspaceComponentImplTests {
         };
 
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
-        String json = workspaceComponent.getWorkspace(1, "");
+        String json = workspaceComponent.getWorkspace(1, "", "");
         assertEquals("json", json);
     }
 
@@ -263,7 +263,7 @@ public class WorkspaceComponentImplTests {
         };
 
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "password");
-        String json = workspaceComponent.getWorkspace(1, "");
+        String json = workspaceComponent.getWorkspace(1, "", "");
         assertEquals("""
                 {"configuration":{},"description":"Description","documentation":{},"id":1,"model":{},"name":"Name","views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""", json);
     }
@@ -289,7 +289,7 @@ public class WorkspaceComponentImplTests {
             };
 
             WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
-            assertEquals(json, workspaceComponent.getWorkspace(1, ""));
+            assertEquals(json, workspaceComponent.getWorkspace(1, "", ""));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -318,13 +318,13 @@ public class WorkspaceComponentImplTests {
                 {"configuration":{},"description":"Description","documentation":{},"id":1,"lastModifiedDate":"%s","model":{},"name":"Name","revision":%s,"views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""";
 
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
-        workspaceComponent.putWorkspace(1, json);
+        workspaceComponent.putWorkspace(1, "", json);
         assertEquals(String.format(expectedJson, DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()), "1"), jsonBuffer.toString());
 
         // and again, to increment the revision
         json = jsonBuffer.toString();
         jsonBuffer.setLength(0);
-        workspaceComponent.putWorkspace(1, json);
+        workspaceComponent.putWorkspace(1, "", json);
         assertEquals(String.format(expectedJson, DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()), "2"), jsonBuffer.toString());
     }
 
@@ -348,7 +348,7 @@ public class WorkspaceComponentImplTests {
         };
 
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "password");
-        workspaceComponent.putWorkspace(1, json);
+        workspaceComponent.putWorkspace(1, "", json);
         String pattern = """
                 "id":1,"lastModifiedDate":"%s","name":"Name","revision":%s}""";
         assertTrue(jsonBuffer.toString().startsWith("{\"ciphertext\":\""));
@@ -357,7 +357,7 @@ public class WorkspaceComponentImplTests {
         // and again, to increment the revision
         json = jsonBuffer.toString();
         jsonBuffer.setLength(0);
-        workspaceComponent.putWorkspace(1, json);
+        workspaceComponent.putWorkspace(1, "", json);
         assertTrue(jsonBuffer.toString().startsWith("{\"ciphertext\":\""));
         assertTrue(jsonBuffer.toString().endsWith(String.format(pattern, DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()), "2")));
     }
@@ -387,7 +387,7 @@ public class WorkspaceComponentImplTests {
         };
 
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
-        workspaceComponent.putWorkspace(1, json);
+        workspaceComponent.putWorkspace(1, "", json);
         String pattern = """
                 "id":1,"lastModifiedDate":"%s","name":"Name","revision":%s}""";
         assertTrue(jsonBuffer.toString().startsWith("{\"ciphertext\":\""));
@@ -396,7 +396,7 @@ public class WorkspaceComponentImplTests {
         // and again, to increment the revision
         json = jsonBuffer.toString();
         jsonBuffer.setLength(0);
-        workspaceComponent.putWorkspace(1, json);
+        workspaceComponent.putWorkspace(1, "", json);
         assertTrue(jsonBuffer.toString().startsWith("{\"ciphertext\":\""));
         assertTrue(jsonBuffer.toString().endsWith(String.format(pattern, DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()), "2")));
     }
@@ -419,7 +419,7 @@ public class WorkspaceComponentImplTests {
         };
 
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
-        workspaceComponent.putWorkspace(1, json);
+        workspaceComponent.putWorkspace(1, "", json);
 
         assertTrue(wmd.isPublicWorkspace());
     }
@@ -441,7 +441,7 @@ public class WorkspaceComponentImplTests {
         };
 
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
-        workspaceComponent.putWorkspace(1, json);
+        workspaceComponent.putWorkspace(1, "", json);
 
         assertFalse(wmd.isPublicWorkspace());
     }
@@ -467,7 +467,7 @@ public class WorkspaceComponentImplTests {
         };
 
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
-        workspaceComponent.putWorkspace(1, json);
+        workspaceComponent.putWorkspace(1, "", json);
 
         assertEquals(2, writeUsers.size());
         assertTrue(writeUsers.contains("user1@example.com"));
@@ -496,7 +496,7 @@ public class WorkspaceComponentImplTests {
         };
 
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
-        workspaceComponent.putWorkspace(1, json);
+        workspaceComponent.putWorkspace(1, "", json);
 
         assertEquals(1, writeUsers.size());
         assertTrue(writeUsers.contains("user1@example.com"));
@@ -506,7 +506,7 @@ public class WorkspaceComponentImplTests {
         // and update the workspace again, this time without users
         workspace = new Workspace("Name", "Description");
         json = WorkspaceUtils.toJson(workspace, false);
-        workspaceComponent.putWorkspace(1, json);
+        workspaceComponent.putWorkspace(1, "", json);
 
         // check that existing users have not disappeared
         assertEquals(1, writeUsers.size());
@@ -537,7 +537,7 @@ public class WorkspaceComponentImplTests {
         });
 
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
-        workspaceComponent.putWorkspace(1, json);
+        workspaceComponent.putWorkspace(1, "", json);
         assertEquals("beforeSave:1:" + json, buf.toString());
     }
 
@@ -719,17 +719,17 @@ public class WorkspaceComponentImplTests {
         };
 
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
-        workspaceComponent.putWorkspace(1, WorkspaceUtils.toJson(workspace, false));
+        workspaceComponent.putWorkspace(1, "", WorkspaceUtils.toJson(workspace, false));
         assertEquals(2, wmd.getRevision());
 
         // and again, to increment the revision
         workspace.setRevision(2L);
-        workspaceComponent.putWorkspace(1, WorkspaceUtils.toJson(workspace, false));
+        workspaceComponent.putWorkspace(1, "", WorkspaceUtils.toJson(workspace, false));
         assertEquals(3, wmd.getRevision());
 
         // and again, to increment the revision
         workspace.setRevision(3L);
-        workspaceComponent.putWorkspace(1, WorkspaceUtils.toJson(workspace, false));
+        workspaceComponent.putWorkspace(1, "", WorkspaceUtils.toJson(workspace, false));
         assertEquals(4, wmd.getRevision());
     }
 
@@ -754,18 +754,18 @@ public class WorkspaceComponentImplTests {
         };
 
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
-        workspaceComponent.putWorkspace(1, WorkspaceUtils.toJson(workspace, false));
+        workspaceComponent.putWorkspace(1, "", WorkspaceUtils.toJson(workspace, false));
         assertEquals(2, workspaceMetaData.getRevision());
 
         // and again, to increment the revision
         workspace.setRevision(2L);
-        workspaceComponent.putWorkspace(1, WorkspaceUtils.toJson(workspace, false));
+        workspaceComponent.putWorkspace(1, "", WorkspaceUtils.toJson(workspace, false));
         assertEquals(3, workspaceMetaData.getRevision());
 
         try {
             // and repeat, but specifying revision 2 again
             workspace.setRevision(2L);
-            workspaceComponent.putWorkspace(1, WorkspaceUtils.toJson(workspace, false));
+            workspaceComponent.putWorkspace(1, "", WorkspaceUtils.toJson(workspace, false));
             fail();
         } catch (WorkspaceComponentException wce) {
             System.out.println(wce.getMessage());
@@ -837,7 +837,7 @@ public class WorkspaceComponentImplTests {
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
         try {
             Configuration.getInstance().setFeatureEnabled(Features.WORKSPACE_SCOPE_VALIDATION);
-            workspaceComponent.putWorkspace(1, json);
+            workspaceComponent.putWorkspace(1, "", json);
             fail();
         } catch (WorkspaceComponentException e) {
             assertEquals("Strict workspace scope validation has been enabled for this on-premises installation. Unscoped workspaces are not permitted - see https://docs.structurizr.com/workspaces for more information.", e.getMessage());
@@ -859,7 +859,7 @@ public class WorkspaceComponentImplTests {
 
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
         try {
-            workspaceComponent.putWorkspace(1, json);
+            workspaceComponent.putWorkspace(1, "", json);
             fail();
         } catch (WorkspaceComponentException e) {
             assertEquals("Workspace is landscape scoped, but the software system named A has containers.", e.getMessage());

@@ -44,7 +44,7 @@ public class JsonControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showPublicJson(1, "version", model);
+        String view = controller.showPublicJson(1, model);
         assertEquals("404", view);
     }
 
@@ -59,12 +59,12 @@ public class JsonControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return workspaceJson;
             }
         });
 
-        String view = controller.showPublicJson(1, "version", model);
+        String view = controller.showPublicJson(1, model);
         assertEquals("404", view);
     }
 
@@ -78,12 +78,12 @@ public class JsonControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return workspaceJson;
             }
         });
 
-        String view = controller.showPublicJson(1, "version", model);
+        String view = controller.showPublicJson(1, model);
         assertEquals("json", view);
         assertEquals("""
                 {"configuration":{},"description":"Description","documentation":{},"id":0,"model":{},"name":"Name","views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""", model.getAttribute("json"));
@@ -98,7 +98,7 @@ public class JsonControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showSharedJson(1, "version", "token", model);
+        String view = controller.showSharedJson(1, "token", model);
         assertEquals("404", view);
     }
 
@@ -112,12 +112,12 @@ public class JsonControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return workspaceJson;
             }
         });
 
-        String view = controller.showSharedJson(1, "version", "token", model);
+        String view = controller.showSharedJson(1, "token", model);
         assertEquals("404", view);
     }
 
@@ -132,12 +132,12 @@ public class JsonControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return workspaceJson;
             }
         });
 
-        String view = controller.showSharedJson(1, "version", "token", model);
+        String view = controller.showSharedJson(1, "token", model);
         assertEquals("404", view);
     }
 
@@ -152,12 +152,12 @@ public class JsonControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return workspaceJson;
             }
         });
 
-        String view = controller.showSharedJson(1, "version", "token", model);
+        String view = controller.showSharedJson(1, "token", model);
         assertEquals("json", view);
         assertEquals("""
                 {"configuration":{},"description":"Description","documentation":{},"id":0,"model":{},"name":"Name","views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""", model.getAttribute("json"));

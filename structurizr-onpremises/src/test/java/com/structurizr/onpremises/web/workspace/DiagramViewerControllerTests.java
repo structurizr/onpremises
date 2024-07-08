@@ -34,7 +34,7 @@ public class DiagramViewerControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showPublicDiagramViewer(1, "version", "perspective", model);
+        String view = controller.showPublicDiagramViewer(1, "perspective", model);
         assertEquals("404", view);
     }
 
@@ -49,12 +49,12 @@ public class DiagramViewerControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
-        String view = controller.showPublicDiagramViewer(1, "version", "perspective", model);
+        String view = controller.showPublicDiagramViewer(1, "perspective", model);
         assertEquals("404", view);
     }
 
@@ -68,12 +68,12 @@ public class DiagramViewerControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
-        String view = controller.showPublicDiagramViewer(1, "version", "perspective", model);
+        String view = controller.showPublicDiagramViewer(1, "perspective", model);
         assertEquals("diagrams", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
@@ -90,7 +90,7 @@ public class DiagramViewerControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showSharedDiagramViewer(1, "version", "perspective", "token", model);
+        String view = controller.showSharedDiagramViewer(1, "perspective", "token", model);
         assertEquals("404", view);
     }
 
@@ -104,12 +104,12 @@ public class DiagramViewerControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
-        String view = controller.showSharedDiagramViewer(1, "version", "perspective", "token", model);
+        String view = controller.showSharedDiagramViewer(1, "perspective", "token", model);
         assertEquals("404", view);
     }
 
@@ -124,12 +124,12 @@ public class DiagramViewerControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
-        String view = controller.showSharedDiagramViewer(1, "version", "perspective", "token", model);
+        String view = controller.showSharedDiagramViewer(1, "perspective", "token", model);
         assertEquals("404", view);
     }
 
@@ -144,12 +144,12 @@ public class DiagramViewerControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
-        String view = controller.showSharedDiagramViewer(1, "version", "perspective", "token", model);
+        String view = controller.showSharedDiagramViewer(1, "perspective", "token", model);
         assertEquals("diagrams", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
@@ -167,7 +167,7 @@ public class DiagramViewerControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedDiagramViewer(1, "version", "perspective", model);
+        String view = controller.showAuthenticatedDiagramViewer(1, "branch", "version", "perspective", model);
         assertEquals("404", view);
     }
 
@@ -182,13 +182,13 @@ public class DiagramViewerControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDiagramViewer(1, "version", "perspective", model);
+        String view = controller.showAuthenticatedDiagramViewer(1, "branch", "version", "perspective", model);
         assertEquals("404", view);
     }
 
@@ -202,13 +202,13 @@ public class DiagramViewerControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedDiagramViewer(1, "version", "perspective", model);
+        String view = controller.showAuthenticatedDiagramViewer(1, "branch", "version", "perspective", model);
         assertEquals("diagrams", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
@@ -228,13 +228,13 @@ public class DiagramViewerControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDiagramViewer(1, "version", "perspective", model);
+        String view = controller.showAuthenticatedDiagramViewer(1, "branch", "version", "perspective", model);
         assertEquals("diagrams", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
@@ -254,13 +254,13 @@ public class DiagramViewerControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDiagramViewer(1, "version", "perspective", model);
+        String view = controller.showAuthenticatedDiagramViewer(1, "branch", "version", "perspective", model);
         assertEquals("diagrams", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));

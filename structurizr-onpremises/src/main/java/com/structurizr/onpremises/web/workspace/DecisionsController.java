@@ -22,37 +22,33 @@ public class DecisionsController extends AbstractWorkspaceController {
     @RequestMapping(value = "/share/{workspaceId}/decisions", method = RequestMethod.GET)
     public String showPublicDecisions(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             ModelMap model
     ) {
-        return showPublicDecisions(workspaceId, version, null, model);
+        return showPublicDecisions(workspaceId, null, model);
     }
 
     @RequestMapping(value = "/share/{workspaceId}/decisions/{softwareSystem}", method = RequestMethod.GET)
     public String showPublicDecisions(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             @PathVariable("softwareSystem") String softwareSystem,
             ModelMap model
     ) {
-        return showPublicDecisions(workspaceId, version, softwareSystem, null, model);
+        return showPublicDecisions(workspaceId, softwareSystem, null, model);
     }
 
     @RequestMapping(value = "/share/{workspaceId}/decisions/{softwareSystem}/{container}", method = RequestMethod.GET)
     public String showPublicDecisions(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             @PathVariable("softwareSystem") String softwareSystem,
             @PathVariable("container") String container,
             ModelMap model
     ) {
-        return showPublicDecisions(workspaceId, version, softwareSystem, container, null, model);
+        return showPublicDecisions(workspaceId, softwareSystem, container, null, model);
     }
 
     @RequestMapping(value = "/share/{workspaceId}/decisions/{softwareSystem}/{container}/{component}", method = RequestMethod.GET)
     public String showPublicDecisions(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             @PathVariable("softwareSystem") String softwareSystem,
             @PathVariable("container") String container,
             @PathVariable("component") String component,
@@ -61,46 +57,42 @@ public class DecisionsController extends AbstractWorkspaceController {
         model.addAttribute("scope", Base64.getEncoder().encodeToString(toScope(softwareSystem, container, component).getBytes(StandardCharsets.UTF_8)));
         model.addAttribute("showHeader", true);
 
-        return showPublicView(VIEW, workspaceId, version, model, false);
+        return showPublicView(VIEW, workspaceId, model, false);
     }
 
     @RequestMapping(value = "/share/{workspaceId}/{token}/decisions", method = RequestMethod.GET)
     public String showSharedDecisions(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             @PathVariable("token") String token,
             ModelMap model
     ) {
-        return showSharedDecisions(workspaceId, version, null, token, model);
+        return showSharedDecisions(workspaceId, null, token, model);
     }
 
     @RequestMapping(value = "/share/{workspaceId}/{token}/decisions/{softwareSystem}", method = RequestMethod.GET)
     public String showSharedDecisions(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             @PathVariable("softwareSystem") String softwareSystem,
             @PathVariable("token") String token,
             ModelMap model
     ) {
-        return showSharedDecisions(workspaceId, version, softwareSystem, null, token, model);
+        return showSharedDecisions(workspaceId, softwareSystem, null, token, model);
     }
 
     @RequestMapping(value = "/share/{workspaceId}/{token}/decisions/{softwareSystem}/{container}", method = RequestMethod.GET)
     public String showSharedDecisions(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             @PathVariable("softwareSystem") String softwareSystem,
             @PathVariable("container") String container,
             @PathVariable("token") String token,
             ModelMap model
     ) {
-        return showSharedDecisions(workspaceId, version, softwareSystem, container, null, token, model);
+        return showSharedDecisions(workspaceId, softwareSystem, container, null, token, model);
     }
 
     @RequestMapping(value = "/share/{workspaceId}/{token}/decisions/{softwareSystem}/{container}/{component}", method = RequestMethod.GET)
     public String showSharedDecisions(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             @PathVariable("softwareSystem") String softwareSystem,
             @PathVariable("container") String container,
             @PathVariable("component") String component,
@@ -110,43 +102,47 @@ public class DecisionsController extends AbstractWorkspaceController {
         model.addAttribute("scope", Base64.getEncoder().encodeToString(toScope(softwareSystem, container, component).getBytes(StandardCharsets.UTF_8)));
         model.addAttribute("showHeader", true);
 
-        return showSharedView(VIEW, workspaceId, token, version, model, false);
+        return showSharedView(VIEW, workspaceId, token, model, false);
     }
 
     @RequestMapping(value = "/workspace/{workspaceId}/decisions", method = RequestMethod.GET)
     @PreAuthorize("isAuthenticated()")
     public String showAuthenticatedDecisions(
             @PathVariable("workspaceId") long workspaceId,
+            @RequestParam(required = false) String branch,
             @RequestParam(required = false) String version,
             ModelMap model
     ) {
-        return showAuthenticatedDecisions(workspaceId, version, null, model);
+        return showAuthenticatedDecisions(workspaceId, branch, version, null, model);
     }
 
     @RequestMapping(value = "/workspace/{workspaceId}/decisions/{softwareSystem}", method = RequestMethod.GET)
     public String showAuthenticatedDecisions(
             @PathVariable("workspaceId") long workspaceId,
+            @RequestParam(required = false) String branch,
             @RequestParam(required = false) String version,
             @PathVariable("softwareSystem") String softwareSystem,
             ModelMap model
     ) {
-        return showAuthenticatedDecisions(workspaceId, version, softwareSystem, null, model);
+        return showAuthenticatedDecisions(workspaceId, branch, version, softwareSystem, null, model);
     }
 
     @RequestMapping(value = "/workspace/{workspaceId}/decisions/{softwareSystem}/{container}", method = RequestMethod.GET)
     public String showAuthenticatedDecisions(
             @PathVariable("workspaceId") long workspaceId,
+            @RequestParam(required = false) String branch,
             @RequestParam(required = false) String version,
             @PathVariable("softwareSystem") String softwareSystem,
             @PathVariable("container") String container,
             ModelMap model
     ) {
-        return showAuthenticatedDecisions(workspaceId, version, softwareSystem, container, null, model);
+        return showAuthenticatedDecisions(workspaceId, branch, version, softwareSystem, container, null, model);
     }
 
     @RequestMapping(value = "/workspace/{workspaceId}/decisions/{softwareSystem}/{container}/{component}", method = RequestMethod.GET)
     public String showAuthenticatedDecisions(
             @PathVariable("workspaceId") long workspaceId,
+            @RequestParam(required = false) String branch,
             @RequestParam(required = false) String version,
             @PathVariable("softwareSystem") String softwareSystem,
             @PathVariable("container") String container,
@@ -161,7 +157,7 @@ public class DecisionsController extends AbstractWorkspaceController {
         model.addAttribute("scope", Base64.getEncoder().encodeToString(toScope(softwareSystem, container, component).getBytes(StandardCharsets.UTF_8)));
         model.addAttribute("showHeader", true);
 
-        return showAuthenticatedView(VIEW, workspaceMetaData, version, model, false, false);
+        return showAuthenticatedView(VIEW, workspaceMetaData, branch, version, model, false, false);
     }
 
     String toScope(String softwareSystem, String container, String component) {

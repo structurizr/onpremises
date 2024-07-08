@@ -13,7 +13,7 @@ public abstract class AbstractWorkspaceEditorController extends AbstractWorkspac
 
     private static final String AGENT = "structurizr-onpremises";
 
-    protected final String lockWorkspaceAndShowAuthenticatedView(String view, WorkspaceMetaData workspaceMetaData, String version, ModelMap model, boolean showHeaderAndFooter) {
+    protected final String lockWorkspaceAndShowAuthenticatedView(String view, WorkspaceMetaData workspaceMetaData, String branch, String version, ModelMap model, boolean showHeaderAndFooter) {
         boolean success = false;
         String agent = AGENT + "/" + view + "/" + new RandomGuidGenerator().generate();
 
@@ -43,7 +43,7 @@ public abstract class AbstractWorkspaceEditorController extends AbstractWorkspac
         } else {
             workspaceMetaData = workspaceComponent.getWorkspaceMetaData(workspaceMetaData.getId()); // refresh metadata
             model.addAttribute("userAgent", agent);
-            return showAuthenticatedView(view, workspaceMetaData, version, model, showHeaderAndFooter, true);
+            return showAuthenticatedView(view, workspaceMetaData, branch, version, model, showHeaderAndFooter, true);
         }
     }
 

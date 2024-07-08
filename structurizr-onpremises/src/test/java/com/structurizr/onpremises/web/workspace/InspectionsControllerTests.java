@@ -36,7 +36,7 @@ public class InspectionsControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showInspections(1, "version", model);
+        String view = controller.showInspections(1, "branch", "version", model);
         assertEquals("404", view);
     }
 
@@ -51,7 +51,7 @@ public class InspectionsControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showInspections(1, "version", model);
+        String view = controller.showInspections(1, "branch", "version", model);
         assertEquals("workspace-is-client-side-encrypted", view);
     }
 
@@ -67,7 +67,7 @@ public class InspectionsControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showInspections(1, "version", model);
+        String view = controller.showInspections(1, "branch", "version", model);
         assertEquals("404", view);
     }
 
@@ -81,7 +81,7 @@ public class InspectionsControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 try {
                     return WorkspaceUtils.toJson(new Workspace("Name", "Description"), false);
                 } catch (Exception e) {
@@ -91,7 +91,7 @@ public class InspectionsControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showInspections(1, "version", model);
+        String view = controller.showInspections(1, "branch", "version", model);
         assertEquals("inspections", view);
         assertNotNull(model.getAttribute("violations"));
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
@@ -110,7 +110,7 @@ public class InspectionsControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 try {
                     return WorkspaceUtils.toJson(new Workspace("Name", "Description"), false);
                 } catch (Exception e) {
@@ -120,7 +120,7 @@ public class InspectionsControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showInspections(1, "version", model);
+        String view = controller.showInspections(1, "branch", "version", model);
         assertEquals("inspections", view);
         assertNotNull(model.getAttribute("violations"));
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
@@ -139,7 +139,7 @@ public class InspectionsControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 try {
                     return WorkspaceUtils.toJson(new Workspace("Name", "Description"), false);
                 } catch (Exception e) {
@@ -149,7 +149,7 @@ public class InspectionsControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showInspections(1, "version", model);
+        String view = controller.showInspections(1, "branch", "version", model);
         assertEquals("inspections", view);
         assertNotNull(model.getAttribute("violations"));
         assertSame(workspaceMetaData, model.getAttribute("workspace"));

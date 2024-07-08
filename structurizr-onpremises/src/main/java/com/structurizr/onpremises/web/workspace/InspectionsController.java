@@ -30,6 +30,7 @@ public class InspectionsController extends AbstractWorkspaceController {
     @PreAuthorize("isAuthenticated()")
     public String showInspections(
             @PathVariable("workspaceId") long workspaceId,
+            @RequestParam(required = false) String branch,
             @RequestParam(required = false) String version,
             ModelMap model
     ) {
@@ -44,7 +45,7 @@ public class InspectionsController extends AbstractWorkspaceController {
 
         if (userCanAccessWorkspace(workspaceMetaData)) {
             try {
-                String json = workspaceComponent.getWorkspace(workspaceMetaData.getId(), version);
+                String json = workspaceComponent.getWorkspace(workspaceMetaData.getId(), branch, version);
                 Workspace workspace = WorkspaceUtils.fromJson(json);
                 Inspector inspector = new DefaultInspector(workspace);
                 List<Violation> violations = inspector.getViolations();
@@ -57,7 +58,7 @@ public class InspectionsController extends AbstractWorkspaceController {
                 model.addAttribute("numberOfInfos", violations.stream().filter(r -> r.getSeverity() == Severity.INFO).count());
                 model.addAttribute("numberOfIgnores", violations.stream().filter(r -> r.getSeverity() == Severity.IGNORE).count());
 
-                return showAuthenticatedView(VIEW, workspaceMetaData, null, model, true, false);
+                return showAuthenticatedView(VIEW, workspaceMetaData, branch, version, model, true, false);
             } catch (Exception e) {
                 log.error(e);
                 throw new RuntimeException(e);

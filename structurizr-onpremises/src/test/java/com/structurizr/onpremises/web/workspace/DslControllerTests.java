@@ -48,7 +48,7 @@ public class DslControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showPublicDsl(1, "version", model);
+        String view = controller.showPublicDsl(1, model);
         assertEquals("404", view);
     }
 
@@ -63,12 +63,12 @@ public class DslControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return workspaceJson;
             }
         });
 
-        String view = controller.showPublicDsl(1, "version", model);
+        String view = controller.showPublicDsl(1, model);
         assertEquals("404", view);
     }
 
@@ -82,12 +82,12 @@ public class DslControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return workspaceJson;
             }
         });
 
-        String view = controller.showPublicDsl(1, "version", model);
+        String view = controller.showPublicDsl(1, model);
         assertEquals("plaintext", view);
         assertEquals("""
             workspace "Name" "Description" {
@@ -104,7 +104,7 @@ public class DslControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showSharedDsl(1, "version", "token", model);
+        String view = controller.showSharedDsl(1, "token", model);
         assertEquals("404", view);
     }
 
@@ -118,12 +118,12 @@ public class DslControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return workspaceJson;
             }
         });
 
-        String view = controller.showSharedDsl(1, "version", "token", model);
+        String view = controller.showSharedDsl(1, "token", model);
         assertEquals("404", view);
     }
 
@@ -138,12 +138,12 @@ public class DslControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return workspaceJson;
             }
         });
 
-        String view = controller.showSharedDsl(1, "version", "token", model);
+        String view = controller.showSharedDsl(1, "token", model);
         assertEquals("404", view);
     }
 
@@ -158,12 +158,12 @@ public class DslControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return workspaceJson;
             }
         });
 
-        String view = controller.showSharedDsl(1, "version", "token", model);
+        String view = controller.showSharedDsl(1, "token", model);
         assertEquals("plaintext", view);
         assertEquals("""
             workspace "Name" "Description" {

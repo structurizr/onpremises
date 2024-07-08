@@ -17,32 +17,31 @@ public class TreeController extends AbstractWorkspaceController {
     @RequestMapping(value = "/share/{workspaceId}/explore/tree", method = RequestMethod.GET)
     public String showPublicTree(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             @RequestParam(required = false) String view,
             ModelMap model
     ) {
         model.addAttribute("view", view);
 
-        return showPublicView(VIEW, workspaceId, version, model, true);
+        return showPublicView(VIEW, workspaceId, model, true);
     }
 
     @RequestMapping(value = "/share/{workspaceId}/{token}/explore/tree", method = RequestMethod.GET)
     public String showSharedTree(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             @RequestParam(required = false) String view,
             @PathVariable("token") String token,
             ModelMap model
     ) {
         model.addAttribute("view", view);
 
-        return showSharedView(VIEW, workspaceId, token, version, model, true);
+        return showSharedView(VIEW, workspaceId, token, model, true);
     }
 
     @RequestMapping(value = "/workspace/{workspaceId}/explore/tree", method = RequestMethod.GET)
     @PreAuthorize("isAuthenticated()")
     public String showAuthenticatedTree(
             @PathVariable("workspaceId") long workspaceId,
+            @RequestParam(required = false) String branch,
             @RequestParam(required = false) String version,
             @RequestParam(required = false) String view,
             ModelMap model
@@ -54,7 +53,7 @@ public class TreeController extends AbstractWorkspaceController {
 
         model.addAttribute("view", view);
 
-        return showAuthenticatedView(VIEW, workspaceMetaData, version, model, true, false);
+        return showAuthenticatedView(VIEW, workspaceMetaData, branch, version, model, true, false);
     }
 
 }

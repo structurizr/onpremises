@@ -21,9 +21,7 @@ public abstract class AbstractWorkspaceController extends AbstractController {
     protected static final String URL_PREFIX = "urlPrefix";
     protected static final String URL_SUFFIX = "urlSuffix";
 
-    protected final String showPublicView(String view, long workspaceId, String version, ModelMap model, boolean showHeaderAndFooter) {
-        version = HtmlUtils.filterHtml(version);
-
+    protected final String showPublicView(String view, long workspaceId, ModelMap model, boolean showHeaderAndFooter) {
         WorkspaceMetaData workspaceMetaData = null;
         try {
             workspaceMetaData = workspaceComponent.getWorkspaceMetaData(workspaceId);
@@ -37,20 +35,15 @@ public abstract class AbstractWorkspaceController extends AbstractController {
                 model.addAttribute(URL_PREFIX, urlPrefix);
                 model.addAttribute("thumbnailUrl", urlPrefix + "/images/");
 
-                if (version != null && version.trim().length() > 0) {
-                    model.addAttribute(URL_SUFFIX, "?version=" + version);
-                }
-
-                return showView(view, workspaceMetaData, version, model, false, showHeaderAndFooter);
+                return showView(view, workspaceMetaData, null, null, model, false, showHeaderAndFooter);
             }
         }
 
         return show404Page(model);
     }
 
-    protected final String showSharedView(String view, long workspaceId, String token, String version, ModelMap model, boolean showHeaderAndFooter) {
+    protected final String showSharedView(String view, long workspaceId, String token, ModelMap model, boolean showHeaderAndFooter) {
         token = HtmlUtils.filterHtml(token);
-        version = HtmlUtils.filterHtml(version);
 
         WorkspaceMetaData workspaceMetaData = null;
         try {
@@ -65,18 +58,14 @@ public abstract class AbstractWorkspaceController extends AbstractController {
                 model.addAttribute(URL_PREFIX, urlPrefix);
                 model.addAttribute("thumbnailUrl", urlPrefix + "/images/");
 
-                if (version != null && version.trim().length() > 0) {
-                    model.addAttribute(URL_SUFFIX, "?version=" + version);
-                }
-
-                return showView(view, workspaceMetaData, version, model, false, showHeaderAndFooter);
+                return showView(view, workspaceMetaData, null, null, model, false, showHeaderAndFooter);
             }
         }
 
         return show404Page(model);
     }
 
-    protected final String showAuthenticatedView(String view, WorkspaceMetaData workspaceMetaData, String version, ModelMap model, boolean showHeaderAndFooter, boolean editable) {
+    protected final String showAuthenticatedView(String view, WorkspaceMetaData workspaceMetaData, String branch, String version, ModelMap model, boolean showHeaderAndFooter, boolean editable) {
         version = HtmlUtils.filterHtml(version);
 
         User user = getUser();
@@ -102,16 +91,16 @@ public abstract class AbstractWorkspaceController extends AbstractController {
             }
 
             if (workspaceMetaData.hasNoUsersConfigured() || workspaceMetaData.isWriteUser(user)) {
-                return showView(view, workspaceMetaData, version, model, editable, showHeaderAndFooter);
+                return showView(view, workspaceMetaData, branch, version, model, editable, showHeaderAndFooter);
             } else if (workspaceMetaData.isReadUser(user)) {
-                return showView(view, workspaceMetaData, version, model, false, showHeaderAndFooter);
+                return showView(view, workspaceMetaData, branch, version, model, false, showHeaderAndFooter);
             }
         }
 
         return show404Page(model);
     }
 
-    protected final String showView(String view, WorkspaceMetaData workspaceMetaData, String version, ModelMap model, boolean editable, boolean showHeaderAndFooter) {
+    protected final String showView(String view, WorkspaceMetaData workspaceMetaData, String branch, String version, ModelMap model, boolean editable, boolean showHeaderAndFooter) {
         try {
             if (editable) {
                 workspaceMetaData.setEditable(true);
@@ -121,7 +110,7 @@ public abstract class AbstractWorkspaceController extends AbstractController {
                 }
             } else {
                 workspaceMetaData.setEditable(false);
-                String json = workspaceComponent.getWorkspace(workspaceMetaData.getId(), version);
+                String json = workspaceComponent.getWorkspace(workspaceMetaData.getId(), branch, version);
                 json = json.replaceAll("[\\n\\r\\f]", "");
                 model.addAttribute("workspaceAsJson", JsonUtils.base64(json));
                 workspaceMetaData.setApiKey("");

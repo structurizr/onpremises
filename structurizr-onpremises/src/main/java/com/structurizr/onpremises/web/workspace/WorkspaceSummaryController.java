@@ -18,30 +18,29 @@ public class WorkspaceSummaryController extends AbstractWorkspaceController {
     @RequestMapping(value = "/share/{workspaceId}", method = RequestMethod.GET)
     public String showPublicWorkspaceSummary(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             ModelMap model
     ) {
-        model.addAttribute("versions", workspaceComponent.getWorkspaceVersions(workspaceId, Configuration.getInstance().getMaxWorkspaceVersions()));
+        model.addAttribute("versions", workspaceComponent.getWorkspaceVersions(workspaceId, null, Configuration.getInstance().getMaxWorkspaceVersions()));
 
-        return showPublicView(VIEW, workspaceId, version, model, true);
+        return showPublicView(VIEW, workspaceId, model, true);
     }
 
     @RequestMapping(value = "/share/{workspaceId}/{token}", method = RequestMethod.GET)
     public String showSharedWorkspaceSummary(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             @PathVariable("token") String token,
             ModelMap model
     ) {
-        model.addAttribute("versions", workspaceComponent.getWorkspaceVersions(workspaceId, Configuration.getInstance().getMaxWorkspaceVersions()));
+        model.addAttribute("versions", workspaceComponent.getWorkspaceVersions(workspaceId, null, Configuration.getInstance().getMaxWorkspaceVersions()));
 
-        return showSharedView(VIEW, workspaceId, token, version, model, true);
+        return showSharedView(VIEW, workspaceId, token, model, true);
     }
 
     @RequestMapping(value = "/workspace/{workspaceId}", method = RequestMethod.GET)
     @PreAuthorize("isAuthenticated()")
     public String showAuthenticatedWorkspaceSummary(
             @PathVariable("workspaceId") long workspaceId,
+            @RequestParam(required = false) String branch,
             @RequestParam(required = false) String version,
             ModelMap model
     ) {
@@ -50,11 +49,11 @@ public class WorkspaceSummaryController extends AbstractWorkspaceController {
             return show404Page(model);
         }
 
-        model.addAttribute("versions", workspaceComponent.getWorkspaceVersions(workspaceId, Configuration.getInstance().getMaxWorkspaceVersions()));
+        model.addAttribute("versions", workspaceComponent.getWorkspaceVersions(workspaceId, branch, Configuration.getInstance().getMaxWorkspaceVersions()));
 
         boolean editable = workspaceMetaData.hasNoUsersConfigured() || workspaceMetaData.isWriteUser(getUser());
 
-        return showAuthenticatedView(VIEW, workspaceMetaData, version, model, true, editable);
+        return showAuthenticatedView(VIEW, workspaceMetaData, branch, version, model, true, editable);
     }
 
 }

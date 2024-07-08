@@ -34,7 +34,7 @@ public class DocumentationControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showPublicDocumentation(1, "version", model);
+        String view = controller.showPublicDocumentation(1, model);
         assertEquals("404", view);
     }
 
@@ -49,12 +49,12 @@ public class DocumentationControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
-        String view = controller.showPublicDocumentation(1, "version", model);
+        String view = controller.showPublicDocumentation(1, model);
         assertEquals("404", view);
     }
 
@@ -68,12 +68,12 @@ public class DocumentationControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
-        String view = controller.showPublicDocumentation(1, "version", model);
+        String view = controller.showPublicDocumentation(1, model);
         assertEquals("documentation", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
@@ -90,7 +90,7 @@ public class DocumentationControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showSharedDocumentation(1, "version", "token", model);
+        String view = controller.showSharedDocumentation(1, "token", model);
         assertEquals("404", view);
     }
 
@@ -104,12 +104,12 @@ public class DocumentationControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
-        String view = controller.showSharedDocumentation(1, "version", "token", model);
+        String view = controller.showSharedDocumentation(1, "token", model);
         assertEquals("404", view);
     }
 
@@ -124,12 +124,12 @@ public class DocumentationControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
-        String view = controller.showSharedDocumentation(1, "version", "token", model);
+        String view = controller.showSharedDocumentation(1, "token", model);
         assertEquals("404", view);
     }
 
@@ -144,12 +144,12 @@ public class DocumentationControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
-        String view = controller.showSharedDocumentation(1, "version", "token", model);
+        String view = controller.showSharedDocumentation(1, "token", model);
         assertEquals("documentation", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
@@ -167,7 +167,7 @@ public class DocumentationControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedDocumentation(1, "version", model);
+        String view = controller.showAuthenticatedDocumentation(1, "branch", "version", model);
         assertEquals("404", view);
     }
 
@@ -182,13 +182,13 @@ public class DocumentationControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDocumentation(1, "version", model);
+        String view = controller.showAuthenticatedDocumentation(1, "branch", "version", model);
         assertEquals("404", view);
     }
 
@@ -202,13 +202,13 @@ public class DocumentationControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedDocumentation(1, "version", model);
+        String view = controller.showAuthenticatedDocumentation(1, "branch", "version", model);
         assertEquals("documentation", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
@@ -227,13 +227,13 @@ public class DocumentationControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDocumentation(1, "version", model);
+        String view = controller.showAuthenticatedDocumentation(1, "branch", "version", model);
         assertEquals("documentation", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
@@ -252,13 +252,13 @@ public class DocumentationControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDocumentation(1, "version", model);
+        String view = controller.showAuthenticatedDocumentation(1, "branch", "version", model);
         assertEquals("documentation", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));

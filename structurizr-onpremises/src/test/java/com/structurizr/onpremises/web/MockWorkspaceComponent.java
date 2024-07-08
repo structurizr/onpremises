@@ -40,7 +40,7 @@ public abstract class MockWorkspaceComponent implements WorkspaceComponent {
     }
 
     @Override
-    public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+    public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
         return null;
     }
 
@@ -55,12 +55,12 @@ public abstract class MockWorkspaceComponent implements WorkspaceComponent {
     }
 
     @Override
-    public void putWorkspace(long workspaceId, String json) throws WorkspaceComponentException {
+    public void putWorkspace(long workspaceId, String branch, String json) throws WorkspaceComponentException {
 
     }
 
     @Override
-    public List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, int maxVersions) {
+    public List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, String branch, int maxVersions) {
         return null;
     }
 

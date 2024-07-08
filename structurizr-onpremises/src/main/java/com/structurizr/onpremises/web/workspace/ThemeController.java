@@ -22,7 +22,6 @@ public class ThemeController extends AbstractWorkspaceController {
     @RequestMapping(value = "/share/{workspaceId}/theme", method = RequestMethod.GET)
     public String showPublicTheme(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             ModelMap model
     ) {
         WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(workspaceId);
@@ -31,20 +30,19 @@ public class ThemeController extends AbstractWorkspaceController {
         }
 
         try {
-            String workspaceAsJson = workspaceComponent.getWorkspace(workspaceId, version);
+            String workspaceAsJson = workspaceComponent.getWorkspace(workspaceId, null, null);
             model.addAttribute("json", ThemeUtils.toJson(WorkspaceUtils.fromJson(workspaceAsJson)));
         } catch (Exception e) {
             log.error(e);
             throw new RuntimeException(e);
         }
 
-        return showPublicView(VIEW, workspaceId, version, model, false);
+        return showPublicView(VIEW, workspaceId, model, false);
     }
 
     @RequestMapping(value = "/share/{workspaceId}/{token}/theme", method = RequestMethod.GET)
     public String showSharedTheme(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             @PathVariable("token") String token,
             ModelMap model
     ) {
@@ -54,20 +52,21 @@ public class ThemeController extends AbstractWorkspaceController {
         }
 
         try {
-            String workspaceAsJson = workspaceComponent.getWorkspace(workspaceId, version);
+            String workspaceAsJson = workspaceComponent.getWorkspace(workspaceId, null, null);
             model.addAttribute("json", ThemeUtils.toJson(WorkspaceUtils.fromJson(workspaceAsJson)));
         } catch (Exception e) {
             log.error(e);
             throw new RuntimeException(e);
         }
 
-        return showSharedView(VIEW, workspaceId, token, version, model, false);
+        return showSharedView(VIEW, workspaceId, token, model, false);
     }
 
     @RequestMapping(value = "/workspace/{workspaceId}/theme", method = RequestMethod.GET)
     @PreAuthorize("isAuthenticated()")
     public String showAuthenticatedTheme(
             @PathVariable("workspaceId") long workspaceId,
+            @RequestParam(required = false) String branch,
             @RequestParam(required = false) String version,
             ModelMap model
     ) {
@@ -77,14 +76,14 @@ public class ThemeController extends AbstractWorkspaceController {
         }
 
         try {
-            String workspaceAsJson = workspaceComponent.getWorkspace(workspaceId, version);
+            String workspaceAsJson = workspaceComponent.getWorkspace(workspaceId, branch, version);
             model.addAttribute("json", ThemeUtils.toJson(WorkspaceUtils.fromJson(workspaceAsJson)));
         } catch (Exception e) {
             log.error(e);
             throw new RuntimeException(e);
         }
 
-        return showAuthenticatedView(VIEW, workspaceMetaData, version, model, false, false);
+        return showAuthenticatedView(VIEW, workspaceMetaData, branch, version, model, false, false);
     }
 
 }

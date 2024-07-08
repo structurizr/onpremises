@@ -34,7 +34,7 @@ public class DecisionsControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showPublicDecisions(1, "version", model);
+        String view = controller.showPublicDecisions(1, model);
         assertEquals("404", view);
     }
 
@@ -49,12 +49,12 @@ public class DecisionsControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
-        String view = controller.showPublicDecisions(1, "version", model);
+        String view = controller.showPublicDecisions(1, model);
         assertEquals("404", view);
     }
 
@@ -68,12 +68,12 @@ public class DecisionsControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
-        String view = controller.showPublicDecisions(1, "version", model);
+        String view = controller.showPublicDecisions(1, model);
         assertEquals("decisions", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
@@ -90,7 +90,7 @@ public class DecisionsControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showSharedDecisions(1, "version", "token", model);
+        String view = controller.showSharedDecisions(1, "token", model);
         assertEquals("404", view);
     }
 
@@ -104,12 +104,12 @@ public class DecisionsControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
-        String view = controller.showSharedDecisions(1, "version", "token", model);
+        String view = controller.showSharedDecisions(1, "token", model);
         assertEquals("404", view);
     }
 
@@ -124,12 +124,12 @@ public class DecisionsControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
-        String view = controller.showSharedDecisions(1, "version", "token", model);
+        String view = controller.showSharedDecisions(1, "token", model);
         assertEquals("404", view);
     }
 
@@ -144,12 +144,12 @@ public class DecisionsControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
-        String view = controller.showSharedDecisions(1, "version", "token", model);
+        String view = controller.showSharedDecisions(1, "token", model);
         assertEquals("decisions", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
@@ -167,7 +167,7 @@ public class DecisionsControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedDecisions(1, "version", model);
+        String view = controller.showAuthenticatedDecisions(1, "branch", "version", model);
         assertEquals("404", view);
     }
 
@@ -182,13 +182,13 @@ public class DecisionsControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDecisions(1, "version", model);
+        String view = controller.showAuthenticatedDecisions(1, "branch", "version", model);
         assertEquals("404", view);
     }
 
@@ -202,13 +202,13 @@ public class DecisionsControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedDecisions(1, "version", model);
+        String view = controller.showAuthenticatedDecisions(1, "branch", "version", model);
         assertEquals("decisions", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
@@ -227,13 +227,13 @@ public class DecisionsControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDecisions(1, "version", model);
+        String view = controller.showAuthenticatedDecisions(1, "branch", "version", model);
         assertEquals("decisions", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
@@ -252,13 +252,13 @@ public class DecisionsControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDecisions(1, "version", model);
+        String view = controller.showAuthenticatedDecisions(1, "branch", "version", model);
         assertEquals("decisions", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));

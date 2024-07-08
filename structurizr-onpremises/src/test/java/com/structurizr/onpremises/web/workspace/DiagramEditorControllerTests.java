@@ -35,7 +35,7 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedDiagramEditor(1, "version", model);
+        String view = controller.showAuthenticatedDiagramEditor(1, "branch", "version", model);
         assertEquals("404", view);
     }
 
@@ -51,7 +51,7 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDiagramEditor(1, "version", model);
+        String view = controller.showAuthenticatedDiagramEditor(1, "branch", "version", model);
         assertEquals("404", view);
     }
 
@@ -65,7 +65,7 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
 
@@ -77,7 +77,7 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedDiagramEditor(1, "version", model);
+        String view = controller.showAuthenticatedDiagramEditor(1, "branch", "version", model);
         assertEquals("diagrams", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertTrue(workspaceMetaData.isEditable());
@@ -100,7 +100,7 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
 
@@ -112,7 +112,7 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDiagramEditor(1, "version", model);
+        String view = controller.showAuthenticatedDiagramEditor(1, "branch", "version", model);
         assertEquals("diagrams", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertTrue(workspaceMetaData.isEditable());
@@ -135,13 +135,13 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return "json";
             }
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDiagramEditor(1, "version", model);
+        String view = controller.showAuthenticatedDiagramEditor(1, "branch", "version", model);
         assertEquals("workspace-is-readonly", view);
     }
 

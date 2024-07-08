@@ -22,7 +22,6 @@ public class DslController extends AbstractWorkspaceController {
     @RequestMapping(value = "/share/{workspaceId}/dsl", method = RequestMethod.GET)
     public String showPublicDsl(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             ModelMap model
     ) {
         WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(workspaceId);
@@ -31,7 +30,7 @@ public class DslController extends AbstractWorkspaceController {
         }
 
         try {
-            String workspaceAsJson = workspaceComponent.getWorkspace(workspaceId, version);
+            String workspaceAsJson = workspaceComponent.getWorkspace(workspaceId, null, null);
             Workspace workspace = WorkspaceUtils.fromJson(workspaceAsJson);
             String dsl = DslUtils.getDsl(workspace);
 
@@ -41,13 +40,12 @@ public class DslController extends AbstractWorkspaceController {
             throw new RuntimeException(e);
         }
 
-        return showPublicView(VIEW, workspaceId, version, model, false);
+        return showPublicView(VIEW, workspaceId, model, false);
     }
 
     @RequestMapping(value = "/share/{workspaceId}/{token}/dsl", method = RequestMethod.GET)
     public String showSharedDsl(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             @PathVariable("token") String token,
             ModelMap model
     ) {
@@ -57,7 +55,7 @@ public class DslController extends AbstractWorkspaceController {
         }
 
         try {
-            String workspaceAsJson = workspaceComponent.getWorkspace(workspaceId, version);
+            String workspaceAsJson = workspaceComponent.getWorkspace(workspaceId, null, null);
             Workspace workspace = WorkspaceUtils.fromJson(workspaceAsJson);
             String dsl = DslUtils.getDsl(workspace);
 
@@ -67,7 +65,7 @@ public class DslController extends AbstractWorkspaceController {
             throw new RuntimeException(e);
         }
 
-        return showSharedView(VIEW, workspaceId, token, version, model, false);
+        return showSharedView(VIEW, workspaceId, token, model, false);
     }
 
 }

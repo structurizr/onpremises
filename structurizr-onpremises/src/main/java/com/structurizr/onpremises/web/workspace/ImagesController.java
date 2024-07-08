@@ -46,7 +46,7 @@ public class ImagesController extends AbstractWorkspaceController {
 
             boolean editable = workspaceMetaData.hasNoUsersConfigured() || workspaceMetaData.isWriteUser(getUser());
 
-            return showAuthenticatedView(VIEW, workspaceMetaData, null, model, true, editable);
+            return showAuthenticatedView(VIEW, workspaceMetaData, null, null, model, true, editable);
         }
 
         return show404Page(model);

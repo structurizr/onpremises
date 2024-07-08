@@ -17,26 +17,25 @@ public class ExploreController extends AbstractWorkspaceController {
     @RequestMapping(value = "/share/{workspaceId}/explore", method = RequestMethod.GET)
     public String showPublicExplorePage(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             ModelMap model
     ) {
-        return showPublicView(VIEW, workspaceId, version, model, true);
+        return showPublicView(VIEW, workspaceId, model, true);
     }
 
     @RequestMapping(value = "/share/{workspaceId}/{token}/explore", method = RequestMethod.GET)
     public String showSharedExplorePage(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             @PathVariable("token") String token,
             ModelMap model
     ) {
-        return showSharedView(VIEW, workspaceId, token, version, model, true);
+        return showSharedView(VIEW, workspaceId, token, model, true);
     }
 
     @RequestMapping(value = "/workspace/{workspaceId}/explore", method = RequestMethod.GET)
     @PreAuthorize("isAuthenticated()")
     public String showAuthenticatedExplorePage(
             @PathVariable("workspaceId") long workspaceId,
+            @RequestParam(required = false) String branch,
             @RequestParam(required = false) String version,
             ModelMap model
     ) {
@@ -45,7 +44,7 @@ public class ExploreController extends AbstractWorkspaceController {
             return show404Page(model);
         }
 
-        return showAuthenticatedView(VIEW, workspaceMetaData, version, model, true, false);
+        return showAuthenticatedView(VIEW, workspaceMetaData, branch, version, model, true, false);
     }
 
 }

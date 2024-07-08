@@ -51,13 +51,13 @@ public class WorkspaceComponentTests {
         WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(1);
         String jsonV1 = String.format("""
                 {"configuration":{},"description":"Description","documentation":{},"id":1,"lastModifiedDate":"%s","model":{},"name":"Workspace 0001","revision":1,"views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()));
-        assertEquals(jsonV1, workspaceComponent.getWorkspace(1, ""));
+        assertEquals(jsonV1, workspaceComponent.getWorkspace(1, "", ""));
 
         Collection<WorkspaceMetaData> workspaces = workspaceComponent.getWorkspaces();
         assertEquals(1, workspaces.size());
         assertEquals(workspaceId, workspaces.iterator().next().getId());
 
-        List<WorkspaceVersion> workspaceVersions = workspaceComponent.getWorkspaceVersions(1, 10);
+        List<WorkspaceVersion> workspaceVersions = workspaceComponent.getWorkspaceVersions(1, "", 10);
         assertEquals(1, workspaceVersions.size());
         WorkspaceVersion version1 = workspaceVersions.get(0); // keep this for later
         assertNull(workspaceVersions.get(0).getVersionId());
@@ -67,14 +67,14 @@ public class WorkspaceComponentTests {
 
         Workspace workspace = new Workspace("Financial Risk System", "...");
         String json = WorkspaceUtils.toJson(workspace, false);
-        workspaceComponent.putWorkspace(1, json);
+        workspaceComponent.putWorkspace(1, "", json);
 
         workspaceMetaData = workspaceComponent.getWorkspaceMetaData(1);
         String jsonV2 = String.format("""
                 {"configuration":{},"description":"...","documentation":{},"id":1,"lastModifiedDate":"%s","model":{},"name":"Financial Risk System","revision":2,"views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()));
-        assertEquals(jsonV2, workspaceComponent.getWorkspace(1, ""));
+        assertEquals(jsonV2, workspaceComponent.getWorkspace(1, "", ""));
 
-        workspaceVersions = workspaceComponent.getWorkspaceVersions(1, 10);
+        workspaceVersions = workspaceComponent.getWorkspaceVersions(1, "", 10);
         assertEquals(2, workspaceVersions.size());
         assertNull(workspaceVersions.get(0).getVersionId());
         assertEquals(DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()), DateUtils.formatIsoDate(workspaceVersions.get(0).getLastModifiedDate()));
@@ -82,11 +82,11 @@ public class WorkspaceComponentTests {
         assertEquals(sdf.format(version1.getLastModifiedDate()), workspaceVersions.get(1).getVersionId());
         assertEquals(DateUtils.formatIsoDate(version1.getLastModifiedDate()), DateUtils.formatIsoDate(workspaceVersions.get(1).getLastModifiedDate()));
 
-        json = workspaceComponent.getWorkspace(1, sdf.format(version1.getLastModifiedDate()));
+        json = workspaceComponent.getWorkspace(1, "", sdf.format(version1.getLastModifiedDate()));
         assertEquals(jsonV1, json);
 
         try {
-            workspaceComponent.getWorkspace(1, "1234567890"); // invalid workspace version
+            workspaceComponent.getWorkspace(1, "", "1234567890"); // invalid workspace version
             fail();
         } catch (WorkspaceComponentException e) {
             assertEquals("Could not get workspace 1 with version 1234567890", e.getMessage());
@@ -97,7 +97,7 @@ public class WorkspaceComponentTests {
 
         try {
             assertNull(workspaceComponent.getWorkspaceMetaData(1));
-            workspaceComponent.getWorkspace(1, "");
+            workspaceComponent.getWorkspace(1, "", "");
             fail();
         } catch (WorkspaceComponentException e) {
             assertEquals("Could not get workspace 1", e.getMessage());

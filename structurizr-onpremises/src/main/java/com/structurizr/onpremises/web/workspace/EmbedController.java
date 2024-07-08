@@ -43,12 +43,12 @@ public class EmbedController extends AbstractController {
 
         if (workspace.isOpen()) {
             model.addAttribute("urlPrefix", "/share/" + workspaceId);
-            return showEmbed(workspaceId, version, diagramIdentifier, diagramSelector, iframe, health, perspective, model);
+            return showEmbed(workspaceId, null, version, diagramIdentifier, diagramSelector, iframe, health, perspective, model);
         }
 
         if (!StringUtils.isNullOrEmpty(apiKey) && apiKey.equals(workspace.getApiKey())) {
             model.addAttribute("urlPrefix", "/workspace/" + workspaceId);
-            return showEmbed(workspaceId, version, diagramIdentifier, diagramSelector, iframe, health, perspective, model);
+            return showEmbed(workspaceId, null, version, diagramIdentifier, diagramSelector, iframe, health, perspective, model);
         }
 
         return "404";
@@ -73,7 +73,7 @@ public class EmbedController extends AbstractController {
 
         if (workspace.isShareable() && workspace.getSharingToken().equals(token)) {
             model.addAttribute("urlPrefix", "/share/" + workspaceId + "/" + workspace.getSharingToken());
-            return showEmbed(workspaceId, version, diagramIdentifier, diagramSelector, iframe, health, perspective, model);
+            return showEmbed(workspaceId, null, version, diagramIdentifier, diagramSelector, iframe, health, perspective, model);
         }
 
         return "404";
@@ -81,6 +81,7 @@ public class EmbedController extends AbstractController {
 
     private String showEmbed(
             long workspaceId,
+            String branch,
             String version,
             String diagramIdentifier,
             boolean diagramSelector,
@@ -112,7 +113,7 @@ public class EmbedController extends AbstractController {
         workspace.setEditable(false);
         model.addAttribute("workspace", workspace);
 
-        String json = workspaceComponent.getWorkspace(workspaceId, version);
+        String json = workspaceComponent.getWorkspace(workspaceId, branch, version);
         model.addAttribute("workspaceAsJson", JsonUtils.base64(json));
 
         if (version != null && version.trim().length() > 0) {

@@ -26,15 +26,15 @@ public interface WorkspaceComponent {
 
     void putWorkspaceMetaData(WorkspaceMetaData workspaceMetaData) throws WorkspaceComponentException;
 
-    String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException;
+    String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException;
 
     long createWorkspace(User user) throws WorkspaceComponentException;
 
     boolean deleteWorkspace(long workspaceId) throws WorkspaceComponentException;
 
-    void putWorkspace(long workspaceId, String json) throws WorkspaceComponentException;
+    void putWorkspace(long workspaceId, String branch, String json) throws WorkspaceComponentException;
 
-    List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, int maxVersions) throws WorkspaceComponentException;
+    List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, String branch, int maxVersions) throws WorkspaceComponentException;
 
     boolean lockWorkspace(long workspaceId, String username, String agent) throws WorkspaceComponentException;
 

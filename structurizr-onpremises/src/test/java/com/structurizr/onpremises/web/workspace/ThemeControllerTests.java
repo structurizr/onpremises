@@ -46,7 +46,7 @@ public class ThemeControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showPublicTheme(1, "version", model);
+        String view = controller.showPublicTheme(1, model);
         assertEquals("404", view);
     }
 
@@ -61,12 +61,12 @@ public class ThemeControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return workspaceJson;
             }
         });
 
-        String view = controller.showPublicTheme(1, "version", model);
+        String view = controller.showPublicTheme(1, model);
         assertEquals("404", view);
     }
 
@@ -80,12 +80,12 @@ public class ThemeControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return workspaceJson;
             }
         });
 
-        String view = controller.showPublicTheme(1, "version", model);
+        String view = controller.showPublicTheme(1, model);
         assertEquals("json", view);
         assertEquals("""
                 {
@@ -107,7 +107,7 @@ public class ThemeControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showSharedTheme(1, "version", "token", model);
+        String view = controller.showSharedTheme(1, "token", model);
         assertEquals("404", view);
     }
 
@@ -121,12 +121,12 @@ public class ThemeControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return workspaceJson;
             }
         });
 
-        String view = controller.showSharedTheme(1, "version", "token", model);
+        String view = controller.showSharedTheme(1, "token", model);
         assertEquals("404", view);
     }
 
@@ -141,12 +141,12 @@ public class ThemeControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return workspaceJson;
             }
         });
 
-        String view = controller.showSharedTheme(1, "version", "token", model);
+        String view = controller.showSharedTheme(1, "token", model);
         assertEquals("404", view);
     }
 
@@ -161,12 +161,12 @@ public class ThemeControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return workspaceJson;
             }
         });
 
-        String view = controller.showSharedTheme(1, "version", "token", model);
+        String view = controller.showSharedTheme(1, "token", model);
         assertEquals("json", view);
         assertEquals("""
                 {
@@ -189,7 +189,7 @@ public class ThemeControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedTheme(1, "version", model);
+        String view = controller.showAuthenticatedTheme(1, "branch", "version", model);
         assertEquals("404", view);
     }
 
@@ -204,13 +204,13 @@ public class ThemeControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return workspaceJson;
             }
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedTheme(1, "version", model);
+        String view = controller.showAuthenticatedTheme(1, "branch", "version", model);
         assertEquals("404", view);
     }
 
@@ -224,13 +224,13 @@ public class ThemeControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return workspaceJson;
             }
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedTheme(1, "version", model);
+        String view = controller.showAuthenticatedTheme(1, "branch", "version", model);
         assertEquals("json", view);
         assertEquals("""
                 {
@@ -254,13 +254,13 @@ public class ThemeControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return workspaceJson;
             }
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedTheme(1, "version", model);
+        String view = controller.showAuthenticatedTheme(1, "branch", "version", model);
         assertEquals("json", view);
         assertEquals("""
                 {
@@ -284,13 +284,13 @@ public class ThemeControllerTests extends ControllerTestsBase {
             }
 
             @Override
-            public String getWorkspace(long workspaceId, String version) throws WorkspaceComponentException {
+            public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
                 return workspaceJson;
             }
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedTheme(1, "version", model);
+        String view = controller.showAuthenticatedTheme(1, "branch", "version", model);
         assertEquals("json", view);
         assertEquals("""
                 {

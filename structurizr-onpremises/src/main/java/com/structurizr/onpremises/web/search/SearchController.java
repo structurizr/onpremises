@@ -57,7 +57,7 @@ public class SearchController extends AbstractController {
                             if (workspaceMetaData != null) {
                                 if (!workspaceMetaData.isClientEncrypted()) {
                                     log.debug("Indexing workspace with ID " + workspaceMetaData.getId());
-                                    String json = workspaceComponent.getWorkspace(workspaceMetaData.getId(), null);
+                                    String json = workspaceComponent.getWorkspace(workspaceMetaData.getId(), null, null);
                                     Workspace workspace = WorkspaceUtils.fromJson(json);
                                     searchComponent.index(workspace);
                                 } else {
