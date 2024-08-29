@@ -1,5 +1,4 @@
 <%@ include file="/WEB-INF/fragments/workspace/javascript.jspf" %>
-<script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr-ui${structurizrConfiguration.versionSuffix}.js"></script>
 
 <style>
     h2 {

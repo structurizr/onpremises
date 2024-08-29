@@ -1,7 +1,6 @@
 <%@ include file="/WEB-INF/fragments/workspace/javascript.jspf" %>
 
 <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr-lock${structurizrConfiguration.versionSuffix}.js"></script>
-<script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr-ui.js"></script>
 <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/structurizr-embed.js"></script>
 <script type="text/javascript" src="${structurizrConfiguration.cdnUrl}/js/ace-1.5.0.min.js" charset="utf-8"></script>
 
