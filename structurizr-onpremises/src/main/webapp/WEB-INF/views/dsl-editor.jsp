@@ -447,6 +447,7 @@
 
     function saveWorkspace() {
         var save = true;
+        $('#saveButton').prop('disabled', true);
 
         if (hasUnparsedDSL === true) {
             save = confirm("Warning: you have changes in the DSL editor that have not been rendered yet (these changes will not be included in your workspace).");
@@ -480,6 +481,7 @@
                         console.log(err);
                     }
                 } else {
+                    $('#saveButton').prop('disabled', false);
                     if (response.message) {
                         console.log(response.message);
                         if (progressMessage) {
