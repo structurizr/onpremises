@@ -125,3 +125,7 @@ configurations {
 configurations.implementation {
 	exclude group: 'org.apache.xmlgraphics'
 }
+
+configurations.all {
+	exclude group: "commons-logging", module: "commons-logging"
+}
