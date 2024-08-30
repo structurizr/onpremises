@@ -113,8 +113,6 @@ public abstract class AbstractWorkspaceController extends AbstractController {
                 String json = workspaceComponent.getWorkspace(workspaceMetaData.getId(), branch, version);
                 json = json.replaceAll("[\\n\\r\\f]", "");
                 model.addAttribute("workspaceAsJson", JsonUtils.base64(json));
-                workspaceMetaData.setApiKey("");
-                workspaceMetaData.setApiSecret("");
             }
 
             addCommonAttributes(model, workspaceMetaData.getName(), showHeaderAndFooter);

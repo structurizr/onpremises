@@ -107,8 +107,6 @@ public class EmbedController extends AbstractController {
 
         addCommonAttributes(model, "", false);
 
-        workspace.setApiKey("");
-        workspace.setApiSecret("");
         workspace.setInternalVersion(version);
         workspace.setEditable(false);
         model.addAttribute("workspace", workspace);
