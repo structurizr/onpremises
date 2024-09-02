@@ -1,9 +1,6 @@
 package com.structurizr.onpremises.web;
 
-import com.structurizr.onpremises.component.workspace.WorkspaceComponent;
-import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
-import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
-import com.structurizr.onpremises.component.workspace.WorkspaceVersion;
+import com.structurizr.onpremises.component.workspace.*;
 import com.structurizr.onpremises.domain.Image;
 import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.domain.InputStreamAndContentLength;
@@ -61,7 +58,12 @@ public abstract class MockWorkspaceComponent implements WorkspaceComponent {
 
     @Override
     public List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, String branch, int maxVersions) {
-        return null;
+        return List.of();
+    }
+
+    @Override
+    public List<WorkspaceBranch> getWorkspaceBranches(long workspaceId) throws WorkspaceComponentException {
+        return List.of();
     }
 
     @Override

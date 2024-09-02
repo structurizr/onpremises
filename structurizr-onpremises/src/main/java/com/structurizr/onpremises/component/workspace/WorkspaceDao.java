@@ -20,11 +20,13 @@ interface WorkspaceDao {
 
     boolean deleteWorkspace(long workspaceId);
 
-    String getWorkspace(long workspaceId, String version);
+    String getWorkspace(long workspaceId, String branch, String version);
 
-    void putWorkspace(WorkspaceMetaData workspaceMetaData, String json);
+    void putWorkspace(WorkspaceMetaData workspaceMetaData, String json, String branch);
 
-    List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, int maxVersions);
+    List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, String branch, int maxVersions);
+
+    List<WorkspaceBranch> getWorkspaceBranches(long workspaceId);
 
     boolean putImage(long workspaceId, String filename, File file);
 

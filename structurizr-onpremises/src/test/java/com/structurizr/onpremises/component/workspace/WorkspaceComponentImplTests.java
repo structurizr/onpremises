@@ -175,7 +175,7 @@ public class WorkspaceComponentImplTests {
             }
 
             @Override
-            public void putWorkspace(WorkspaceMetaData workspaceMetaData, String json) {
+            public void putWorkspace(WorkspaceMetaData workspaceMetaData, String json, String branch) {
                 jsonBuffer.append(json);
             }
         };
@@ -185,7 +185,7 @@ public class WorkspaceComponentImplTests {
 
         assertEquals(1, workspaceId);
         assertEquals(String.format("""
-                {"configuration":{},"description":"Description","documentation":{},"id":1,"lastModifiedDate":"%s","model":{},"name":"Workspace 0001","revision":1,"views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate())), jsonBuffer.toString());
+                {"configuration":{},"description":"Description","documentation":{},"id":1,"lastModifiedDate":"%s","model":{},"name":"Workspace 0001","views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate())), jsonBuffer.toString());
     }
 
     @Test
@@ -227,7 +227,7 @@ public class WorkspaceComponentImplTests {
     public void getWorkspace_WhenServerSideEncryptionIsNotEnabled() {
         WorkspaceDao dao = new MockWorkspaceDao() {
             @Override
-            public String getWorkspace(long workspaceId, String version) {
+            public String getWorkspace(long workspaceId, String branch, String version) {
                 return "json";
             }
         };
@@ -241,7 +241,7 @@ public class WorkspaceComponentImplTests {
     public void getWorkspace_WhenServerSideEncryptionIsEnabled() {
         WorkspaceDao dao = new MockWorkspaceDao() {
             @Override
-            public String getWorkspace(long workspaceId, String version) {
+            public String getWorkspace(long workspaceId, String branch, String version) {
                 String json = "";
 
                 try {
@@ -283,7 +283,7 @@ public class WorkspaceComponentImplTests {
 
             WorkspaceDao dao = new MockWorkspaceDao() {
                 @Override
-                public String getWorkspace(long workspaceId, String version) {
+                public String getWorkspace(long workspaceId, String branch, String version) {
                     return json;
                 }
             };
@@ -309,13 +309,13 @@ public class WorkspaceComponentImplTests {
             }
 
             @Override
-            public void putWorkspace(WorkspaceMetaData workspaceMetaData, String json) {
+            public void putWorkspace(WorkspaceMetaData workspaceMetaData, String json, String branch) {
                 jsonBuffer.append(json);
             }
         };
 
         String expectedJson = """
-                {"configuration":{},"description":"Description","documentation":{},"id":1,"lastModifiedDate":"%s","model":{},"name":"Name","revision":%s,"views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""";
+                {"configuration":{},"description":"Description","documentation":{},"id":1,"lastModifiedDate":"%s","model":{},"name":"Name","views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""";
 
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
         workspaceComponent.putWorkspace(1, "", json);
@@ -342,7 +342,7 @@ public class WorkspaceComponentImplTests {
             }
 
             @Override
-            public void putWorkspace(WorkspaceMetaData workspaceMetaData, String json) {
+            public void putWorkspace(WorkspaceMetaData workspaceMetaData, String json, String branch) {
                 jsonBuffer.append(json);
             }
         };
@@ -350,16 +350,16 @@ public class WorkspaceComponentImplTests {
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "password");
         workspaceComponent.putWorkspace(1, "", json);
         String pattern = """
-                "id":1,"lastModifiedDate":"%s","name":"Name","revision":%s}""";
+                "id":1,"lastModifiedDate":"%s","name":"Name"}""";
         assertTrue(jsonBuffer.toString().startsWith("{\"ciphertext\":\""));
-        assertTrue(jsonBuffer.toString().endsWith(String.format(pattern, DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()), "1")));
+        assertTrue(jsonBuffer.toString().endsWith(String.format(pattern, DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()))));
 
         // and again, to increment the revision
         json = jsonBuffer.toString();
         jsonBuffer.setLength(0);
         workspaceComponent.putWorkspace(1, "", json);
         assertTrue(jsonBuffer.toString().startsWith("{\"ciphertext\":\""));
-        assertTrue(jsonBuffer.toString().endsWith(String.format(pattern, DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()), "2")));
+        assertTrue(jsonBuffer.toString().endsWith(String.format(pattern, DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()))));
     }
 
     @Test
@@ -381,7 +381,7 @@ public class WorkspaceComponentImplTests {
             }
 
             @Override
-            public void putWorkspace(WorkspaceMetaData workspaceMetaData, String json) {
+            public void putWorkspace(WorkspaceMetaData workspaceMetaData, String json, String branch) {
                 jsonBuffer.append(json);
             }
         };
@@ -389,16 +389,16 @@ public class WorkspaceComponentImplTests {
         WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
         workspaceComponent.putWorkspace(1, "", json);
         String pattern = """
-                "id":1,"lastModifiedDate":"%s","name":"Name","revision":%s}""";
+                "id":1,"lastModifiedDate":"%s","name":"Name"}""";
         assertTrue(jsonBuffer.toString().startsWith("{\"ciphertext\":\""));
-        assertTrue(jsonBuffer.toString().endsWith(String.format(pattern, DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()), "1")));
+        assertTrue(jsonBuffer.toString().endsWith(String.format(pattern, DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()))));
 
         // and again, to increment the revision
         json = jsonBuffer.toString();
         jsonBuffer.setLength(0);
         workspaceComponent.putWorkspace(1, "", json);
         assertTrue(jsonBuffer.toString().startsWith("{\"ciphertext\":\""));
-        assertTrue(jsonBuffer.toString().endsWith(String.format(pattern, DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()), "2")));
+        assertTrue(jsonBuffer.toString().endsWith(String.format(pattern, DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()))));
     }
 
     @Test
@@ -698,80 +698,6 @@ public class WorkspaceComponentImplTests {
         assertNull(workspaceMetaData.getLockedUser());
         assertNull(workspaceMetaData.getLockedAgent());
         assertNull(workspaceMetaData.getLockedDate());
-    }
-
-    @Test
-    public void putWorkspace_UpdatesTheWorkspace_WhenTheCorrectRevisionIsSpecified() throws Exception {
-        Workspace workspace = new Workspace("Name", "Description");
-
-        final WorkspaceMetaData wmd = new WorkspaceMetaData(1);
-        wmd.setRevision(1);
-        WorkspaceDao dao = new MockWorkspaceDao() {
-            @Override
-            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
-                return wmd;
-            }
-
-            @Override
-            public void putWorkspaceMetaData(WorkspaceMetaData workspaceMetaData) {
-                wmd.setRevision(workspaceMetaData.getRevision());
-            }
-        };
-
-        WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
-        workspaceComponent.putWorkspace(1, "", WorkspaceUtils.toJson(workspace, false));
-        assertEquals(2, wmd.getRevision());
-
-        // and again, to increment the revision
-        workspace.setRevision(2L);
-        workspaceComponent.putWorkspace(1, "", WorkspaceUtils.toJson(workspace, false));
-        assertEquals(3, wmd.getRevision());
-
-        // and again, to increment the revision
-        workspace.setRevision(3L);
-        workspaceComponent.putWorkspace(1, "", WorkspaceUtils.toJson(workspace, false));
-        assertEquals(4, wmd.getRevision());
-    }
-
-    @Test
-    public void putWorkspace_ThrowsAnException_WhenTheIncorrectRevisionIsSpecified() throws Exception {
-        Workspace workspace = new Workspace("Name", "Description");
-        workspace.setLastModifiedUser("user@example.com");
-
-        final WorkspaceMetaData workspaceMetaData = new WorkspaceMetaData(1);
-        workspaceMetaData.setRevision(1);
-
-        WorkspaceDao dao = new MockWorkspaceDao() {
-            @Override
-            public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
-                return workspaceMetaData;
-            }
-
-            @Override
-            public void putWorkspaceMetaData(WorkspaceMetaData wmd) {
-                workspaceMetaData.setRevision(wmd.getRevision());
-            }
-        };
-
-        WorkspaceComponent workspaceComponent = new WorkspaceComponentImpl(dao, "");
-        workspaceComponent.putWorkspace(1, "", WorkspaceUtils.toJson(workspace, false));
-        assertEquals(2, workspaceMetaData.getRevision());
-
-        // and again, to increment the revision
-        workspace.setRevision(2L);
-        workspaceComponent.putWorkspace(1, "", WorkspaceUtils.toJson(workspace, false));
-        assertEquals(3, workspaceMetaData.getRevision());
-
-        try {
-            // and repeat, but specifying revision 2 again
-            workspace.setRevision(2L);
-            workspaceComponent.putWorkspace(1, "", WorkspaceUtils.toJson(workspace, false));
-            fail();
-        } catch (WorkspaceComponentException wce) {
-            System.out.println(wce.getMessage());
-            assertTrue(wce.getMessage().startsWith("The workspace could not be saved because a newer version has been created by user@example.com at "));
-            assertEquals(3, workspaceMetaData.getRevision());
-        }
     }
 
     @Test

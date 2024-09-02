@@ -30,8 +30,11 @@ class FileSystemWorkspaceDao extends AbstractWorkspaceDao {
     static final String WORKSPACE_PROPERTIES_FILENAME = "workspace.properties";
     static final String VERSION_TIMESTAMP_FORMAT = "yyyyMMddHHmmssSSS";
     static final String WORKSPACE_VERSION_JSON_FILENAME_REGEX = "workspace-\\d{17}\\.json";
+    static final String BRANCH_NAME_REGEX = "[a-zA-Z0-9-_]*";
     static final String IMAGES_DIRECTORY_NAME = "images";
     static final String PNG_FILENAME_REGEX = ".*\\.png";
+
+    private static final String BRANCHES_DIRECTORY_NAME = "branches";
 
     private final File dataDirectory;
 
@@ -40,7 +43,18 @@ class FileSystemWorkspaceDao extends AbstractWorkspaceDao {
     }
 
     private File getPathToWorkspace(long workspaceId) {
-        File path = new File(dataDirectory, "" + workspaceId);
+        return getPathToWorkspace(workspaceId, null);
+    }
+
+    private File getPathToWorkspace(long workspaceId, String branch) {
+        File path;
+
+        if (StringUtils.isNullOrEmpty(branch)) {
+            path = new File(dataDirectory, "" + workspaceId);
+        } else {
+            path = new File(dataDirectory, workspaceId + "/" + BRANCHES_DIRECTORY_NAME + "/" + branch);
+        }
+
         if (!path.exists()) {
             try {
                 Path directory = Files.createDirectories(path.toPath());
@@ -138,9 +152,9 @@ class FileSystemWorkspaceDao extends AbstractWorkspaceDao {
     }
 
     @Override
-    public String getWorkspace(long workspaceId, String version) {
+    public String getWorkspace(long workspaceId, String branch, String version) {
         try {
-            File path = getPathToWorkspace(workspaceId);
+            File path = getPathToWorkspace(workspaceId, branch);
             File file;
 
             if (!StringUtils.isNullOrEmpty(version)) {
@@ -164,10 +178,10 @@ class FileSystemWorkspaceDao extends AbstractWorkspaceDao {
     }
 
     @Override
-    public void putWorkspace(WorkspaceMetaData workspaceMetaData, String json) {
+    public void putWorkspace(WorkspaceMetaData workspaceMetaData, String json, String branch) {
         try {
             // write the latest version to workspace.json
-            File path = getPathToWorkspace(workspaceMetaData.getId());
+            File path = getPathToWorkspace(workspaceMetaData.getId(), branch);
             File file = new File(path, WORKSPACE_JSON_FILENAME);
             Files.writeString(file.toPath(), json);
 
@@ -185,13 +199,13 @@ class FileSystemWorkspaceDao extends AbstractWorkspaceDao {
     }
 
     @Override
-    public List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, int maxVersions) {
+    public List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, String branch, int maxVersions) {
         List<WorkspaceVersion> versions = new ArrayList<>();
         SimpleDateFormat sdf = new SimpleDateFormat(VERSION_TIMESTAMP_FORMAT);
         sdf.setTimeZone(TimeZone.getTimeZone(UTC_TIME_ZONE));
 
         try {
-            File workspaceDirectory = getPathToWorkspace(workspaceId);
+            File workspaceDirectory = getPathToWorkspace(workspaceId, branch);
             if (workspaceDirectory.exists()) {
                 File[] files = workspaceDirectory.listFiles((dir, name) -> name.matches(WORKSPACE_VERSION_JSON_FILENAME_REGEX));
 
@@ -244,6 +258,30 @@ class FileSystemWorkspaceDao extends AbstractWorkspaceDao {
     @Scheduled(cron="0 0 * * * ?")
     public void removeOldWorkspaceVersions() {
         removeOldWorkspaceVersions(Configuration.getInstance().getMaxWorkspaceVersions());
+    }
+
+    @Override
+    public List<WorkspaceBranch> getWorkspaceBranches(long workspaceId) {
+        List<WorkspaceBranch> branches = new ArrayList<>();
+
+        try {
+            File branchesDirectory = new File(getPathToWorkspace(workspaceId), BRANCHES_DIRECTORY_NAME);
+            if (branchesDirectory.exists()) {
+                File[] files = branchesDirectory.listFiles((dir, name) -> name.matches(BRANCH_NAME_REGEX));
+
+                if (files != null) {
+                    Arrays.sort(files, (f1, f2) -> f2.getName().compareTo(f1.getName()));
+
+                    for (File file : files) {
+                        branches.add(new WorkspaceBranch(file.getName()));
+                    }
+                }
+            }
+        } catch (Exception ioe) {
+            log.error(ioe);
+        }
+
+        return branches;
     }
 
     private File getPathToWorkspaceImages(long workspaceId) {

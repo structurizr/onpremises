@@ -36,18 +36,23 @@ public class MockWorkspaceDao implements WorkspaceDao {
     }
 
     @Override
-    public String getWorkspace(long workspaceId, String version) {
+    public String getWorkspace(long workspaceId, String branch, String version) {
         return null;
     }
 
     @Override
-    public void putWorkspace(WorkspaceMetaData workspaceMetaData, String json) {
+    public void putWorkspace(WorkspaceMetaData workspaceMetaData, String json, String branch) {
 
     }
 
     @Override
-    public List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, int maxVersions) {
-        return null;
+    public List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, String branch, int maxVersions) {
+        return List.of();
+    }
+
+    @Override
+    public List<WorkspaceBranch> getWorkspaceBranches(long workspaceId) {
+        return List.of();
     }
 
     @Override

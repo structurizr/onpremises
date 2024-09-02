@@ -1,6 +1,7 @@
 package com.structurizr.onpremises.web.workspace;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
+import com.structurizr.util.StringUtils;
 import com.structurizr.view.PaperSize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -28,7 +29,7 @@ public class DiagramEditorController extends AbstractWorkspaceEditorController {
             return show404Page(model);
         }
 
-        model.addAttribute("publishThumbnails", true);
+        model.addAttribute("publishThumbnails", StringUtils.isNullOrEmpty(branch) && StringUtils.isNullOrEmpty(version));
         model.addAttribute("createReviews", true);
         model.addAttribute("quickNavigationPath", "diagram-editor");
         model.addAttribute("paperSizes", PaperSize.getOrderedPaperSizes());

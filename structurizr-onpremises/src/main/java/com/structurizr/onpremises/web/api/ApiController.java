@@ -108,15 +108,15 @@ public class ApiController extends AbstractController {
                             throw new ApiException(e.getMessage());
                         }
 
-                        searchComponent.index(workspace);
+                        if (StringUtils.isNullOrEmpty(branch)) {
+                            searchComponent.index(workspace);
+                        }
                     } catch (Exception e) {
                         log.error(e);
                     }
                 }
 
-                ApiResponse apiResponse = new ApiResponse("OK");
-                apiResponse.setRevision(workspaceComponent.getWorkspaceMetaData(workspaceId).getRevision());
-                return apiResponse;
+                return new ApiResponse("OK");
             } else {
                 throw new ApiException("Workspace ID must be greater than 1");
             }

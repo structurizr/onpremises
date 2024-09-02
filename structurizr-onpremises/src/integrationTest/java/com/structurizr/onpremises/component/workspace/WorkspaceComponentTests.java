@@ -50,7 +50,7 @@ public class WorkspaceComponentTests {
 
         WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(1);
         String jsonV1 = String.format("""
-                {"configuration":{},"description":"Description","documentation":{},"id":1,"lastModifiedDate":"%s","model":{},"name":"Workspace 0001","revision":1,"views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()));
+                {"configuration":{},"description":"Description","documentation":{},"id":1,"lastModifiedDate":"%s","model":{},"name":"Workspace 0001","views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()));
         assertEquals(jsonV1, workspaceComponent.getWorkspace(1, "", ""));
 
         Collection<WorkspaceMetaData> workspaces = workspaceComponent.getWorkspaces();
@@ -71,7 +71,7 @@ public class WorkspaceComponentTests {
 
         workspaceMetaData = workspaceComponent.getWorkspaceMetaData(1);
         String jsonV2 = String.format("""
-                {"configuration":{},"description":"...","documentation":{},"id":1,"lastModifiedDate":"%s","model":{},"name":"Financial Risk System","revision":2,"views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()));
+                {"configuration":{},"description":"...","documentation":{},"id":1,"lastModifiedDate":"%s","model":{},"name":"Financial Risk System","views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()));
         assertEquals(jsonV2, workspaceComponent.getWorkspace(1, "", ""));
 
         workspaceVersions = workspaceComponent.getWorkspaceVersions(1, "", 10);

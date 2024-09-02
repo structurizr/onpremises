@@ -196,7 +196,7 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
 
     @Override
     public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
-        String json = workspaceDao.getWorkspace(workspaceId, version);
+        String json = workspaceDao.getWorkspace(workspaceId, branch, version);
 
         if (json.contains(ENCRYPTION_STRATEGY_STRING) && json.contains(CIPHERTEXT_STRING)) {
             EncryptedJsonReader encryptedJsonReader = new EncryptedJsonReader();
@@ -289,14 +289,6 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
                 encryptedWorkspace.setId(workspaceId);
                 encryptedWorkspace.setLastModifiedDate(DateUtils.removeMilliseconds(DateUtils.getNow()));
 
-                if (encryptedWorkspace.getRevision() == null) {
-                    currentRevision = workspaceMetaData.getRevision();
-                    encryptedWorkspace.setRevision(currentRevision + 1);
-                } else {
-                    currentRevision = encryptedWorkspace.getRevision();
-                    encryptedWorkspace.setRevision(currentRevision + 1);
-                }
-
                 // also remove the workspace configuration
                 configuration = encryptedWorkspace.getConfiguration();
                 encryptedWorkspace.clearConfiguration();
@@ -322,14 +314,6 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
 
                 workspace.setId(workspaceId);
                 workspace.setLastModifiedDate(DateUtils.removeMilliseconds(DateUtils.getNow()));
-
-                if (workspace.getRevision() == null) {
-                    currentRevision = workspaceMetaData.getRevision();
-                    workspace.setRevision(currentRevision + 1);
-                } else {
-                    currentRevision = workspace.getRevision();
-                    workspace.setRevision(currentRevision + 1);
-                }
 
                 // also remove the configuration
                 configuration = workspace.getConfiguration();
@@ -360,12 +344,6 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
                 }
             }
 
-            // check the revision
-            if (workspaceMetaData.getRevision() > currentRevision) {
-                SimpleDateFormat sdf = new SimpleDateFormat(DateUtils.USER_FRIENDLY_DATE_FORMAT);
-                throw new WorkspaceComponentException("The workspace could not be saved because a newer version has been created by " + workspaceMetaData.getLastModifiedUser() + " at " + sdf.format(workspaceMetaData.getLastModifiedDate()) + ".");
-            }
-
             workspaceMetaData.setSize(jsonToBeStored.length());
 
             // check the workspace lock
@@ -375,36 +353,38 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
             }
 
             // use the DAO to write the workspace
-            workspaceDao.putWorkspace(workspaceMetaData, jsonToBeStored);
+            workspaceDao.putWorkspace(workspaceMetaData, jsonToBeStored, branch);
 
-            try {
-                workspaceMetaData.setName(workspaceToBeStored.getName());
-                workspaceMetaData.setDescription(workspaceToBeStored.getDescription());
-                workspaceMetaData.setRevision(workspaceMetaData.getRevision() + 1);
+            if (StringUtils.isNullOrEmpty(branch)) {
+                // only store workspace metadata for the main branch
+                try {
+                    workspaceMetaData.setName(workspaceToBeStored.getName());
+                    workspaceMetaData.setDescription(workspaceToBeStored.getDescription());
 
-                // configure users
-                if (configuration != null) {
-                    if (configuration.getVisibility() != null) {
-                        workspaceMetaData.setPublicWorkspace(configuration.getVisibility() == Visibility.Public);
-                    }
+                    // configure users
+                    if (configuration != null) {
+                        if (configuration.getVisibility() != null) {
+                            workspaceMetaData.setPublicWorkspace(configuration.getVisibility() == Visibility.Public);
+                        }
 
-                    if (!configuration.getUsers().isEmpty()) {
-                        workspaceMetaData.clearWriteUsers();
-                        workspaceMetaData.clearReadUsers();
+                        if (!configuration.getUsers().isEmpty()) {
+                            workspaceMetaData.clearWriteUsers();
+                            workspaceMetaData.clearReadUsers();
 
-                        for (com.structurizr.configuration.User user : configuration.getUsers()) {
-                            if (user.getRole() == Role.ReadWrite) {
-                                workspaceMetaData.addWriteUser(user.getUsername());
-                            } else {
-                                workspaceMetaData.addReadUser(user.getUsername());
+                            for (com.structurizr.configuration.User user : configuration.getUsers()) {
+                                if (user.getRole() == Role.ReadWrite) {
+                                    workspaceMetaData.addWriteUser(user.getUsername());
+                                } else {
+                                    workspaceMetaData.addReadUser(user.getUsername());
+                                }
                             }
                         }
                     }
-                }
 
-                putWorkspaceMetaData(workspaceMetaData);
-            } catch (Exception e) {
-                log.error(e);
+                    putWorkspaceMetaData(workspaceMetaData);
+                } catch (Exception e) {
+                    log.error(e);
+                }
             }
         } catch (WorkspaceComponentException wce) {
             throw wce;
@@ -465,7 +445,12 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
 
     @Override
     public List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, String branch, int maxVersions) throws WorkspaceComponentException {
-        return workspaceDao.getWorkspaceVersions(workspaceId, maxVersions);
+        return workspaceDao.getWorkspaceVersions(workspaceId, branch, maxVersions);
+    }
+
+    @Override
+    public List<WorkspaceBranch> getWorkspaceBranches(long workspaceId) throws WorkspaceComponentException {
+        return workspaceDao.getWorkspaceBranches(workspaceId);
     }
 
     @Override

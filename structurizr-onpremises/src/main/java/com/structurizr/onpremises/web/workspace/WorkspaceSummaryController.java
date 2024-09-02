@@ -20,6 +20,7 @@ public class WorkspaceSummaryController extends AbstractWorkspaceController {
             @PathVariable("workspaceId") long workspaceId,
             ModelMap model
     ) {
+        model.addAttribute("branch", "");
         model.addAttribute("versions", workspaceComponent.getWorkspaceVersions(workspaceId, null, Configuration.getInstance().getMaxWorkspaceVersions()));
 
         return showPublicView(VIEW, workspaceId, model, true);
@@ -31,6 +32,7 @@ public class WorkspaceSummaryController extends AbstractWorkspaceController {
             @PathVariable("token") String token,
             ModelMap model
     ) {
+        model.addAttribute("branch", "");
         model.addAttribute("versions", workspaceComponent.getWorkspaceVersions(workspaceId, null, Configuration.getInstance().getMaxWorkspaceVersions()));
 
         return showSharedView(VIEW, workspaceId, token, model, true);
@@ -40,7 +42,7 @@ public class WorkspaceSummaryController extends AbstractWorkspaceController {
     @PreAuthorize("isAuthenticated()")
     public String showAuthenticatedWorkspaceSummary(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String branch,
+            @RequestParam(required = false, defaultValue = "") String branch,
             @RequestParam(required = false) String version,
             ModelMap model
     ) {
@@ -49,7 +51,9 @@ public class WorkspaceSummaryController extends AbstractWorkspaceController {
             return show404Page(model);
         }
 
+        model.addAttribute("branch", branch);
         model.addAttribute("versions", workspaceComponent.getWorkspaceVersions(workspaceId, branch, Configuration.getInstance().getMaxWorkspaceVersions()));
+        model.addAttribute("branches", workspaceComponent.getWorkspaceBranches(workspaceId));
 
         boolean editable = workspaceMetaData.hasNoUsersConfigured() || workspaceMetaData.isWriteUser(getUser());
 

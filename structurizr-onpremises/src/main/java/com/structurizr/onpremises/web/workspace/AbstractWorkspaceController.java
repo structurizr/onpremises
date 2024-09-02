@@ -86,8 +86,12 @@ public abstract class AbstractWorkspaceController extends AbstractController {
                 model.addAttribute("sharingUrlPrefix", "/share/" + workspaceMetaData.getId() + "/" + workspaceMetaData.getSharingToken());
             }
 
-            if (version != null && version.trim().length() > 0) {
-                model.addAttribute(URL_SUFFIX, "?version=" + version);
+            if (!StringUtils.isNullOrEmpty(branch) && !StringUtils.isNullOrEmpty(version)) {
+                model.addAttribute(URL_SUFFIX, String.format("?branch=%s&version=%s", branch, version));
+            } else if (!StringUtils.isNullOrEmpty(branch)) {
+                model.addAttribute(URL_SUFFIX, String.format("?branch=%s", branch));
+            } else if (!StringUtils.isNullOrEmpty(version)) {
+                model.addAttribute(URL_SUFFIX, String.format("?version=%s", version));
             }
 
             if (workspaceMetaData.hasNoUsersConfigured() || workspaceMetaData.isWriteUser(user)) {
@@ -117,6 +121,7 @@ public abstract class AbstractWorkspaceController extends AbstractController {
 
             addCommonAttributes(model, workspaceMetaData.getName(), showHeaderAndFooter);
 
+            workspaceMetaData.setBranch(branch);
             workspaceMetaData.setInternalVersion(version);
             model.addAttribute("workspace", workspaceMetaData);
             model.addAttribute("showToolbar", true);

@@ -83,7 +83,7 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
     }
 
     @Override
-    public void putWorkspace(WorkspaceMetaData workspaceMetaData, String json) {
+    public void putWorkspace(WorkspaceMetaData workspaceMetaData, String json, String branch) {
         String objectKey = getBaseObjectName(workspaceMetaData.getId()) + WORKSPACE_CONTENT_FILENAME;
 
         byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
@@ -100,7 +100,7 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
     }
 
     @Override
-    public String getWorkspace(long workspaceId, String version) {
+    public String getWorkspace(long workspaceId, String branch, String version) {
         InputStream inputStream = null;
         try {
             String objectKey = getBaseObjectName(workspaceId) + WORKSPACE_CONTENT_FILENAME;
@@ -225,7 +225,7 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
     }
 
     @Override
-    public List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, int maxVersions) {
+    public List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, String branch, int maxVersions) {
         List<WorkspaceVersion> versions = new ArrayList<>();
 
         String objectKey = getBaseObjectName(workspaceId) + WORKSPACE_CONTENT_FILENAME;
@@ -248,6 +248,11 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
         }
 
         return versions;
+    }
+
+    @Override
+    public List<WorkspaceBranch> getWorkspaceBranches(long workspaceId) {
+        return List.of();
     }
 
     @Override

@@ -79,12 +79,16 @@
                     <button id="saveButton" class="btn btn-default" title="Save workspace" disabled="true" style="text-shadow: none"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/folder-check.svg" class="icon-btn icon-white" /></button>
                 </div>
 
+                <c:if test="${not empty workspace.branch}">
+                    <span class="label label-version" style="font-size: 13px"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/bezier2.svg" class="icon-sm icon-white" /> ${workspace.branch}</span>
+                </c:if>
+
                 <c:if test="${not empty param.version}">
-                    <span class="label label-version" style="font-size: 11px"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-xs icon-white" /> ${workspace.internalVersion}</span>
+                    <span class="label label-version" style="font-size: 13px"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-sm icon-white" /> ${workspace.internalVersion}</span>
                 </c:if>
 
                 <c:if test="${not workspace.active}">
-                    <span class="label label-danger" style="font-size: 11px"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/exclamation-circle.svg" class="icon-sm icon-white" /> Read-Only</span>
+                    <span class="label label-danger" style="font-size: 13px"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/exclamation-circle.svg" class="icon-sm icon-white" /> Read-Only</span>
                 </c:if>
             </div>
         </div>
@@ -287,7 +291,7 @@
 
             var diagramIdentifier = viewInFocus;
             var domId = 'diagramEditorIframe';
-            var embedUrl = '/embed?workspace=${workspace.id}&view=' + encodeURIComponent(diagramIdentifier) + '&editable=true&urlPrefix=${urlPrefix}&iframe=' + domId;
+            var embedUrl = '/embed?workspace=${workspace.id}&branch=${workspace.branch}&version=${param.version}&view=' + encodeURIComponent(diagramIdentifier) + '&editable=true&urlPrefix=${urlPrefix}&iframe=' + domId;
             diagramEditorDiv.append('<div style="text-align: center"><iframe id="' + domId + '" class="structurizrEmbed thumbnail" src="' + embedUrl + '" width="100%" height="' + window.innerHeight + 'px" marginwidth="0" marginheight="0" frameborder="0" scrolling="no" allowfullscreen="true"></iframe></div>');
 
             setTimeout(function () {

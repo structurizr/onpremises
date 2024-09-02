@@ -24,7 +24,6 @@ public class WorkspaceMetaData {
     static final String LAST_MODIFIED_USER_PROPERTY = "lastModifiedUser";
     static final String LAST_MODIFIED_AGENT_PROPERTY = "lastModifiedAgent";
     static final String LAST_MODIFIED_DATE_PROPERTY = "lastModifiedDate";
-    static final String REVISION_PROPERTY = "revision";
     static final String SIZE_PROPERTY = "size";
     static final String API_KEY_PROPERTY = "apiKey";
     static final String API_SECRET_PROPERTY = "apiSecret";
@@ -59,8 +58,8 @@ public class WorkspaceMetaData {
     private String lockedAgent;
     private Date lockedDate;
 
+    private String branch;
     private String internalVersion;
-    private long revision = 0;
 
     private boolean editable = false;
 
@@ -229,11 +228,7 @@ public class WorkspaceMetaData {
     }
 
     public long getRevision() {
-        return revision;
-    }
-
-    public void setRevision(long revision) {
-        this.revision = revision;
+        return 0;
     }
 
     public boolean isEditable() {
@@ -322,6 +317,14 @@ public class WorkspaceMetaData {
         return StringUtils.isNullOrEmpty(owner) || owner.equals(user.getUsername());
     }
 
+    public String getBranch() {
+        return branch;
+    }
+
+    public void setBranch(String branch) {
+        this.branch = branch;
+    }
+
     public String getInternalVersion() {
         return internalVersion;
     }
@@ -364,7 +367,6 @@ public class WorkspaceMetaData {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        workspace.setRevision(Long.parseLong(properties.getProperty(REVISION_PROPERTY, "0")));
         workspace.setSize(Long.parseLong(properties.getProperty(SIZE_PROPERTY, "0")));
         workspace.setApiKey(properties.getProperty(API_KEY_PROPERTY, ""));
         workspace.setApiSecret(properties.getProperty(API_SECRET_PROPERTY, ""));
@@ -438,8 +440,6 @@ public class WorkspaceMetaData {
         } else {
             properties.setProperty(LAST_MODIFIED_DATE_PROPERTY, "");
         }
-
-        properties.setProperty(REVISION_PROPERTY, "" + this.getRevision());
 
         if (!StringUtils.isNullOrEmpty(this.getOwner())) {
             properties.setProperty(OWNER_PROPERTY, this.getOwner());

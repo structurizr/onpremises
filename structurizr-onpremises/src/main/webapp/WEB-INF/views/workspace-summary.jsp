@@ -38,12 +38,6 @@
                 Workspace
             </div>
 
-            <c:if test="${not empty param.version}">
-            <div class="navigationItem">
-                <span class="label label-version"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-xs icon-white" /> <c:out value="${workspace.internalVersion}" /></span>
-            </div>
-            </c:if>
-
             <c:if test="${workspace.clientEncrypted}">
             <div class="navigationItem">
                 <img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/file-earmark-lock.svg" class="icon-sm" /> Client-side encrypted
@@ -120,7 +114,7 @@
             <div class="navigationItemSeparator"></div>
             <c:if test="${fn:startsWith(urlPrefix, '/workspace')}">
             <div class="navigationItem">
-                <a href="<c:out value="${urlPrefix}" />/inspections"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clipboard-pulse.svg" class="icon-sm" /> Inspections</a>
+                <a href="<c:out value="${urlPrefix}" />/inspections<c:out value="${urlSuffix}" />"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clipboard-pulse.svg" class="icon-sm" /> Inspections</a>
             </div>
 
             <div class="navigationItem">
@@ -148,35 +142,43 @@
                     <c:out value="${workspace.description}" escapeXml="true" />
                 </p>
 
-                <p class="workspaceMetaData">
-                    <c:if test="${empty param.version}">
-                    Last modified: <fmt:formatDate value="${workspace.lastModifiedDate}" pattern="EEE dd MMM yyyy HH:mm:ss z" timeZone="${user.timeZone}" />
-                    <c:if test="${workspace.editable eq true}">by ${workspace.lastModifiedUser} using ${workspace.lastModifiedAgent}</c:if>
-
-                    <c:if test="${not empty workspace.version}">
-                    | Version: ${workspace.version}
-                    </c:if>
-                    <c:if test="${workspace.size gt 0}">
-                    |
-                    Size: <fmt:formatNumber minFractionDigits="2" maxFractionDigits="2" value="${workspace.sizeInMegaBytes}" /> MB
-                    </c:if>
-                    </c:if>
-                </p>
-
-                <c:if test="${fn:startsWith(urlPrefix, '/workspace') && not empty versions}">
+                <c:if test="${fn:startsWith(urlPrefix, '/workspace')}">
                 <div class="centered" style="margin-top: 20px">
-                    <form class="form-inline" style="display: inline-block" method="get" action="<c:out value="${urlPrefix}" />">
+                    <c:if test="${not empty branches}">
+                    <form id="workspaceBranchForm" class="form-inline" style="display: inline-block" method="get" action="<c:out value="${urlPrefix}" />">
+                        <select id="workspaceBranch" name="branch" class="form-control">
+                            <option value="">[branch] main</option>
+                            <c:forEach var="branch" items="${branches}">
+                                <option value="${branch.name}">[branch] ${branch.name}</option>
+                            </c:forEach>
+                        </select>
+                    </form>
+                    </c:if>
+
+                    <c:if test="${not empty versions && versions.size() > 1}">
+                    <form id="workspaceVersionForm" class="form-inline" style="display: inline-block" method="get" action="<c:out value="${urlPrefix}" />">
+                        <input type="hidden" name="branch" value="${workspace.branch}" />
                         <select id="workspaceVersion" name="version" class="form-control">
                             <c:forEach var="version" items="${versions}">
                                 <option value="${version.versionId}"><fmt:formatDate value="${version.lastModifiedDate}" pattern="EEE dd MMM yyyy HH:mm:ss z" timeZone="${user.timeZone}" /></option>
                             </c:forEach>
                         </select>
-                        <input type="submit" class="btn btn-default" value="Load version" style="height: 35.5px"/>
                     </form>
                     <c:if test="${not empty param.version && workspace.editable && not workspace.locked}">
-                        <button id="revertButton" class="btn btn-default small"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-btn" /> Revert to <c:out value="${workspace.internalVersion}" /></button>
+                        <button id="revertButton" class="btn btn-default small"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-btn" /> Revert to this version</button>
+                    </c:if>
                     </c:if>
                 </div>
+
+                <div class="centered" style="margin-top: 10px;">
+                <c:if test="${not empty workspace.branch}">
+                <span class="label label-version" style="font-size: 15px"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/bezier2.svg" class="icon-sm icon-white" /> ${workspace.branch}</span>
+                </c:if>
+                <c:if test="${not empty param.version}">
+                <span class="label label-version" style="font-size: 15px"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-sm icon-white" /> ${workspace.internalVersion}</span>
+                </c:if>
+                </div>
+
                 </c:if>
 
                 <div id="gettingStarted" class="centered hidden">
@@ -240,7 +242,21 @@
 
     progressMessage.show('<p>Loading workspace...</p>');
 
-    $('#unlockWorkspaceLink').click(function(event) { unlockWorkspace(event); });
+    $('#unlockWorkspaceLink').click(function (event) {
+        unlockWorkspace(event);
+    });
+
+    <c:if test="${not empty workspace.branch}">
+    $('#workspaceBranch').val("<c:out value="${workspace.branch}" />");
+    </c:if>
+
+    $('#workspaceBranch').on('change', function() {
+        $('#workspaceBranchForm').submit();
+    });
+
+    $('#workspaceVersion').on('change', function() {
+        $('#workspaceVersionForm').submit();
+    });
 
     <c:if test="${not empty param.version}">
     $('#workspaceVersion').val("<c:out value="${workspace.internalVersion}" />");
@@ -255,12 +271,12 @@
 
     addOnClickHandler('revertButton', revertToLoadedVersion);
 
-    addOnClickHandler('exportJsonLink', function(e) {
+    addOnClickHandler('exportJsonLink', function (e) {
         structurizr.util.exportWorkspace(structurizr.workspace.id, structurizr.workspace.getJson());
         e.preventDefault();
     });
 
-    addOnClickHandler('exportDslLink', function(e) {
+    addOnClickHandler('exportDslLink', function (e) {
         var dslSource = structurizr.workspace.getProperty('structurizr.dsl');
         if (dslSource !== undefined) {
             dslSource = structurizr.util.atob(dslSource);
@@ -271,19 +287,19 @@
         e.preventDefault();
     });
 
-    addOnClickHandler('importJsonLink1', function(e) {
+    addOnClickHandler('importJsonLink1', function (e) {
         $('#importFromJsonControl').trigger('click');
         e.preventDefault();
     });
 
-    addOnClickHandler('importJsonLink2', function(e) {
+    addOnClickHandler('importJsonLink2', function (e) {
         $('#importFromJsonControl').trigger('click');
         e.preventDefault();
     });
 
     var importFromJsonControl = document.getElementById('importFromJsonControl');
     if (importFromJsonControl) {
-        importFromJsonControl.onchange = function() {
+        importFromJsonControl.onchange = function () {
             importWorkspaceFromFile(importFromJsonControl.files[0], structurizr.workspace.id);
         };
     }
@@ -306,7 +322,7 @@
             const thumbnailSize = 200;
             var html = '';
 
-            views.forEach(function(view) {
+            views.forEach(function (view) {
                 var url = '<c:out value="${urlPrefix}" />/diagrams<c:out value="${urlSuffix}" />#' + structurizr.util.escapeHtml(view.key);
                 var title = structurizr.util.escapeHtml(structurizr.ui.getTitleForView(view));
 
@@ -316,14 +332,14 @@
                     if (view.type === structurizr.constants.IMAGE_VIEW_TYPE) {
                         html += '  <a href="' + url + '"><img src="' + view.content + '" class="img-thumbnail viewThumbnail" style="margin-bottom: 10px; max-height: ' + thumbnailSize + 'px" /></a>';
                     } else {
-                    <c:choose>
-                    <c:when test="${not empty param.version}">
-                    html += '  <a href="' + url + '"><img src="/static/img/thumbnail-not-available.png" class="img-thumbnail" style="margin-bottom: 10px" /></a>';
-                    </c:when>
-                    <c:otherwise>
-                    html += '  <a href="' + url + '"><img src="${thumbnailUrl}' + structurizr.util.escapeHtml(view.key) + '-thumbnail.png" class="img-thumbnail viewThumbnail" style="margin-bottom: 10px; max-height: ' + thumbnailSize + 'px" /></a>';
-                    </c:otherwise>
-                    </c:choose>
+                        <c:choose>
+                        <c:when test="${not empty workspace.branch or not empty param.version}">
+                        html += '  <a href="' + url + '"><img src="/static/img/thumbnail-not-available.png" class="img-thumbnail" style="margin-bottom: 10px" /></a>';
+                        </c:when>
+                        <c:otherwise>
+                        html += '  <a href="' + url + '"><img src="${thumbnailUrl}' + structurizr.util.escapeHtml(view.key) + '-thumbnail.png" class="img-thumbnail viewThumbnail" style="margin-bottom: 10px; max-height: ' + thumbnailSize + 'px" /></a>';
+                        </c:otherwise>
+                        </c:choose>
                     }
 
                     html += '  <div class="smaller">';
@@ -342,7 +358,7 @@
             diagramsDiv.addClass('centered');
             diagramsDiv.append(html);
 
-            $('.viewThumbnail').on('error', function() {
+            $('.viewThumbnail').on('error', function () {
                 $(this).on('error', undefined);
                 $(this).attr('src', '/static/img/thumbnail-not-available.png');
             });
@@ -383,24 +399,31 @@
     }
 
     function formatDate(dateAsString) {
-        return new Date(dateAsString).toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        return new Date(dateAsString).toLocaleDateString('en-GB', {
+            weekday: 'long',
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
     }
 
     function revertToLoadedVersion() {
         if (confirm('Are you sure you want to revert to this version?')) {
             structurizrApiClient.resetRevision();
-            structurizr.saveWorkspace(function() {
-                const indexOfVersionParameter = window.location.href.indexOf('?version=');
-                if (indexOfVersionParameter > -1) {
-                    window.location.href = window.location.href.substr(0, indexOfVersionParameter);
+            structurizr.saveWorkspace(function () {
+                const branch = '<c:out value="${workspace.branch}" />';
+
+                if (branch.length > 0) {
+                    window.location.href = '<c:out value="${urlPrefix}"/>?branch=' + branch;
                 } else {
-                    location.reload();
+                    window.location.href = '<c:out value="${urlPrefix}"/>';
                 }
             });
         }
     }
 
     <c:if test="${workspace.editable eq true and workspace.locked eq true}">
+
     function unlockWorkspace(e) {
         e.preventDefault();
 
@@ -408,6 +431,7 @@
             window.location.href = '/workspace/${workspace.id}/unlock';
         }
     }
+
     </c:if>
 
     function importWorkspaceFromFile(file, workspaceId) {
@@ -418,7 +442,7 @@
             try {
                 var json = JSON.parse(evt.target.result);
                 json.id = workspaceId;
-            } catch(err) {
+            } catch (err) {
                 alert("Sorry, there was a problem reading the file: " + err);
                 console.log(err);
                 return;
@@ -427,7 +451,7 @@
             progressMessage.show('<p>Saving workspace...</p>');
             structurizrEncryptionStrategy = undefined;
             structurizrApiClient.resetRevision();
-            structurizrApiClient.putWorkspace(json, function(response) {
+            structurizrApiClient.putWorkspace(json, function (response) {
                 if (response.success) {
                     window.location.reload();
                 } else {

@@ -36,6 +36,8 @@ public interface WorkspaceComponent {
 
     List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, String branch, int maxVersions) throws WorkspaceComponentException;
 
+    List<WorkspaceBranch> getWorkspaceBranches(long workspaceId) throws WorkspaceComponentException;
+
     boolean lockWorkspace(long workspaceId, String username, String agent) throws WorkspaceComponentException;
 
     boolean unlockWorkspace(long workspaceId) throws WorkspaceComponentException;

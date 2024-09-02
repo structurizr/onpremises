@@ -33,6 +33,7 @@ public class DslEditorController extends AbstractWorkspaceEditorController {
     @RequestMapping(value = "/workspace/{workspaceId}/dsl", method = RequestMethod.GET)
     public String showAuthenticatedDslEditor(
             @PathVariable("workspaceId") long workspaceId,
+            @RequestParam(required = false, defaultValue = "") String branch,
             @RequestParam(required = false) String version,
             ModelMap model
     ) {
@@ -49,7 +50,7 @@ public class DslEditorController extends AbstractWorkspaceEditorController {
             return showError("workspace-is-client-side-encrypted", model);
         }
 
-        model.addAttribute("publishThumbnails", true);
+        model.addAttribute("publishThumbnails", StringUtils.isNullOrEmpty(branch) && StringUtils.isNullOrEmpty(version));
         model.addAttribute("quickNavigationPath", "diagram-editor");
         try {
             model.addAttribute("dslVersion", Class.forName(StructurizrDslParser.class.getCanonicalName()).getPackage().getImplementationVersion());
@@ -65,7 +66,7 @@ public class DslEditorController extends AbstractWorkspaceEditorController {
             }
         }
 
-        return lockWorkspaceAndShowAuthenticatedView(VIEW, workspaceMetaData, null, version, model, false);
+        return lockWorkspaceAndShowAuthenticatedView(VIEW, workspaceMetaData, branch, version, model, false);
     }
 
     @RequestMapping(value = "/workspace/{workspaceId}/dsl", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")

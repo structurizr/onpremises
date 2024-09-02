@@ -210,7 +210,6 @@ public class WorkspaceMetaDataTests {
         properties.setProperty(WorkspaceMetaData.LAST_MODIFIED_USER_PROPERTY, "user1");
         properties.setProperty(WorkspaceMetaData.LAST_MODIFIED_AGENT_PROPERTY, "structurizr/dsl");
         properties.setProperty(WorkspaceMetaData.LAST_MODIFIED_DATE_PROPERTY, "2021-01-31T14:30:59Z");
-        properties.setProperty(WorkspaceMetaData.REVISION_PROPERTY, "81");
         properties.setProperty(WorkspaceMetaData.API_KEY_PROPERTY, "1234567890");
         properties.setProperty(WorkspaceMetaData.API_SECRET_PROPERTY, "0987654321");
         properties.setProperty(WorkspaceMetaData.PUBLIC_PROPERTY, "true");
@@ -232,7 +231,6 @@ public class WorkspaceMetaDataTests {
         assertEquals("user1", workspace.getLastModifiedUser());
         assertEquals("structurizr/dsl", workspace.getLastModifiedAgent());
         assertEquals(DateUtils.parseIsoDate("2021-01-31T14:30:59Z"), workspace.getLastModifiedDate());
-        assertEquals(81, workspace.getRevision());
         assertEquals("1234567890", workspace.getApiKey());
         assertEquals("0987654321", workspace.getApiSecret());
         assertTrue(workspace.isPublicWorkspace());
@@ -255,7 +253,6 @@ public class WorkspaceMetaDataTests {
         assertEquals("user1", properties.getProperty(WorkspaceMetaData.LAST_MODIFIED_USER_PROPERTY));
         assertEquals("structurizr/dsl", properties.getProperty(WorkspaceMetaData.LAST_MODIFIED_AGENT_PROPERTY));
         assertEquals("2021-01-31T14:30:59Z", properties.getProperty(WorkspaceMetaData.LAST_MODIFIED_DATE_PROPERTY));
-        assertEquals("81", properties.getProperty(WorkspaceMetaData.REVISION_PROPERTY));
         assertEquals("1234567890", properties.getProperty(WorkspaceMetaData.API_KEY_PROPERTY));
         assertEquals("0987654321", properties.getProperty(WorkspaceMetaData.API_SECRET_PROPERTY));
         assertEquals("true", properties.getProperty(WorkspaceMetaData.PUBLIC_PROPERTY));
