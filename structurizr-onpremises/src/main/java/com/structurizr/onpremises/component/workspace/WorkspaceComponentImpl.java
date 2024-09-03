@@ -196,6 +196,7 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
 
     @Override
     public String getWorkspace(long workspaceId, String branch, String version) throws WorkspaceComponentException {
+        WorkspaceBranch.validateBranchName(branch);
         String json = workspaceDao.getWorkspace(workspaceId, branch, version);
 
         if (json.contains(ENCRYPTION_STRATEGY_STRING) && json.contains(CIPHERTEXT_STRING)) {
@@ -264,8 +265,9 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
 
     @Override
     public void putWorkspace(long workspaceId, String branch, String json) throws WorkspaceComponentException {
+        WorkspaceBranch.validateBranchName(branch);
+
         try {
-            Long currentRevision;
             AbstractWorkspace workspaceToBeStored;
             String jsonToBeStored;
             WorkspaceConfiguration configuration;
@@ -445,6 +447,7 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
 
     @Override
     public List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, String branch, int maxVersions) throws WorkspaceComponentException {
+        WorkspaceBranch.validateBranchName(branch);
         return workspaceDao.getWorkspaceVersions(workspaceId, branch, maxVersions);
     }
 

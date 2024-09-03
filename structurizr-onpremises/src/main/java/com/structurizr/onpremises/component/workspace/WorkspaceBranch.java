@@ -1,6 +1,10 @@
 package com.structurizr.onpremises.component.workspace;
 
+import com.structurizr.util.StringUtils;
+
 public final class WorkspaceBranch {
+
+    private static final String BRANCH_NAME_REGEX = "[a-zA-Z0-9][a-zA-Z0-9-_.]*";
 
     private final String name;
 
@@ -8,8 +12,18 @@ public final class WorkspaceBranch {
         this.name = name;
     }
 
+    public static void validateBranchName(String name) {
+        if (!StringUtils.isNullOrEmpty(name) && !isValidBranchName(name)) {
+            throw new IllegalArgumentException("The branch name \"" + name + "\" is invalid");
+        }
+    }
+
     public String getName() {
         return name;
+    }
+
+    public static boolean isValidBranchName(String name) {
+        return name.matches(BRANCH_NAME_REGEX);
     }
 
 }

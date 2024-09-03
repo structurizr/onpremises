@@ -30,7 +30,6 @@ class FileSystemWorkspaceDao extends AbstractWorkspaceDao {
     static final String WORKSPACE_PROPERTIES_FILENAME = "workspace.properties";
     static final String VERSION_TIMESTAMP_FORMAT = "yyyyMMddHHmmssSSS";
     static final String WORKSPACE_VERSION_JSON_FILENAME_REGEX = "workspace-\\d{17}\\.json";
-    static final String BRANCH_NAME_REGEX = "[a-zA-Z0-9-_]*";
     static final String IMAGES_DIRECTORY_NAME = "images";
     static final String PNG_FILENAME_REGEX = ".*\\.png";
 
@@ -267,7 +266,7 @@ class FileSystemWorkspaceDao extends AbstractWorkspaceDao {
         try {
             File branchesDirectory = new File(getPathToWorkspace(workspaceId), BRANCHES_DIRECTORY_NAME);
             if (branchesDirectory.exists()) {
-                File[] files = branchesDirectory.listFiles((dir, name) -> name.matches(BRANCH_NAME_REGEX));
+                File[] files = branchesDirectory.listFiles((dir, name) -> WorkspaceBranch.isValidBranchName(name));
 
                 if (files != null) {
                     Arrays.sort(files, (f1, f2) -> f2.getName().compareTo(f1.getName()));
