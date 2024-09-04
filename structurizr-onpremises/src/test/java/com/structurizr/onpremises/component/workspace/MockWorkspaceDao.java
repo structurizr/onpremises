@@ -31,6 +31,11 @@ public class MockWorkspaceDao implements WorkspaceDao {
     }
 
     @Override
+    public boolean deleteBranch(long workspaceId, String branch) {
+        return false;
+    }
+
+    @Override
     public boolean deleteWorkspace(long workspaceId) {
         return false;
     }

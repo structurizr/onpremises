@@ -143,6 +143,14 @@ class FileSystemWorkspaceDao extends AbstractWorkspaceDao {
     }
 
     @Override
+    public boolean deleteBranch(long workspaceId, String branch) {
+        File branchDirectory = getPathToWorkspace(workspaceId, branch);
+        deleteDirectory(branchDirectory);
+
+        return !branchDirectory.exists();
+    }
+
+    @Override
     public boolean deleteWorkspace(long workspaceId) {
         File workspaceDirectory = getPathToWorkspace(workspaceId);
         deleteDirectory(workspaceDirectory);

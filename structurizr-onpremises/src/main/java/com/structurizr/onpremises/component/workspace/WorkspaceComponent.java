@@ -30,6 +30,8 @@ public interface WorkspaceComponent {
 
     long createWorkspace(User user) throws WorkspaceComponentException;
 
+    boolean deleteBranch(long workspaceId, String branch) throws WorkspaceComponentException;
+
     boolean deleteWorkspace(long workspaceId) throws WorkspaceComponentException;
 
     void putWorkspace(long workspaceId, String branch, String json) throws WorkspaceComponentException;

@@ -38,6 +38,23 @@
                 Workspace
             </div>
 
+            <c:if test="${not empty workspace.branch || not empty param.version}">
+            <div class="navigationItem">
+                <c:if test="${not empty workspace.branch}">
+                <div style="margin-bottom: 10px">
+                    <span class="label label-branch" style="font-size: 13px;"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/bezier2.svg" class="icon-sm icon-white" /> ${workspace.branch}</span>
+                </div>
+                </c:if>
+                <c:if test="${not empty param.version}">
+                <div style="margin-bottom: 10px">
+                    <span class="label label-version" style="font-size: 13px"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-sm icon-white" /> ${workspace.internalVersion}</span>
+                </div>
+                </c:if>
+            </div>
+
+            <div class="navigationItemSeparator"></div>
+            </c:if>
+
             <c:if test="${workspace.clientEncrypted}">
             <div class="navigationItem">
                 <img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/file-earmark-lock.svg" class="icon-sm" /> Client-side encrypted
@@ -147,7 +164,7 @@
                     <c:if test="${not empty branches}">
                     <form id="workspaceBranchForm" class="form-inline" style="display: inline-block" method="get" action="<c:out value="${urlPrefix}" />">
                         <select id="workspaceBranch" name="branch" class="form-control">
-                            <option value="">[branch] main</option>
+                            <option value="">main</option>
                             <c:forEach var="branch" items="${branches}">
                                 <option value="${branch.name}">[branch] ${branch.name}</option>
                             </c:forEach>
@@ -157,28 +174,33 @@
 
                     <c:if test="${not empty versions && versions.size() > 1}">
                     <form id="workspaceVersionForm" class="form-inline" style="display: inline-block" method="get" action="<c:out value="${urlPrefix}" />">
+                        <c:if test="${not empty branch}">
                         <input type="hidden" name="branch" value="${workspace.branch}" />
+                        </c:if>
                         <select id="workspaceVersion" name="version" class="form-control">
                             <c:forEach var="version" items="${versions}">
                                 <option value="${version.versionId}"><fmt:formatDate value="${version.lastModifiedDate}" pattern="EEE dd MMM yyyy HH:mm:ss z" timeZone="${user.timeZone}" /></option>
                             </c:forEach>
                         </select>
                     </form>
-                    <c:if test="${not empty param.version && workspace.editable && not workspace.locked}">
-                        <button id="revertButton" class="btn btn-default small"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-btn" /> Revert to this version</button>
-                    </c:if>
-                    </c:if>
-                </div>
 
-                <div class="centered" style="margin-top: 10px;">
-                <c:if test="${not empty workspace.branch}">
-                <span class="label label-version" style="font-size: 15px"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/bezier2.svg" class="icon-sm icon-white" /> ${workspace.branch}</span>
-                </c:if>
-                <c:if test="${not empty param.version}">
-                <span class="label label-version" style="font-size: 15px"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-sm icon-white" /> ${workspace.internalVersion}</span>
-                </c:if>
-                </div>
+                    <div style="margin-top: 10px">
+                        <c:if test="${not empty param.version && workspace.editable && not workspace.locked}">
+                            <button id="revertButton" class="btn btn-default small"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-btn" /> Revert to this version</button>
+                        </c:if>
+                        </c:if>
 
+                        <c:if test="${workspace.editable && not workspace.locked && branchesEnabled}">
+                        <button id="copyToBranchButton" class="btn btn-default small"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/bezier2.svg" class="icon-btn" /> Copy to branch</button>
+                        </c:if>
+
+                        <c:if test="${workspace.editable && not workspace.locked && branchesEnabled && not empty branch}">
+                        <form id="deleteBranchForm" action="/workspace/${workspace.id}/branch/${branch}/delete" method="post" class="form-inline" style="display: inline-block">
+                            <button class="btn btn-default small" type="submit"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/trash.svg" class="icon-btn" /> Delete branch</button>
+                        </form>
+                        </c:if>
+                    </div>
+                </div>
                 </c:if>
 
                 <div id="gettingStarted" class="centered hidden">
@@ -269,7 +291,9 @@
         }
     }
 
+    addOnClickHandler('copyToBranchButton', copyWorkspaceToBranch);
     addOnClickHandler('revertButton', revertToLoadedVersion);
+    $('#deleteBranchForm').on('submit', function() { return deleteBranch(); });
 
     addOnClickHandler('exportJsonLink', function (e) {
         structurizr.util.exportWorkspace(structurizr.workspace.id, structurizr.workspace.getJson());
@@ -407,6 +431,22 @@
         });
     }
 
+    function copyWorkspaceToBranch() {
+        const branch = prompt("Branch name");
+
+        if (branch !== undefined) {
+            structurizrApiClient.setBranch(branch);
+
+            structurizr.saveWorkspace(function () {
+                if (branch.length > 0) {
+                    window.location.href = '<c:out value="${urlPrefix}"/>?branch=' + branch;
+                } else {
+                    window.location.href = '<c:out value="${urlPrefix}"/>';
+                }
+            });
+        }
+    }
+
     function revertToLoadedVersion() {
         if (confirm('Are you sure you want to revert to this version?')) {
             structurizrApiClient.resetRevision();
@@ -420,6 +460,10 @@
                 }
             });
         }
+    }
+
+    function deleteBranch() {
+        return confirm('Are you sure you want to delete this branch?');
     }
 
     <c:if test="${workspace.editable eq true and workspace.locked eq true}">

@@ -2,6 +2,7 @@ package com.structurizr.onpremises.web.workspace;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.util.Features;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -51,9 +52,15 @@ public class WorkspaceSummaryController extends AbstractWorkspaceController {
             return show404Page(model);
         }
 
-        model.addAttribute("branch", branch);
+        if (Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_BRANCHES)) {
+            model.addAttribute("branchesEnabled", true);
+            model.addAttribute("branch", branch);
+            model.addAttribute("branches", workspaceComponent.getWorkspaceBranches(workspaceId));
+        } else {
+            branch = "";
+        }
+
         model.addAttribute("versions", workspaceComponent.getWorkspaceVersions(workspaceId, branch, Configuration.getInstance().getMaxWorkspaceVersions()));
-        model.addAttribute("branches", workspaceComponent.getWorkspaceBranches(workspaceId));
 
         boolean editable = workspaceMetaData.hasNoUsersConfigured() || workspaceMetaData.isWriteUser(getUser());
 

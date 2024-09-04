@@ -31,7 +31,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class WorkspaceComponentImpl implements WorkspaceComponent {
+class WorkspaceComponentImpl implements WorkspaceComponent {
 
     private static final Log log = LogFactory.getLog(WorkspaceComponentImpl.class);
     private static final String ENCRYPTION_STRATEGY_STRING = "encryptionStrategy";
@@ -246,6 +246,11 @@ public class WorkspaceComponentImpl implements WorkspaceComponent {
         } catch (Exception e) {
             throw new WorkspaceComponentException("Could not create workspace", e);
         }
+    }
+
+    @Override
+    public boolean deleteBranch(long workspaceId, String branch) throws WorkspaceComponentException {
+        return workspaceDao.deleteBranch(workspaceId, branch);
     }
 
     @Override

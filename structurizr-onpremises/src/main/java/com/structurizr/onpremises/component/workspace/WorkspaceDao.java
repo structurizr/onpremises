@@ -18,6 +18,8 @@ interface WorkspaceDao {
 
     long createWorkspace(User user);
 
+    boolean deleteBranch(long workspaceId, String branch);
+
     boolean deleteWorkspace(long workspaceId);
 
     String getWorkspace(long workspaceId, String branch, String version);

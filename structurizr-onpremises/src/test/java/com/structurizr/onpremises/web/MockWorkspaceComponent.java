@@ -47,6 +47,11 @@ public abstract class MockWorkspaceComponent implements WorkspaceComponent {
     }
 
     @Override
+    public boolean deleteBranch(long workspaceId, String branch) throws WorkspaceComponentException {
+        return false;
+    }
+
+    @Override
     public boolean deleteWorkspace(long workspaceId) throws WorkspaceComponentException {
         return false;
     }

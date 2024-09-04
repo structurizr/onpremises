@@ -156,7 +156,11 @@ public class WorkspaceMetaData {
     }
 
     public boolean hasNoUsersConfigured() {
-        return readUsers.size() == 0 && writeUsers.size() == 0;
+        return readUsers.isEmpty() && writeUsers.isEmpty();
+    }
+
+    public boolean hasUsersConfigured() {
+        return !hasNoUsersConfigured();
     }
 
     public Date getLastModifiedDate() {

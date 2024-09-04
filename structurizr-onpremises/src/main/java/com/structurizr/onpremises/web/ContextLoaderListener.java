@@ -127,6 +127,7 @@ public class ContextLoaderListener implements ServletContextListener {
             log.info("Data storage: " + Configuration.getInstance().getDataStorageImplementationName());
             log.info("Caching: " + Configuration.getInstance().getCacheImplementationName());
             log.info("Workspace archiving: " + Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_ARCHIVING));
+            log.info("Workspace branches: " + Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_BRANCHES));
             log.info("Workspace scope: " + (Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_SCOPE_VALIDATION) ? "strict" : "relaxed"));
             log.info("Search: " + Configuration.getInstance().getSearchImplementationName());
 

@@ -128,6 +128,11 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
     }
 
     @Override
+    public boolean deleteBranch(long workspaceId, String branch) {
+        return false;
+    }
+
+    @Override
     public boolean deleteWorkspace(long workspaceId) {
         try {
             String folderKey = getBaseObjectName(workspaceId);
