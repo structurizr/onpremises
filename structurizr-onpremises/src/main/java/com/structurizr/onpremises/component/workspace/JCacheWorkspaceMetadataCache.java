@@ -12,9 +12,6 @@ import javax.cache.expiry.Duration;
 import javax.cache.spi.CachingProvider;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Workspace metadata cache implementation that uses an in-memory Ehcache cache, via the JCache API.
- */
 abstract class JCacheWorkspaceMetadataCache implements WorkspaceMetadataCache {
 
     private static final Log log = LogFactory.getLog(JCacheWorkspaceMetadataCache.class);
