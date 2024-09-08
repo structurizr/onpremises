@@ -83,26 +83,26 @@
             
             <c:if test="${fn:startsWith(urlPrefix, '/workspace') && structurizrConfiguration.dslEditorEnabled}">
             <div class="navigationItem dslEditorNavigation">
-                <a href="<c:out value="${urlPrefix}" />/dsl<c:out value="${urlSuffix}" />"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/code-slash.svg" class="icon-sm" /> DSL editor</a>
+                <a href="<c:out value="${urlPrefix}" />/dsl<c:out value="${urlSuffix}" escapeXml="false" />"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/code-slash.svg" class="icon-sm" /> DSL editor</a>
             </div>
             </c:if>
 
             <div id="diagramsLink" class="navigationItem hidden">
-            <a href="<c:out value="${urlPrefix}" />/diagrams<c:out value="${urlSuffix}" />"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/bounding-box.svg" class="icon-sm" /> Diagrams</a>
+            <a href="<c:out value="${urlPrefix}" />/diagrams<c:out value="${urlSuffix}" escapeXml="false" />"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/bounding-box.svg" class="icon-sm" /> Diagrams</a>
             </div>
 
             <div id="documentationLink"  class="navigationItem hidden">
-                <a href="<c:out value="${urlPrefix}" />/documentation<c:out value="${urlSuffix}" />"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/book.svg" class="icon-sm" /> Documentation</a>
+                <a href="<c:out value="${urlPrefix}" />/documentation<c:out value="${urlSuffix}" escapeXml="false" />"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/book.svg" class="icon-sm" /> Documentation</a>
             </div>
             <div id="decisionsLink" class="navigationItem hidden">
-                <a href="<c:out value="${urlPrefix}" />/decisions<c:out value="${urlSuffix}" />"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/journal-text.svg" class="icon-sm" /> Decisions</a>
+                <a href="<c:out value="${urlPrefix}" />/decisions<c:out value="${urlSuffix}" escapeXml="false" />"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/journal-text.svg" class="icon-sm" /> Decisions</a>
             </div>
             <div id="exploreLink" class="navigationItem hidden">
-                <a href="<c:out value="${urlPrefix}" />/explore<c:out value="${urlSuffix}" />"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/diagram-3.svg" class="icon-sm" /> Explore</a>
+                <a href="<c:out value="${urlPrefix}" />/explore<c:out value="${urlSuffix}" escapeXml="false" />"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/diagram-3.svg" class="icon-sm" /> Explore</a>
             </div>
 
             <div id="themeLink" class="navigationItem hidden">
-                <a href="<c:out value="${urlPrefix}" />/theme<c:out value="${urlSuffix}" />" target="_blank"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/palette.svg" class="icon-sm" /> Theme</a>
+                <a href="<c:out value="${urlPrefix}" />/theme<c:out value="${urlSuffix}" escapeXml="false" />" target="_blank"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/palette.svg" class="icon-sm" /> Theme</a>
             </div>
 
             <div id="imagesLink" class="navigationItem hidden">
@@ -114,11 +114,11 @@
             </div>
 
             <div id="exportJsonLinkNavItem" class="navigationItem">
-                <img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/filetype-json.svg" class="icon-sm" /> JSON - <c:if test="${fn:startsWith(urlPrefix, '/share')}"><a href="<c:out value="${urlPrefix}" />/json<c:out value="${urlSuffix}" />" target="_blank">View</a> | </c:if><a id="exportJsonLink" href="">Export</a>
+                <img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/filetype-json.svg" class="icon-sm" /> JSON - <c:if test="${fn:startsWith(urlPrefix, '/share')}"><a href="<c:out value="${urlPrefix}" />/json<c:out value="${urlSuffix}" escapeXml="false" />" target="_blank">View</a> | </c:if><a id="exportJsonLink" href="">Export</a>
             </div>
 
             <div id="exportDslLinkNavItem" class="navigationItem">
-                <img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/filetype-txt.svg" class="icon-sm" /> DSL - <c:if test="${fn:startsWith(urlPrefix, '/share')}"><a href="<c:out value="${urlPrefix}" />/dsl<c:out value="${urlSuffix}" />" target="_blank">View</a> | </c:if><a id="exportDslLink" href="">Export</a>
+                <img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/filetype-txt.svg" class="icon-sm" /> DSL - <c:if test="${fn:startsWith(urlPrefix, '/share')}"><a href="<c:out value="${urlPrefix}" />/dsl<c:out value="${urlSuffix}" escapeXml="false" />" target="_blank">View</a> | </c:if><a id="exportDslLink" href="">Export</a>
             </div>
 
             <c:if test="${workspace.editable && not workspace.locked}">
@@ -131,7 +131,7 @@
             <div class="navigationItemSeparator"></div>
             <c:if test="${fn:startsWith(urlPrefix, '/workspace')}">
             <div class="navigationItem">
-                <a href="<c:out value="${urlPrefix}" />/inspections<c:out value="${urlSuffix}" />"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clipboard-pulse.svg" class="icon-sm" /> Inspections</a>
+                <a href="<c:out value="${urlPrefix}" />/inspections<c:out value="${urlSuffix}" escapeXml="false" />"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clipboard-pulse.svg" class="icon-sm" /> Inspections</a>
             </div>
 
             <div class="navigationItem">
@@ -347,7 +347,7 @@
             var html = '';
 
             views.forEach(function (view) {
-                var url = '<c:out value="${urlPrefix}" />/diagrams<c:out value="${urlSuffix}" />#' + structurizr.util.escapeHtml(view.key);
+                var url = '<c:out value="${urlPrefix}" />/diagrams<c:out value="${urlSuffix}" escapeXml="false" />#' + structurizr.util.escapeHtml(view.key);
                 var title = structurizr.util.escapeHtml(structurizr.ui.getTitleForView(view));
 
                 if (count <= maxNumberOfViews) {
@@ -376,7 +376,7 @@
             });
 
             if (views.length > maxNumberOfViews) {
-                html += '<div class="small"><a href="<c:out value="${urlPrefix}" />/diagrams<c:out value="${urlSuffix}" />">More diagrams...</a></div>';
+                html += '<div class="small"><a href="<c:out value="${urlPrefix}" />/diagrams<c:out value="${urlSuffix}" escapeXml="false" />">More diagrams...</a></div>';
             }
 
             diagramsDiv.addClass('centered');

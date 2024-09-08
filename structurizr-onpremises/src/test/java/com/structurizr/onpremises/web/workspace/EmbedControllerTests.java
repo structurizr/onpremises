@@ -32,7 +32,7 @@ public class EmbedControllerTests {
             }
         });
 
-        String view = controller.embedDiagrams(1, "version", "viewKey", "apiKey", false, "iframe", false, "perspective", model);
+        String view = controller.embedDiagrams(1, "viewKey", "apiKey", false, "iframe", false, "perspective", model);
         assertEquals("404", view);
     }
 
@@ -50,7 +50,7 @@ public class EmbedControllerTests {
             }
         });
 
-        String view = controller.embedDiagrams(1, "version", "viewKey", "apiKey", false, "iframe", false, "perspective", model);
+        String view = controller.embedDiagrams(1, "viewKey", "apiKey", false, "iframe", false, "perspective", model);
 
         assertEquals("diagrams", view);
         assertEquals("/share/1", model.get("urlPrefix"));
@@ -72,7 +72,7 @@ public class EmbedControllerTests {
             }
         });
 
-        String view = controller.embedDiagrams(1, "version", "viewKey", "", false, "iframe", false, "perspective", model);
+        String view = controller.embedDiagrams(1, "viewKey", "", false, "iframe", false, "perspective", model);
         assertEquals("404", view);
     }
 
@@ -93,7 +93,7 @@ public class EmbedControllerTests {
             }
         });
 
-        String view = controller.embedDiagrams(1, "version", "viewKey", "1234567890", false, "iframe", false, "perspective", model);
+        String view = controller.embedDiagrams(1, "viewKey", "1234567890", false, "iframe", false, "perspective", model);
         assertEquals("404", view);
     }
 
@@ -115,7 +115,7 @@ public class EmbedControllerTests {
             }
         });
 
-        String view = controller.embedDiagrams(1, "version", "viewKey", "1234567890", false, "iframe", false, "perspective", model);
+        String view = controller.embedDiagrams(1, "viewKey", "1234567890", false, "iframe", false, "perspective", model);
         assertEquals("diagrams", view);
         assertEquals("/workspace/1", model.get("urlPrefix"));
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
@@ -131,7 +131,7 @@ public class EmbedControllerTests {
             }
         });
 
-        String view = controller.embedDiagramsViaSharingToken(1, "token", "version", "viewKey", false, "iframe", false, "perspective", model);
+        String view = controller.embedDiagramsViaSharingToken(1, "token", "viewKey", false, "iframe", false, "perspective", model);
         assertEquals("404", view);
     }
 
@@ -144,7 +144,7 @@ public class EmbedControllerTests {
             }
         });
 
-        String view = controller.embedDiagramsViaSharingToken(1, "token", "version", "viewKey", false, "iframe", false, "perspective", model);
+        String view = controller.embedDiagramsViaSharingToken(1, "token", "viewKey", false, "iframe", false, "perspective", model);
         assertEquals("404", view);
     }
 
@@ -159,7 +159,7 @@ public class EmbedControllerTests {
             }
         });
 
-        String view = controller.embedDiagramsViaSharingToken(1, "1234567890", "version", "viewKey", false, "iframe", false, "perspective", model);
+        String view = controller.embedDiagramsViaSharingToken(1, "1234567890", "viewKey", false, "iframe", false, "perspective", model);
         assertEquals("404", view);
     }
 
@@ -180,7 +180,7 @@ public class EmbedControllerTests {
             }
         });
 
-        String view = controller.embedDiagramsViaSharingToken(1, "1234567890", "version", "viewKey", false, "iframe", false, "perspective", model);
+        String view = controller.embedDiagramsViaSharingToken(1, "1234567890", "viewKey", false, "iframe", false, "perspective", model);
         assertEquals("diagrams", view);
         assertEquals("/share/1/1234567890", model.get("urlPrefix"));
         assertSame(workspaceMetaData, model.getAttribute("workspace"));

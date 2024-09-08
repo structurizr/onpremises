@@ -1,8 +1,10 @@
 package com.structurizr.onpremises.web;
 
 import com.structurizr.onpremises.component.search.SearchComponent;
+import com.structurizr.onpremises.component.workspace.WorkspaceBranch;
 import com.structurizr.onpremises.component.workspace.WorkspaceComponent;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
+import com.structurizr.onpremises.component.workspace.WorkspaceVersion;
 import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.Features;
@@ -40,6 +42,9 @@ public abstract class AbstractController {
     private static final Log log = LogFactory.getLog(AbstractController.class);
     private static final String STRUCTURIZR_CSS_FILENAME = "structurizr.css";
     private static final String STRUCTURIZR_JS_FILENAME = "structurizr.js";
+
+    protected static final String URL_PREFIX = "urlPrefix";
+    private static final String URL_SUFFIX = "urlSuffix";
 
     protected WorkspaceComponent workspaceComponent;
     protected SearchComponent searchComponent;
@@ -163,6 +168,22 @@ public abstract class AbstractController {
     protected boolean userCanAccessWorkspace(WorkspaceMetaData workspaceMetaData) {
         User user = getUser();
         return workspaceMetaData.isOpen() || workspaceMetaData.isWriteUser(user) || workspaceMetaData.isReadUser(user);
+    }
+
+    protected final void addUrlSuffix(String branch, String version, ModelMap model) {
+        if (!StringUtils.isNullOrEmpty(branch) && !StringUtils.isNullOrEmpty(version)) {
+            WorkspaceBranch.validateBranchName(branch);
+            WorkspaceVersion.validateVersionIdentifier(version);
+            model.addAttribute(URL_SUFFIX, String.format("?branch=%s&version=%s", branch, version));
+
+        } else if (!StringUtils.isNullOrEmpty(branch)) {
+            WorkspaceBranch.validateBranchName(branch);
+            model.addAttribute(URL_SUFFIX, String.format("?branch=%s", branch));
+
+        } else if (!StringUtils.isNullOrEmpty(version)) {
+            WorkspaceVersion.validateVersionIdentifier(version);
+            model.addAttribute(URL_SUFFIX, String.format("?version=%s", version));
+        }
     }
 
 }

@@ -1,8 +1,12 @@
 package com.structurizr.onpremises.component.workspace;
 
+import com.structurizr.util.StringUtils;
+
 import java.util.Date;
 
 public final class WorkspaceVersion {
+
+    private static final String VERSION_IDENTIFIER_REGEX = "[0-9a-zA-Z+-:]*";
 
     private String versionId;
     private final Date lastModifiedDate;
@@ -22,6 +26,16 @@ public final class WorkspaceVersion {
 
     public Date getLastModifiedDate() {
         return lastModifiedDate;
+    }
+
+    public static void validateVersionIdentifier(String identifier) {
+        if (!StringUtils.isNullOrEmpty(identifier) && !isValidBVersionIdentifier(identifier)) {
+            throw new IllegalArgumentException("The version identifier \"" + identifier + "\" is invalid");
+        }
+    }
+
+    public static boolean isValidBVersionIdentifier(String identifier) {
+        return identifier.matches(VERSION_IDENTIFIER_REGEX);
     }
 
 }

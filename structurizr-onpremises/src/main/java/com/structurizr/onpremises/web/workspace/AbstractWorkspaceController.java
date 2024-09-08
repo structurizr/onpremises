@@ -3,6 +3,8 @@ package com.structurizr.onpremises.web.workspace;
 import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.domain.User;
+import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.util.Features;
 import com.structurizr.onpremises.util.HtmlUtils;
 import com.structurizr.onpremises.util.JsonUtils;
 import com.structurizr.onpremises.web.AbstractController;
@@ -17,9 +19,6 @@ import org.springframework.ui.ModelMap;
 public abstract class AbstractWorkspaceController extends AbstractController {
 
     private static final Log log = LogFactory.getLog(AbstractWorkspaceController.class);
-
-    protected static final String URL_PREFIX = "urlPrefix";
-    protected static final String URL_SUFFIX = "urlSuffix";
 
     protected final String showPublicView(String view, long workspaceId, ModelMap model, boolean showHeaderAndFooter) {
         WorkspaceMetaData workspaceMetaData = null;
@@ -66,12 +65,10 @@ public abstract class AbstractWorkspaceController extends AbstractController {
     }
 
     protected final String showAuthenticatedView(String view, WorkspaceMetaData workspaceMetaData, String branch, String version, ModelMap model, boolean showHeaderAndFooter, boolean editable) {
-        version = HtmlUtils.filterHtml(version);
-
         User user = getUser();
         if (user == null) {
             // this should never happen, because private resources (e.g. /workspace/*) are protected by Spring Security,
-            // but it doesn't hurt to double check...
+            // but it doesn't hurt to double-check...
             return show404Page(model);
         }
 
@@ -86,13 +83,11 @@ public abstract class AbstractWorkspaceController extends AbstractController {
                 model.addAttribute("sharingUrlPrefix", "/share/" + workspaceMetaData.getId() + "/" + workspaceMetaData.getSharingToken());
             }
 
-            if (!StringUtils.isNullOrEmpty(branch) && !StringUtils.isNullOrEmpty(version)) {
-                model.addAttribute(URL_SUFFIX, String.format("?branch=%s&version=%s", branch, version));
-            } else if (!StringUtils.isNullOrEmpty(branch)) {
-                model.addAttribute(URL_SUFFIX, String.format("?branch=%s", branch));
-            } else if (!StringUtils.isNullOrEmpty(version)) {
-                model.addAttribute(URL_SUFFIX, String.format("?version=%s", version));
+            if (!Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_BRANCHES)) {
+                branch = "";
             }
+
+            addUrlSuffix(branch, version, model);
 
             if (workspaceMetaData.hasNoUsersConfigured() || workspaceMetaData.isWriteUser(user)) {
                 return showView(view, workspaceMetaData, branch, version, model, editable, showHeaderAndFooter);

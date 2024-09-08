@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class WorkspaceBranchTests {
 
     @Test
-    void isValidName() {
+    void isValidBranchName() {
         assertTrue(WorkspaceBranch.isValidBranchName("main"));
         assertTrue(WorkspaceBranch.isValidBranchName("dev"));
         assertTrue(WorkspaceBranch.isValidBranchName("dev"));

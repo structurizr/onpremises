@@ -27,7 +27,6 @@ public class EmbedController extends AbstractController {
     @RequestMapping(value = "/embed/{workspaceId}")
     public String embedDiagrams(
             @PathVariable("workspaceId") long workspaceId,
-            @RequestParam(required = false) String version,
             @RequestParam(value = "diagram", required = false) String diagramIdentifier,
             @RequestParam(value = "apiKey", required = false) String apiKey,
             @RequestParam(required = false) boolean diagramSelector,
@@ -43,12 +42,12 @@ public class EmbedController extends AbstractController {
 
         if (workspace.isOpen()) {
             model.addAttribute("urlPrefix", "/share/" + workspaceId);
-            return showEmbed(workspaceId, null, version, diagramIdentifier, diagramSelector, iframe, health, perspective, model);
+            return showEmbed(workspaceId, diagramIdentifier, diagramSelector, iframe, health, perspective, model);
         }
 
         if (!StringUtils.isNullOrEmpty(apiKey) && apiKey.equals(workspace.getApiKey())) {
             model.addAttribute("urlPrefix", "/workspace/" + workspaceId);
-            return showEmbed(workspaceId, null, version, diagramIdentifier, diagramSelector, iframe, health, perspective, model);
+            return showEmbed(workspaceId, diagramIdentifier, diagramSelector, iframe, health, perspective, model);
         }
 
         return "404";
@@ -58,7 +57,6 @@ public class EmbedController extends AbstractController {
     public String embedDiagramsViaSharingToken(
             @PathVariable("workspaceId") long workspaceId,
             @PathVariable("token") String token,
-            @RequestParam(required = false) String version,
             @RequestParam(value = "diagram", required = false) String diagramIdentifier,
             @RequestParam(required = false) boolean diagramSelector,
             @RequestParam(required = false, defaultValue = "") String iframe,
@@ -73,7 +71,7 @@ public class EmbedController extends AbstractController {
 
         if (workspace.isShareable() && workspace.getSharingToken().equals(token)) {
             model.addAttribute("urlPrefix", "/share/" + workspaceId + "/" + workspace.getSharingToken());
-            return showEmbed(workspaceId, null, version, diagramIdentifier, diagramSelector, iframe, health, perspective, model);
+            return showEmbed(workspaceId, diagramIdentifier, diagramSelector, iframe, health, perspective, model);
         }
 
         return "404";
@@ -81,8 +79,6 @@ public class EmbedController extends AbstractController {
 
     private String showEmbed(
             long workspaceId,
-            String branch,
-            String version,
             String diagramIdentifier,
             boolean diagramSelector,
             String iframe,
@@ -90,7 +86,6 @@ public class EmbedController extends AbstractController {
             String perspective,
             ModelMap model) {
 
-        version = HtmlUtils.filterHtml(version);
         diagramIdentifier = HtmlUtils.filterHtml(diagramIdentifier);
         diagramIdentifier = HtmlUtils.escapeQuoteCharacters(diagramIdentifier);
         iframe = HtmlUtils.filterHtml(iframe);
@@ -107,17 +102,11 @@ public class EmbedController extends AbstractController {
 
         addCommonAttributes(model, "", false);
 
-        workspace.setInternalVersion(version);
         workspace.setEditable(false);
         model.addAttribute("workspace", workspace);
 
-        String json = workspaceComponent.getWorkspace(workspaceId, branch, version);
+        String json = workspaceComponent.getWorkspace(workspaceId, null, null);
         model.addAttribute("workspaceAsJson", JsonUtils.base64(json));
-
-        if (version != null && version.trim().length() > 0) {
-            model.addAttribute("urlSuffix", "?version=" + version);
-        }
-
         model.addAttribute("showToolbar", diagramSelector);
         model.addAttribute("showDiagramSelector", diagramSelector);
         model.addAttribute("embed", true);
@@ -139,7 +128,6 @@ public class EmbedController extends AbstractController {
                                   @RequestParam(required = false, defaultValue = "false") boolean editable,
                                   @RequestParam(required = false, defaultValue = "") String iframe,
                                   @RequestParam(required = false) String urlPrefix,
-                                  @RequestParam(required = false) String urlSuffix,
                                   ModelMap model) {
 
         type = HtmlUtils.filterHtml(type);
@@ -163,14 +151,7 @@ public class EmbedController extends AbstractController {
             model.addAttribute("urlPrefix", urlPrefix);
         }
 
-        if (!StringUtils.isNullOrEmpty(perspective)) {
-            if (StringUtils.isNullOrEmpty(urlSuffix)) {
-                urlSuffix = "?perspective=" + perspective;
-            } else {
-                urlSuffix = urlSuffix + "&perspective=" + perspective;
-            }
-        }
-        model.addAttribute("urlSuffix", urlSuffix);
+        addUrlSuffix(branch, version, model);
 
         if ("graph".equals(type)) {
             model.addAttribute("view", view);
