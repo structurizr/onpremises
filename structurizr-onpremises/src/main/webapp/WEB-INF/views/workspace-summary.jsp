@@ -109,9 +109,11 @@
                 <a href="<c:out value="${urlPrefix}" />/images"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/filetype-png.svg" class="icon-sm" /> Published images</a>
             </div>
 
+            <c:if test="${reviewsEnabled}">
             <div class="navigationItem">
                 <a href="<c:out value="${urlPrefix}" />/reviews"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/chat.svg" class="icon-sm" /> Reviews</a>
             </div>
+            </c:if>
 
             <div id="exportJsonLinkNavItem" class="navigationItem">
                 <img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/filetype-json.svg" class="icon-sm" /> JSON - <c:if test="${fn:startsWith(urlPrefix, '/share')}"><a href="<c:out value="${urlPrefix}" />/json<c:out value="${urlSuffix}" escapeXml="false" />" target="_blank">View</a> | </c:if><a id="exportJsonLink" href="">Export</a>

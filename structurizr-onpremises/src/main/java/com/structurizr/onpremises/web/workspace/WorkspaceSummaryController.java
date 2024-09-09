@@ -69,6 +69,8 @@ public class WorkspaceSummaryController extends AbstractWorkspaceController {
 
         model.addAttribute("versions", workspaceComponent.getWorkspaceVersions(workspaceId, branch, Configuration.getInstance().getMaxWorkspaceVersions()));
 
+        model.addAttribute("reviewsEnabled", Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_REVIEWS));
+
         boolean editable = workspaceMetaData.hasNoUsersConfigured() || workspaceMetaData.isWriteUser(getUser());
 
         return showAuthenticatedView(VIEW, workspaceMetaData, branch, version, model, true, editable);

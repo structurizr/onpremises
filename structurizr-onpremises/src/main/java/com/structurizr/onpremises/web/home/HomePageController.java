@@ -42,6 +42,8 @@ public class HomePageController extends AbstractController {
         model.addAttribute("numberOfWorkspaces", workspaces.size());
         model.addAttribute("sort", sort);
 
+        model.addAttribute("reviewsEnabled", Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_REVIEWS));
+
         addCommonAttributes(model, "", true);
 
         return "home";
@@ -63,6 +65,7 @@ public class HomePageController extends AbstractController {
         model.addAttribute("sort", sort);
 
         model.addAttribute("userCanCreateWorkspace", Configuration.getInstance().getAdminUsersAndRoles().isEmpty() || getUser().isAdmin());
+        model.addAttribute("reviewsEnabled", Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_REVIEWS));
 
         addCommonAttributes(model, "", true);
 

@@ -1,6 +1,8 @@
 package com.structurizr.onpremises.web.workspace;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
+import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.util.Features;
 import com.structurizr.onpremises.util.HtmlUtils;
 import com.structurizr.util.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -60,7 +62,7 @@ public class DiagramViewerController extends AbstractWorkspaceController {
         }
 
         model.addAttribute("publishThumbnails", StringUtils.isNullOrEmpty(branch) && StringUtils.isNullOrEmpty(version));
-        model.addAttribute("createReviews", true);
+        model.addAttribute("createReviews", Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_REVIEWS));
         model.addAttribute("quickNavigationPath", "diagrams");
         model.addAttribute("perspective", HtmlUtils.filterHtml(perspective));
 

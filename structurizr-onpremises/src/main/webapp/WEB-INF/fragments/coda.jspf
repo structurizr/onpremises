@@ -11,12 +11,24 @@
             |
             <a href="https://structurizr.com/help/support" target="_blank">Help and Support</a>
 
-            <c:if test="${authenticated}">
             <br />
-            <a href="/user/profile">User profile</a>
-            |
-            <a href="/signout">Sign out</a>
+
+            <c:choose>
+            <c:when test="${authenticated}">
+                <c:if test="${reviewsEnabled}">
+                <a href="/reviews">Reviews</a>
+                |
+                </c:if>
+                <a href="/user/profile">User profile</a>
+                |
+                <a href="/signout">Sign out</a>
+            </c:when>
+            <c:otherwise>
+            <c:if test="${reviewsEnabled}">
+                <a href="/reviews">Reviews</a>
             </c:if>
+            </c:otherwise>
+            </c:choose>
         </p>
     </div>
     </c:if>
