@@ -206,6 +206,8 @@ public class Configuration extends ConfigLookup {
 
         if (WorkspaceComponent.AMAZON_WEB_SERVICES_S3.equalsIgnoreCase(name)) {
             return WorkspaceComponent.AMAZON_WEB_SERVICES_S3;
+        } else if (WorkspaceComponent.AZURE_BLOB_STORAGE.equalsIgnoreCase(name)) {
+                return WorkspaceComponent.AZURE_BLOB_STORAGE;
         } else {
             return WorkspaceComponent.FILE;
         }

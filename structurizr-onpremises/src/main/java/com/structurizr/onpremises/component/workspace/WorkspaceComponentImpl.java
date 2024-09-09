@@ -18,8 +18,6 @@ import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.util.*;
 import com.structurizr.util.StringUtils;
 import com.structurizr.util.WorkspaceUtils;
-import com.structurizr.validation.WorkspaceScopeValidationException;
-import com.structurizr.validation.WorkspaceScopeValidatorFactory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -54,6 +52,12 @@ class WorkspaceComponentImpl implements WorkspaceComponent {
             boolean pathAccessEnabled = Boolean.parseBoolean(Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3WorkspaceDao.PATH_STYLE_ACCESS_PROPERTY, "false"));
 
             this.workspaceDao = new AmazonWebServicesS3WorkspaceDao(accessKeyId, secretAccessKey, region, bucketName, endpoint,pathAccessEnabled);
+        } else if (AZURE_BLOB_STORAGE.equals(dataStorageImplementationName)) {
+            String accountName = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AzureBlobStorageWorkspaceDao.ACCOUNT_NAME_PROPERTY, "");
+            String accessKey = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AzureBlobStorageWorkspaceDao.ACCESS_KEY_PROPERTY, "");
+            String containerName = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AzureBlobStorageWorkspaceDao.CONTAINER_NAME_PROPERTY, "");
+
+            this.workspaceDao = new AzureBlobStorageWorkspaceDao(accountName, accessKey, containerName);
         } else {
             this.workspaceDao = new FileSystemWorkspaceDao(Configuration.getInstance().getDataDirectory());
         }
@@ -453,7 +457,15 @@ class WorkspaceComponentImpl implements WorkspaceComponent {
     @Override
     public List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, String branch, int maxVersions) throws WorkspaceComponentException {
         WorkspaceBranch.validateBranchName(branch);
-        return workspaceDao.getWorkspaceVersions(workspaceId, branch, maxVersions);
+
+        List<WorkspaceVersion> versions = workspaceDao.getWorkspaceVersions(workspaceId, branch, maxVersions);
+        versions.sort((v1, v2) -> v2.getLastModifiedDate().compareTo(v1.getLastModifiedDate()));
+
+        if (versions.size() > maxVersions) {
+            versions = versions.subList(0, maxVersions);
+        }
+
+        return versions;
     }
 
     @Override

@@ -15,6 +15,7 @@ public interface WorkspaceComponent {
 
     String FILE = "file";
     String AMAZON_WEB_SERVICES_S3 = "aws-s3";
+    String AZURE_BLOB_STORAGE = "azure-blob";
 
     List<Long> getWorkspaceIds() throws WorkspaceComponentException;
 

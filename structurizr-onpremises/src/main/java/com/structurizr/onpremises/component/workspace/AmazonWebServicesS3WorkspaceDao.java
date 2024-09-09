@@ -175,7 +175,6 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
             String folderKey = getBaseObjectName(workspaceId);
             for (S3ObjectSummary file : amazonS3.listObjects(bucketName, folderKey).getObjectSummaries()) {
                 String name = file.getKey().substring(folderKey.length());
-                System.out.println(name);
                 if (name.endsWith(".png")) {
                     images.add(new Image(name.substring(name.lastIndexOf("/")+1), file.getSize(), file.getLastModified()));
                 }
