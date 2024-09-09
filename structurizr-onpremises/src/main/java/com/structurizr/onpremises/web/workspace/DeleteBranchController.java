@@ -1,5 +1,6 @@
 package com.structurizr.onpremises.web.workspace;
 
+import com.structurizr.onpremises.component.workspace.WorkspaceBranch;
 import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.util.Configuration;
@@ -29,7 +30,7 @@ public class DeleteBranchController extends AbstractController {
             return show404Page(model);
         }
 
-        if (StringUtils.isNullOrEmpty(branch)) {
+        if (WorkspaceBranch.isMainBranch(branch)) {
             return show404Page(model);
         }
 

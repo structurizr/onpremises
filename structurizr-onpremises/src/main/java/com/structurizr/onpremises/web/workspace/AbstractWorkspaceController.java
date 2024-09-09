@@ -1,5 +1,6 @@
 package com.structurizr.onpremises.web.workspace;
 
+import com.structurizr.onpremises.component.workspace.WorkspaceBranch;
 import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.domain.User;
@@ -83,8 +84,12 @@ public abstract class AbstractWorkspaceController extends AbstractController {
                 model.addAttribute("sharingUrlPrefix", "/share/" + workspaceMetaData.getId() + "/" + workspaceMetaData.getSharingToken());
             }
 
-            if (!Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_BRANCHES)) {
+            if (WorkspaceBranch.isMainBranch(branch)) {
                 branch = "";
+            }
+
+            if (!StringUtils.isNullOrEmpty(branch) && !Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_BRANCHES)) {
+                return showError("workspace-branches-not-enabled", model);
             }
 
             addUrlSuffix(branch, version, model);

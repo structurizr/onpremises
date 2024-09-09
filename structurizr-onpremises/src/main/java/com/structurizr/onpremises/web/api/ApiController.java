@@ -4,8 +4,11 @@ import com.structurizr.Workspace;
 import com.structurizr.io.WorkspaceReaderException;
 import com.structurizr.io.json.JsonReader;
 import com.structurizr.onpremises.component.search.SearchComponent;
+import com.structurizr.onpremises.component.workspace.WorkspaceBranch;
 import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
+import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.util.Features;
 import com.structurizr.onpremises.web.AbstractController;
 import com.structurizr.util.StringUtils;
 import org.apache.commons.logging.Log;
@@ -57,6 +60,14 @@ public class ApiController extends AbstractController {
             if (workspaceId > 0) {
                 authoriseRequest(workspaceId, "GET", getPath(request, workspaceId, branch), null, request, response);
 
+                if (WorkspaceBranch.isMainBranch(branch)) {
+                    branch = "";
+                }
+
+                if (!StringUtils.isNullOrEmpty(branch) && !Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_BRANCHES)) {
+                    throw new ApiException("Workspace branches are not enabled for this installation");
+                }
+
                 return workspaceComponent.getWorkspace(workspaceId, branch, version);
             } else {
                 throw new ApiException("Workspace ID must be greater than 1");
@@ -88,6 +99,14 @@ public class ApiController extends AbstractController {
             if (workspaceId > 0) {
                 authoriseRequest(workspaceId, "PUT", getPath(request, workspaceId, branch), json, request, response);
 
+                if (WorkspaceBranch.isMainBranch(branch)) {
+                    branch = "";
+                }
+
+                if (!StringUtils.isNullOrEmpty(branch) && !Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_BRANCHES)) {
+                    throw new ApiException("Workspace branches are not enabled for this installation");
+                }
+
                 workspaceComponent.putWorkspace(workspaceId, branch, json);
 
                 if (json.contains("encryptionStrategy") && json.contains("ciphertext")) {
@@ -108,7 +127,7 @@ public class ApiController extends AbstractController {
                             throw new ApiException(e.getMessage());
                         }
 
-                        if (StringUtils.isNullOrEmpty(branch)) {
+                        if (WorkspaceBranch.isMainBranch(branch)) {
                             searchComponent.index(workspace);
                         }
                     } catch (Exception e) {

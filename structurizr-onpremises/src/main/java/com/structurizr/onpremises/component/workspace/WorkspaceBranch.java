@@ -4,6 +4,7 @@ import com.structurizr.util.StringUtils;
 
 public final class WorkspaceBranch {
 
+    private static final String MAIN_BRANCH = "main";
     private static final String BRANCH_NAME_REGEX = "[a-zA-Z0-9][a-zA-Z0-9-_.]*";
 
     private final String name;
@@ -16,6 +17,10 @@ public final class WorkspaceBranch {
         if (!StringUtils.isNullOrEmpty(name) && !isValidBranchName(name)) {
             throw new IllegalArgumentException("The branch name \"" + name + "\" is invalid");
         }
+    }
+
+    public static boolean isMainBranch(String branch) {
+        return StringUtils.isNullOrEmpty(branch) || branch.equalsIgnoreCase(MAIN_BRANCH);
     }
 
     public String getName() {

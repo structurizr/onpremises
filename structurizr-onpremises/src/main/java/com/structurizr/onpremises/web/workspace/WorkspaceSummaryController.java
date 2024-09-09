@@ -1,8 +1,10 @@
 package com.structurizr.onpremises.web.workspace;
 
+import com.structurizr.onpremises.component.workspace.WorkspaceBranch;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.Features;
+import com.structurizr.util.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -53,11 +55,16 @@ public class WorkspaceSummaryController extends AbstractWorkspaceController {
         }
 
         if (Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_BRANCHES)) {
+            if (WorkspaceBranch.isMainBranch(branch)) {
+                branch = "";
+            }
             model.addAttribute("branchesEnabled", true);
             model.addAttribute("branch", branch);
             model.addAttribute("branches", workspaceComponent.getWorkspaceBranches(workspaceId));
-        } else {
-            branch = "";
+        }
+
+        if (!StringUtils.isNullOrEmpty(branch) && !Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_BRANCHES)) {
+            return showError("workspace-branches-not-enabled", model);
         }
 
         model.addAttribute("versions", workspaceComponent.getWorkspaceVersions(workspaceId, branch, Configuration.getInstance().getMaxWorkspaceVersions()));
