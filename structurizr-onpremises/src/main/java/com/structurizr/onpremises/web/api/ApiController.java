@@ -61,6 +61,12 @@ public class ApiController extends AbstractController {
                 branch = "";
             }
 
+            try {
+                WorkspaceBranch.validateBranchName(branch);
+            } catch (IllegalArgumentException e) {
+                throw new ApiException(e.getMessage());
+            }
+
             if (workspaceId > 0) {
                 authoriseRequest(workspaceId, "GET", getPath(request, workspaceId, branch), null, request, response);
 
@@ -98,6 +104,12 @@ public class ApiController extends AbstractController {
         try {
             if (WorkspaceBranch.isMainBranch(branch)) {
                 branch = "";
+            }
+
+            try {
+                WorkspaceBranch.validateBranchName(branch);
+            } catch (IllegalArgumentException e) {
+                throw new ApiException(e.getMessage());
             }
 
             if (workspaceId > 0) {
