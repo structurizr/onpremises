@@ -231,10 +231,6 @@ public class WorkspaceMetaData {
         return getSize()/(1024.0 * 1024.0);
     }
 
-    public long getRevision() {
-        return 0;
-    }
-
     public boolean isEditable() {
         return editable;
     }
