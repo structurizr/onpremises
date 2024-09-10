@@ -37,6 +37,10 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
     private static final String IMAGE_TYPE = "image";
     private static final String JSON_TYPE = "json";
 
+    private static final String WORKSPACES_FOLDER_NAME = "workspaces";
+    private static final String BRANCHES_FOLDER_NAME = "branches";
+    private static final String PNG_FILE_EXTENSION = ".png";
+
     private final String accessKeyId;
     private final String secretAccessKey;
     private final String region;
@@ -84,7 +88,7 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
 
     @Override
     public void putWorkspace(WorkspaceMetaData workspaceMetaData, String json, String branch) {
-        String objectKey = getBaseObjectName(workspaceMetaData.getId()) + WORKSPACE_CONTENT_FILENAME;
+        String objectKey = getWorkspaceFolderName(workspaceMetaData.getId(), branch) + WORKSPACE_CONTENT_FILENAME;
 
         byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
         InputStream inputStream = new ByteArrayInputStream(bytes);
@@ -103,7 +107,7 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
     public String getWorkspace(long workspaceId, String branch, String version) {
         InputStream inputStream = null;
         try {
-            String objectKey = getBaseObjectName(workspaceId) + WORKSPACE_CONTENT_FILENAME;
+            String objectKey = getWorkspaceFolderName(workspaceId, branch) + WORKSPACE_CONTENT_FILENAME;
             GetObjectRequest getRequest = new GetObjectRequest(bucketName, objectKey);
 
             if (version != null && version.trim().length() > 0) {
@@ -129,13 +133,25 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
 
     @Override
     public boolean deleteBranch(long workspaceId, String branch) {
-        return false;
+        try {
+            String folderKey = getWorkspaceFolderName(workspaceId, branch);
+            for (S3ObjectSummary file : amazonS3.listObjects(bucketName, folderKey).getObjectSummaries()) {
+                amazonS3.deleteObject(bucketName, file.getKey());
+            }
+
+            amazonS3.deleteObject(bucketName, folderKey);
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override
     public boolean deleteWorkspace(long workspaceId) {
         try {
-            String folderKey = getBaseObjectName(workspaceId);
+            String folderKey = getWorkspaceFolderName(workspaceId, WorkspaceBranch.NO_BRANCH);
             for (S3ObjectSummary file : amazonS3.listObjects(bucketName, folderKey).getObjectSummaries()) {
                 amazonS3.deleteObject(bucketName, file.getKey());
             }
@@ -152,7 +168,7 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
     @Override
     public boolean putImage(long workspaceId, String filename, File file) {
         try {
-            String objectKey = getBaseObjectName(workspaceId) + filename;
+            String objectKey = getWorkspaceFolderName(workspaceId, WorkspaceBranch.NO_BRANCH) + filename;
 
             ObjectMetadata objectMetadata = new ObjectMetadata();
             PutObjectRequest putRequest = new PutObjectRequest(bucketName, objectKey, file);
@@ -172,7 +188,7 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
         List<Image> images = new ArrayList<>();
 
         try {
-            String folderKey = getBaseObjectName(workspaceId);
+            String folderKey = getWorkspaceFolderName(workspaceId, WorkspaceBranch.NO_BRANCH);
             for (S3ObjectSummary file : amazonS3.listObjects(bucketName, folderKey).getObjectSummaries()) {
                 String name = file.getKey().substring(folderKey.length());
                 if (name.endsWith(".png")) {
@@ -189,7 +205,7 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
     @Override
     public InputStreamAndContentLength getImage(long workspaceId, String filename) {
         try {
-            String objectKey = getBaseObjectName(workspaceId) + filename;
+            String objectKey = getWorkspaceFolderName(workspaceId, WorkspaceBranch.NO_BRANCH) + filename;
 
             GetObjectRequest getRequest = new GetObjectRequest(bucketName, objectKey);
             S3Object s3Object = amazonS3.getObject(getRequest);
@@ -215,9 +231,9 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
         AmazonS3 s3 = amazonS3;
 
         try {
-            String folderKey = getBaseObjectName(workspaceId);
+            String folderKey = getWorkspaceFolderName(workspaceId, WorkspaceBranch.NO_BRANCH);
             for (S3ObjectSummary file : s3.listObjects(bucketName, folderKey).getObjectSummaries()) {
-                if (file.getKey().endsWith(".png")) {
+                if (file.getKey().endsWith(PNG_FILE_EXTENSION)) {
                     s3.deleteObject(bucketName, file.getKey());
                 }
             }
@@ -232,7 +248,7 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
     public List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, String branch, int maxVersions) {
         List<WorkspaceVersion> versions = new ArrayList<>();
 
-        String objectKey = getBaseObjectName(workspaceId) + WORKSPACE_CONTENT_FILENAME;
+        String objectKey = getWorkspaceFolderName(workspaceId, branch) + WORKSPACE_CONTENT_FILENAME;
 
         ListVersionsRequest request = new ListVersionsRequest()
                 .withBucketName(bucketName)
@@ -256,7 +272,22 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
 
     @Override
     public List<WorkspaceBranch> getWorkspaceBranches(long workspaceId) {
-        return List.of();
+        List<WorkspaceBranch> branches = new ArrayList<>();
+
+        String folderKey = getWorkspaceFolderName(workspaceId, WorkspaceBranch.NO_BRANCH) + BRANCHES_FOLDER_NAME + "/";
+        for (S3ObjectSummary file : amazonS3.listObjects(bucketName, folderKey).getObjectSummaries()) {
+            System.out.println(file.getKey());
+            String name = file.getKey().substring(folderKey.length());
+            name = name.substring(0, name.lastIndexOf("/" + WORKSPACE_CONTENT_FILENAME));
+
+            if (WorkspaceBranch.isValidBranchName(name)) {
+                branches.add(new WorkspaceBranch(name));
+            }
+        }
+
+        branches.sort(Comparator.comparing(WorkspaceBranch::getName));
+
+        return branches;
     }
 
     @Override
@@ -264,8 +295,7 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
         List<Long> workspaceIds = new ArrayList<>();
 
         try {
-            String folderKey = getBaseObjectName();
-
+            String folderKey = WORKSPACES_FOLDER_NAME;
             ObjectListing listing = amazonS3.listObjects(bucketName, folderKey);
             List<S3ObjectSummary> files = listing.getObjectSummaries();
 
@@ -296,7 +326,7 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
     public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
         InputStream inputStream = null;
         try {
-            String objectKey = getBaseObjectName(workspaceId) + WORKSPACE_PROPERTIES_FILENAME;
+            String objectKey = getWorkspaceFolderName(workspaceId, WorkspaceBranch.NO_BRANCH) + WORKSPACE_PROPERTIES_FILENAME;
             GetObjectRequest getRequest = new GetObjectRequest(bucketName, objectKey);
 
             inputStream = amazonS3.getObject(getRequest).getObjectContent();
@@ -325,7 +355,7 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
     @Override
     public void putWorkspaceMetaData(WorkspaceMetaData workspaceMetaData) {
         try {
-            String objectKey = getBaseObjectName(workspaceMetaData.getId()) + WORKSPACE_PROPERTIES_FILENAME;
+            String objectKey = getWorkspaceFolderName(workspaceMetaData.getId(), WorkspaceBranch.NO_BRANCH) + WORKSPACE_PROPERTIES_FILENAME;
 
             Properties properties = workspaceMetaData.toProperties();
             StringWriter stringWriter = new StringWriter();
@@ -347,12 +377,14 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
         }
     }
 
-    private String getBaseObjectName() {
-        return "workspaces";
-    }
+    private String getWorkspaceFolderName(long workspaceId, String branch) {
+        String objectKey = WORKSPACES_FOLDER_NAME + "/" + workspaceId + "/";
 
-    private String getBaseObjectName(long workspaceId) {
-        return getBaseObjectName() + "/" + workspaceId + "/";
+        if (!StringUtils.isNullOrEmpty(branch)) {
+            objectKey += BRANCHES_FOLDER_NAME + "/" + branch + "/";
+        }
+
+        return objectKey;
     }
 
 }
