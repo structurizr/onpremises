@@ -54,10 +54,11 @@ public class WorkspaceSummaryController extends AbstractWorkspaceController {
             return show404Page(model);
         }
 
+        if (WorkspaceBranch.isMainBranch(branch)) {
+            branch = "";
+        }
+
         if (Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_BRANCHES)) {
-            if (WorkspaceBranch.isMainBranch(branch)) {
-                branch = "";
-            }
             model.addAttribute("branchesEnabled", true);
             model.addAttribute("branch", branch);
             model.addAttribute("branches", workspaceComponent.getWorkspaceBranches(workspaceId));

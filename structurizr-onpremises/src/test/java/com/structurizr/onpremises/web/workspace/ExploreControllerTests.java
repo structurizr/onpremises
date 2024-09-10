@@ -165,7 +165,7 @@ public class ExploreControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedExplorePage(1, "branch", "version", model);
+        String view = controller.showAuthenticatedExplorePage(1, "main", "version", model);
         assertEquals("404", view);
     }
 
@@ -186,7 +186,7 @@ public class ExploreControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedExplorePage(1, "branch", "version", model);
+        String view = controller.showAuthenticatedExplorePage(1, "main", "version", model);
         assertEquals("404", view);
     }
 
@@ -206,7 +206,7 @@ public class ExploreControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedExplorePage(1, "branch", "version", model);
+        String view = controller.showAuthenticatedExplorePage(1, "main", "version", model);
         assertEquals("explore", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
@@ -230,7 +230,7 @@ public class ExploreControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedExplorePage(1, "branch", "version", model);
+        String view = controller.showAuthenticatedExplorePage(1, "main", "version", model);
         assertEquals("explore", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
@@ -254,7 +254,7 @@ public class ExploreControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedExplorePage(1, "branch", "version", model);
+        String view = controller.showAuthenticatedExplorePage(1, "main", "version", model);
         assertEquals("explore", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));

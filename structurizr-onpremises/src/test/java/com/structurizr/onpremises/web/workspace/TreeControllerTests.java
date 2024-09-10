@@ -167,7 +167,7 @@ public class TreeControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedTree(1, "branch", "version", "view", model);
+        String view = controller.showAuthenticatedTree(1, "main", "version", "view", model);
         assertEquals("404", view);
     }
 
@@ -188,7 +188,7 @@ public class TreeControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedTree(1, "branch", "version", "view", model);
+        String view = controller.showAuthenticatedTree(1, "main", "version", "view", model);
         assertEquals("404", view);
     }
 
@@ -208,7 +208,7 @@ public class TreeControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedTree(1, "branch", "version", "view", model);
+        String view = controller.showAuthenticatedTree(1, "main", "version", "view", model);
         assertEquals("tree", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
@@ -233,7 +233,7 @@ public class TreeControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedTree(1, "branch", "version", "view", model);
+        String view = controller.showAuthenticatedTree(1, "main", "version", "view", model);
         assertEquals("tree", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
@@ -258,7 +258,7 @@ public class TreeControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedTree(1, "branch", "version", "view", model);
+        String view = controller.showAuthenticatedTree(1, "main", "version", "view", model);
         assertEquals("tree", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));

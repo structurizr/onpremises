@@ -31,7 +31,7 @@ public class DslEditorControllerTests extends ControllerTestsBase {
     public void showAuthenticatedDslEditor_ReturnsAnErrorPage_WhenTheDslEditorHasBeenDisabled() {
         Configuration.getInstance().setFeatureDisabled(Features.UI_DSL_EDITOR);
         setUser("user@example.com");
-        String view = controller.showAuthenticatedDslEditor(1, "branch", "version", model);
+        String view = controller.showAuthenticatedDslEditor(1, "main", "version", model);
         assertEquals("dsl-editor-disabled", view);
     }
 
@@ -45,7 +45,7 @@ public class DslEditorControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedDslEditor(1, "branch", "version", model);
+        String view = controller.showAuthenticatedDslEditor(1, "main", "version", model);
         assertEquals("404", view);
     }
 
@@ -60,7 +60,7 @@ public class DslEditorControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showAuthenticatedDslEditor(1, "branch", "version", model);
+        String view = controller.showAuthenticatedDslEditor(1, "main", "version", model);
         assertEquals("workspace-is-client-side-encrypted", view);
     }
 
@@ -76,7 +76,7 @@ public class DslEditorControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDslEditor(1, "branch", "version", model);
+        String view = controller.showAuthenticatedDslEditor(1, "main", "version", model);
         assertEquals("404", view);
     }
 
@@ -102,7 +102,7 @@ public class DslEditorControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedDslEditor(1, "branch", "version", model);
+        String view = controller.showAuthenticatedDslEditor(1, "main", "version", model);
         assertEquals("dsl-editor", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertTrue(workspaceMetaData.isEditable());
@@ -137,7 +137,7 @@ public class DslEditorControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDslEditor(1, "branch", "version", model);
+        String view = controller.showAuthenticatedDslEditor(1, "main", "version", model);
         assertEquals("dsl-editor", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertTrue(workspaceMetaData.isEditable());
@@ -166,7 +166,7 @@ public class DslEditorControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDslEditor(1, "branch", "version", model);
+        String view = controller.showAuthenticatedDslEditor(1, "main", "version", model);
         assertEquals("workspace-is-readonly", view);
     }
 

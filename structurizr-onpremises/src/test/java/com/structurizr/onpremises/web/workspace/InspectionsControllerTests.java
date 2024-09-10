@@ -36,7 +36,7 @@ public class InspectionsControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showInspections(1, "branch", "version", model);
+        String view = controller.showInspections(1, "main", "version", model);
         assertEquals("404", view);
     }
 
@@ -51,7 +51,7 @@ public class InspectionsControllerTests extends ControllerTestsBase {
             }
         });
 
-        String view = controller.showInspections(1, "branch", "version", model);
+        String view = controller.showInspections(1, "main", "version", model);
         assertEquals("workspace-is-client-side-encrypted", view);
     }
 
@@ -67,7 +67,7 @@ public class InspectionsControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showInspections(1, "branch", "version", model);
+        String view = controller.showInspections(1, "main", "version", model);
         assertEquals("404", view);
     }
 
@@ -91,7 +91,7 @@ public class InspectionsControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showInspections(1, "branch", "version", model);
+        String view = controller.showInspections(1, "main", "version", model);
         assertEquals("inspections", view);
         assertNotNull(model.getAttribute("violations"));
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
@@ -120,7 +120,7 @@ public class InspectionsControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showInspections(1, "branch", "version", model);
+        String view = controller.showInspections(1, "main", "version", model);
         assertEquals("inspections", view);
         assertNotNull(model.getAttribute("violations"));
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
@@ -149,7 +149,7 @@ public class InspectionsControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showInspections(1, "branch", "version", model);
+        String view = controller.showInspections(1, "main", "version", model);
         assertEquals("inspections", view);
         assertNotNull(model.getAttribute("violations"));
         assertSame(workspaceMetaData, model.getAttribute("workspace"));

@@ -35,7 +35,7 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedDiagramEditor(1, "branch", "version", model);
+        String view = controller.showAuthenticatedDiagramEditor(1, "main", "version", model);
         assertEquals("404", view);
     }
 
@@ -51,7 +51,7 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDiagramEditor(1, "branch", "version", model);
+        String view = controller.showAuthenticatedDiagramEditor(1, "main", "version", model);
         assertEquals("404", view);
     }
 
@@ -77,7 +77,7 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedDiagramEditor(1, "branch", "version", model);
+        String view = controller.showAuthenticatedDiagramEditor(1, "main", "version", model);
         assertEquals("diagrams", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertTrue(workspaceMetaData.isEditable());
@@ -112,7 +112,7 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDiagramEditor(1, "branch", "version", model);
+        String view = controller.showAuthenticatedDiagramEditor(1, "main", "version", model);
         assertEquals("diagrams", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertTrue(workspaceMetaData.isEditable());
@@ -141,7 +141,7 @@ public class DiagramEditorControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDiagramEditor(1, "branch", "version", model);
+        String view = controller.showAuthenticatedDiagramEditor(1, "main", "version", model);
         assertEquals("workspace-is-readonly", view);
     }
 

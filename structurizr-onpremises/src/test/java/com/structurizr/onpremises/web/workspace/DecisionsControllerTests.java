@@ -167,7 +167,7 @@ public class DecisionsControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedDecisions(1, "branch", "version", model);
+        String view = controller.showAuthenticatedDecisions(1, "main", "version", model);
         assertEquals("404", view);
     }
 
@@ -188,7 +188,7 @@ public class DecisionsControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDecisions(1, "branch", "version", model);
+        String view = controller.showAuthenticatedDecisions(1, "main", "version", model);
         assertEquals("404", view);
     }
 
@@ -208,7 +208,7 @@ public class DecisionsControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedDecisions(1, "branch", "version", model);
+        String view = controller.showAuthenticatedDecisions(1, "main", "version", model);
         assertEquals("decisions", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
@@ -233,7 +233,7 @@ public class DecisionsControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDecisions(1, "branch", "version", model);
+        String view = controller.showAuthenticatedDecisions(1, "main", "version", model);
         assertEquals("decisions", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
@@ -258,7 +258,7 @@ public class DecisionsControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedDecisions(1, "branch", "version", model);
+        String view = controller.showAuthenticatedDecisions(1, "main", "version", model);
         assertEquals("decisions", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));

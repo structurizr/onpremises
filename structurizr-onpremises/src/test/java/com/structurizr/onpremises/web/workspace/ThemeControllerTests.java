@@ -189,7 +189,7 @@ public class ThemeControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedTheme(1, "branch", "version", model);
+        String view = controller.showAuthenticatedTheme(1, "main", "version", model);
         assertEquals("404", view);
     }
 
@@ -210,7 +210,7 @@ public class ThemeControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedTheme(1, "branch", "version", model);
+        String view = controller.showAuthenticatedTheme(1, "main", "version", model);
         assertEquals("404", view);
     }
 
@@ -230,7 +230,7 @@ public class ThemeControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedTheme(1, "branch", "version", model);
+        String view = controller.showAuthenticatedTheme(1, "main", "version", model);
         assertEquals("json", view);
         assertEquals("""
                 {
@@ -260,7 +260,7 @@ public class ThemeControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedTheme(1, "branch", "version", model);
+        String view = controller.showAuthenticatedTheme(1, "main", "version", model);
         assertEquals("json", view);
         assertEquals("""
                 {
@@ -290,7 +290,7 @@ public class ThemeControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedTheme(1, "branch", "version", model);
+        String view = controller.showAuthenticatedTheme(1, "main", "version", model);
         assertEquals("json", view);
         assertEquals("""
                 {

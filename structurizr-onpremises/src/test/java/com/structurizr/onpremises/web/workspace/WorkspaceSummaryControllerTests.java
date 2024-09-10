@@ -192,7 +192,7 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedWorkspaceSummary(1, "branch", "version", model);
+        String view = controller.showAuthenticatedWorkspaceSummary(1, "main", "version", model);
         assertEquals("404", view);
     }
 
@@ -213,7 +213,7 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedWorkspaceSummary(1, "branch", "version", model);
+        String view = controller.showAuthenticatedWorkspaceSummary(1, "main", "version", model);
         assertEquals("404", view);
     }
 
@@ -233,7 +233,7 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
         });
 
         setUser("user@example.com");
-        String view = controller.showAuthenticatedWorkspaceSummary(1, "branch", "version", model);
+        String view = controller.showAuthenticatedWorkspaceSummary(1, "main", "version", model);
         assertEquals("workspace-summary", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertTrue(workspaceMetaData.isEditable());
@@ -259,7 +259,7 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedWorkspaceSummary(1, "branch", "version", model);
+        String view = controller.showAuthenticatedWorkspaceSummary(1, "main", "version", model);
         assertEquals("workspace-summary", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertTrue(workspaceMetaData.isEditable());
@@ -285,7 +285,7 @@ public class WorkspaceSummaryControllerTests extends ControllerTestsBase {
         });
 
         setUser("user1@example.com");
-        String view = controller.showAuthenticatedWorkspaceSummary(1, "branch", "version", model);
+        String view = controller.showAuthenticatedWorkspaceSummary(1, "main", "version", model);
         assertEquals("workspace-summary", view);
         assertSame(workspaceMetaData, model.getAttribute("workspace"));
         assertEquals("anNvbg==", model.getAttribute("workspaceAsJson"));
