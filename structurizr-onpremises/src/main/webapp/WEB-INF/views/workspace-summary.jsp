@@ -185,22 +185,22 @@
                             </c:forEach>
                         </select>
                     </form>
+                    </c:if>
 
                     <div style="margin-top: 10px">
-                        <c:if test="${not empty param.version && workspace.editable && not workspace.locked}">
-                            <button id="revertButton" class="btn btn-default small"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-btn" /> Revert to this version</button>
-                        </c:if>
-                        </c:if>
+                    <c:if test="${not empty param.version && workspace.editable && not workspace.locked}">
+                        <button id="revertButton" class="btn btn-default small"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-btn" /> Revert to this version</button>
+                    </c:if>
 
-                        <c:if test="${workspace.editable && not workspace.locked && branchesEnabled}">
-                        <button id="copyToBranchButton" class="btn btn-default small"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/bezier2.svg" class="icon-btn" /> Copy to branch</button>
-                        </c:if>
+                    <c:if test="${workspace.editable && not workspace.locked && branchesEnabled}">
+                    <button id="copyToBranchButton" class="btn btn-default small"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/bezier2.svg" class="icon-btn" /> Copy to branch</button>
+                    </c:if>
 
-                        <c:if test="${workspace.editable && not workspace.locked && branchesEnabled && not empty branch}">
-                        <form id="deleteBranchForm" action="/workspace/${workspace.id}/branch/${branch}/delete" method="post" class="form-inline" style="display: inline-block">
-                            <button class="btn btn-default small" type="submit"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/trash.svg" class="icon-btn" /> Delete branch</button>
-                        </form>
-                        </c:if>
+                    <c:if test="${workspace.editable && not workspace.locked && branchesEnabled && not empty branch}">
+                    <form id="deleteBranchForm" action="/workspace/${workspace.id}/branch/${branch}/delete" method="post" class="form-inline" style="display: inline-block">
+                        <button class="btn btn-default small" type="submit"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/trash.svg" class="icon-btn" /> Delete branch</button>
+                    </form>
+                    </c:if>
                     </div>
                 </div>
                 </c:if>
@@ -451,7 +451,6 @@
 
     function revertToLoadedVersion() {
         if (confirm('Are you sure you want to revert to this version?')) {
-            structurizrApiClient.resetRevision();
             structurizr.saveWorkspace(function () {
                 const branch = '<c:out value="${workspace.branch}" />';
 

@@ -47,7 +47,7 @@ public class ApiController extends AbstractController {
                                @RequestParam(required = false) String version,
                                HttpServletRequest request, HttpServletResponse response) {
 
-        return getWorkspace(workspaceId, null, version, request, response);
+        return getWorkspace(workspaceId, WorkspaceBranch.MAIN_BRANCH, version, request, response);
     }
 
     @CrossOrigin
@@ -57,12 +57,12 @@ public class ApiController extends AbstractController {
                                @RequestParam(required = false) String version,
                                HttpServletRequest request, HttpServletResponse response) {
         try {
+            if (WorkspaceBranch.isMainBranch(branch)) {
+                branch = "";
+            }
+
             if (workspaceId > 0) {
                 authoriseRequest(workspaceId, "GET", getPath(request, workspaceId, branch), null, request, response);
-
-                if (WorkspaceBranch.isMainBranch(branch)) {
-                    branch = "";
-                }
 
                 if (!StringUtils.isNullOrEmpty(branch) && !Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_BRANCHES)) {
                     throw new ApiException("Workspace branches are not enabled for this installation");
@@ -85,7 +85,7 @@ public class ApiController extends AbstractController {
                                                   HttpServletRequest request,
                                                   HttpServletResponse response) {
 
-        return putWorkspace(workspaceId, null, json, request, response);
+        return putWorkspace(workspaceId, WorkspaceBranch.MAIN_BRANCH, json, request, response);
     }
 
     @CrossOrigin
@@ -96,12 +96,12 @@ public class ApiController extends AbstractController {
                                                   HttpServletRequest request,
                                                   HttpServletResponse response) {
         try {
+            if (WorkspaceBranch.isMainBranch(branch)) {
+                branch = "";
+            }
+
             if (workspaceId > 0) {
                 authoriseRequest(workspaceId, "PUT", getPath(request, workspaceId, branch), json, request, response);
-
-                if (WorkspaceBranch.isMainBranch(branch)) {
-                    branch = "";
-                }
 
                 if (!StringUtils.isNullOrEmpty(branch) && !Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_BRANCHES)) {
                     throw new ApiException("Workspace branches are not enabled for this installation");

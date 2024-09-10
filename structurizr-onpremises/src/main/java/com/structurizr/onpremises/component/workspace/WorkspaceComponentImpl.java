@@ -470,7 +470,15 @@ class WorkspaceComponentImpl implements WorkspaceComponent {
 
     @Override
     public List<WorkspaceBranch> getWorkspaceBranches(long workspaceId) throws WorkspaceComponentException {
-        return workspaceDao.getWorkspaceBranches(workspaceId);
+        List<WorkspaceBranch> branches = new ArrayList<>();
+
+        try {
+            return workspaceDao.getWorkspaceBranches(workspaceId);
+        } catch (Exception e) {
+            log.error(e);
+        }
+
+        return branches;
     }
 
     @Override

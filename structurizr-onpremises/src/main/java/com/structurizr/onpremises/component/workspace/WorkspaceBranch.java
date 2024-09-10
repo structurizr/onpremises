@@ -4,7 +4,7 @@ import com.structurizr.util.StringUtils;
 
 public final class WorkspaceBranch {
 
-    private static final String MAIN_BRANCH = "main";
+    public static final String MAIN_BRANCH = "main";
     private static final String BRANCH_NAME_REGEX = "[a-zA-Z0-9][a-zA-Z0-9-_.]*";
 
     private final String name;
