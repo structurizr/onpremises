@@ -6,7 +6,7 @@ import java.util.Date;
 
 public final class WorkspaceVersion {
 
-    private static final String VERSION_IDENTIFIER_REGEX = "[0-9a-zA-Z+-:]*";
+    private static final String VERSION_IDENTIFIER_REGEX = "[0-9a-zA-Z+-:_.]*";
 
     private String versionId;
     private final Date lastModifiedDate;

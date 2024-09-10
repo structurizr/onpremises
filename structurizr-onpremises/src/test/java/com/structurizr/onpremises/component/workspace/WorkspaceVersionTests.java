@@ -11,6 +11,7 @@ public class WorkspaceVersionTests {
     void isValidBVersionIdentifier() {
         assertTrue(WorkspaceVersion.isValidBVersionIdentifier("1234567890")); // local
         assertTrue(WorkspaceVersion.isValidBVersionIdentifier("3sL4kqtJlcpXroDTDmJ+rmSpXd3dIbrHY+MTRCxf3vjVBH40Nr8X8gdRQBpUMLUo")); // aws
+        assertTrue(WorkspaceVersion.isValidBVersionIdentifier("h_rKc7NTAmEyxFDB0p4CkCyg_y2uHmO.")); // aws
         assertTrue(WorkspaceVersion.isValidBVersionIdentifier("2024-09-07T16:34:45.7048862Z")); // azure
 
         assertFalse(WorkspaceVersion.isValidBVersionIdentifier("<script>"));
