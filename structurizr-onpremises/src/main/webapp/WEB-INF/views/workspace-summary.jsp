@@ -434,33 +434,31 @@
     }
 
     function copyWorkspaceToBranch() {
-        function copyWorkspaceToBranch() {
-            const branch = prompt("Branch name");
+        const branch = prompt("Branch name");
 
-            if (branch !== undefined) {
-                progressMessage.show('<p>Copying to branch...</p>');
+        if (branch !== undefined) {
+            progressMessage.show('<p>Copying to branch...</p>');
 
-                structurizrApiClient.setBranch(branch);
+            structurizrApiClient.setBranch(branch);
 
-                structurizr.saveWorkspace(function(response) {
-                    if (response.success === true) {
-                        progressMessage.hide();
+            structurizr.saveWorkspace(function(response) {
+                if (response.success === true) {
+                    progressMessage.hide();
 
-                        if (branch.length > 0) {
-                            window.location.href = '<c:out value="${urlPrefix}"/>?branch=' + branch;
-                        } else {
-                            window.location.href = '<c:out value="${urlPrefix}"/>';
-                        }
+                    if (branch.length > 0) {
+                        window.location.href = '<c:out value="${urlPrefix}"/>?branch=' + branch;
                     } else {
-                        if (response.message) {
-                            console.log(response.message);
-                            if (progressMessage) {
-                                progressMessage.show('<p>Error</p><p style="font-size: 75%">' + structurizr.util.escapeHtml(response.message) + '</p>');
-                            }
+                        window.location.href = '<c:out value="${urlPrefix}"/>';
+                    }
+                } else {
+                    if (response.message) {
+                        console.log(response.message);
+                        if (progressMessage) {
+                            progressMessage.show('<p>Error</p><p style="font-size: 75%">' + structurizr.util.escapeHtml(response.message) + '</p>');
                         }
                     }
-                });
-            }
+                }
+            });
         }
     }
 
