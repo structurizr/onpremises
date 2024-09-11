@@ -13,6 +13,9 @@
 
             <br />
 
+            <a href="/dsl">DSL</a>
+            |
+
             <c:choose>
             <c:when test="${authenticated}">
                 <c:if test="${reviewsEnabled}">
