@@ -508,7 +508,6 @@
 
             progressMessage.show('<p>Saving workspace...</p>');
             structurizrEncryptionStrategy = undefined;
-            structurizrApiClient.resetRevision();
             structurizrApiClient.putWorkspace(json, function (response) {
                 if (response.success) {
                     window.location.reload();
