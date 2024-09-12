@@ -68,14 +68,15 @@ public class PublicDslController extends AbstractController {
 
         view = HtmlUtils.filterHtml(view);
 
-        String errorMessage = "";
-
         Workspace workspace = null;
 
         try {
             workspace = fromDsl(source);
-        } catch (StructurizrDslParserException | WorkspaceScopeValidationException e) {
-            errorMessage = e.getMessage();
+        } catch (StructurizrDslParserException e) {
+            model.addAttribute("line", e.getLineNumber());
+            model.addAttribute("errorMessage", e.getMessage());
+        } catch (WorkspaceScopeValidationException e) {
+            model.addAttribute("errorMessage", e.getMessage());
         }
 
         model.addAttribute("dslVersion", Class.forName(StructurizrDslParser.class.getCanonicalName()).getPackage().getImplementationVersion());
@@ -83,24 +84,10 @@ public class PublicDslController extends AbstractController {
         model.addAttribute("view", view);
         model.addAttribute("workspace", workspaceMetaData);
 
-        if (!StringUtils.isNullOrEmpty(errorMessage)) {
-            model.addAttribute("errorMessage", errorMessage);
-        }
-
         if (workspace != null) {
             workspace.setLastModifiedDate(new Date());
 
-            if (StringUtils.isNullOrEmpty(json)) {
-                if (Configuration.getInstance().isGraphvizEnabled()) {
-                    GraphvizAutomaticLayout graphviz = new GraphvizAutomaticLayout();
-                    graphviz.setRankDirection(RankDirection.LeftRight);
-                    graphviz.setChangePaperSize(true);
-                    graphviz.setRankSeparation(300);
-                    graphviz.setNodeSeparation(300);
-                    graphviz.setMargin(400);
-                    graphviz.apply(workspace);
-                }
-            } else {
+            if (!StringUtils.isNullOrEmpty(json)) {
                 Workspace oldWorkspace = WorkspaceUtils.fromJson(json);
 
                 try {

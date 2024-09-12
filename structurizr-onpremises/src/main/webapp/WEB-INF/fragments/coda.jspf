@@ -13,7 +13,7 @@
 
             <br />
 
-            <a href="/dsl">DSL</a>
+            <a href="/dsl">DSL editor</a>
             |
 
             <c:choose>

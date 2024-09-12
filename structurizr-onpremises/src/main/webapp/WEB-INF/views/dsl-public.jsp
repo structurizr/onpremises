@@ -212,6 +212,13 @@
 
         resize();
 
+        <c:if test="${line gt 0}">
+        var line = ${line}-1;
+        editor.moveCursorToPosition({row: line, column: 0});
+        editor.selection.selectLine();
+        editor.scrollToLine(line);
+        </c:if>
+
         setUnsavedChanges(true);
 
         $(window).on("beforeunload", function () {

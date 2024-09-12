@@ -102,10 +102,10 @@ public class DslEditorController extends AbstractWorkspaceEditorController {
                 newWorkspace.getViews().getConfiguration().copyConfigurationFrom(oldWorkspace.getViews().getConfiguration());
 
                 return new DslEditorResponse(WorkspaceUtils.toJson(newWorkspace, false));
-            } catch (StructurizrDslParserException | WorkspaceScopeValidationException e) {
-                String errorMessage = e.getMessage();
-
-                return new DslEditorResponse(false, errorMessage);
+            } catch (StructurizrDslParserException e) {
+                return new DslEditorResponse(false, e.getMessage(), e.getLineNumber());
+            } catch (WorkspaceScopeValidationException e) {
+                return new DslEditorResponse(false, e.getMessage());
             }
         } catch (Exception e) {
             if (!(e instanceof StructurizrDslParserException)) {

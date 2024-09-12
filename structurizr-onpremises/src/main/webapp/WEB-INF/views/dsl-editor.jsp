@@ -375,6 +375,12 @@
                 workspaceChanged();
             } else {
                 showError(data.message);
+                if (data.lineNumber > 0) {
+                    const line = data.lineNumber -1;
+                    editor.moveCursorToPosition({row: line, column: 0});
+                    editor.selection.selectLine();
+                    editor.scrollToLine(line);
+                }
                 progressMessage.hide();
             }
         })
