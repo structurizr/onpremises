@@ -222,6 +222,20 @@
         setUnsavedChanges(true);
 
         $(window).on("beforeunload", function () {
+            try {
+                localStorage.setItem(LOCAL_STORAGE_SOURCE, structurizr.util.btoa(editor.getValue()));
+
+                if (structurizr.workspace) {
+                    const workspace = structurizr.workspace.getJson();
+                    workspace.views = structurizr.workspace.views;
+
+                    const jsonAsString = JSON.stringify(workspace);
+                    localStorage.setItem(LOCAL_STORAGE_JSON, structurizr.util.btoa(jsonAsString));
+                }
+            } catch (e) {
+                console.log(e);
+            }
+
             if (unsavedChanges) {
                 return "There are unsaved changes.";
             }
