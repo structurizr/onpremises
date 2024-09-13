@@ -49,3 +49,6 @@ cp $STRUCTURIZR_UI_DIR/src/fragments/dsl/* $STRUCTURIZR_ONPREMISES_DIR/src/main/
 # JSP
 cp $STRUCTURIZR_UI_DIR/src/jsp/* $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/WEB-INF/views
 
+# Java
+mkdir $STRUCTURIZR_ONPREMISES_DIR/src/main/java/com/structurizr/util/
+cp $STRUCTURIZR_UI_DIR/src/java/com/structurizr/util/DslTemplate.java $STRUCTURIZR_ONPREMISES_DIR/src/main/java/com/structurizr/util/

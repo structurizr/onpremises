@@ -9,6 +9,7 @@ import com.structurizr.dsl.StructurizrDslParserException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.util.*;
 import com.structurizr.onpremises.web.AbstractController;
+import com.structurizr.util.DslTemplate;
 import com.structurizr.util.StringUtils;
 import com.structurizr.util.WorkspaceUtils;
 import com.structurizr.validation.WorkspaceScopeValidationException;
@@ -63,7 +64,7 @@ public class PublicDslController extends AbstractController {
         workspaceMetaData.setLastModifiedDate(new Date());
 
         if (StringUtils.isNullOrEmpty(source)) {
-            source = DslTemplate.generate();
+            source = DslTemplate.generate("Name", "Description");
         }
 
         view = HtmlUtils.filterHtml(view);

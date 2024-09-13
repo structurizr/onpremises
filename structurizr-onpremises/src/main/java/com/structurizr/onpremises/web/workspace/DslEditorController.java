@@ -9,6 +9,7 @@ import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.HtmlUtils;
 import com.structurizr.onpremises.util.WorkspaceValidationUtils;
+import com.structurizr.util.DslTemplate;
 import com.structurizr.util.StringUtils;
 import com.structurizr.util.WorkspaceUtils;
 import com.structurizr.validation.WorkspaceScopeValidationException;
@@ -90,7 +91,7 @@ public class DslEditorController extends AbstractWorkspaceEditorController {
 
             String dsl = DslUtils.getDsl(oldWorkspace);
             if (StringUtils.isNullOrEmpty(dsl)) {
-                dsl = String.format(DSL_TEMPLATE, workspaceMetaData.getName(), workspaceMetaData.getDescription());
+                dsl = DslTemplate.generate(workspaceMetaData.getName(), workspaceMetaData.getDescription());
             }
 
             try {
@@ -133,16 +134,5 @@ public class DslEditorController extends AbstractWorkspaceEditorController {
 
         return workspace;
     }
-
-    private static final String DSL_TEMPLATE = """
-            workspace "%s" "%s" {
-
-                model {
-                }
-
-                views {
-                }
-               \s
-            }""";
 
 }

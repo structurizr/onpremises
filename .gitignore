@@ -42,3 +42,5 @@ structurizr-onpremises/src/main/webapp/WEB-INF/views/model.jsp
 structurizr-onpremises/src/main/webapp/WEB-INF/views/tree.jsp
 structurizr-onpremises/src/main/webapp/WEB-INF/views/review-create.jsp
 structurizr-onpremises/src/main/webapp/WEB-INF/views/review.jsp
+
+structurizr-onpremises/src/main/java/com/structurizr/util/DslTemplate.java
