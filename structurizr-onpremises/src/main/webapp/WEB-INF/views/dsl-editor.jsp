@@ -80,15 +80,11 @@
                 </div>
 
                 <c:if test="${not empty workspace.branch}">
-                    <span class="label label-version" style="font-size: 13px"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/bezier2.svg" class="icon-sm icon-white" /> ${workspace.branch}</span>
+                    <span class="label label-branch"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/bezier2.svg" class="icon-sm icon-white" /> ${workspace.branch}</span>
                 </c:if>
 
                 <c:if test="${not empty param.version}">
-                    <span class="label label-version" style="font-size: 13px"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-sm icon-white" /> ${workspace.internalVersion}</span>
-                </c:if>
-
-                <c:if test="${not workspace.active}">
-                    <span class="label label-danger" style="font-size: 13px"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/exclamation-circle.svg" class="icon-sm icon-white" /> Read-Only</span>
+                    <span class="label label-version"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-sm icon-white" /> ${workspace.internalVersion}</span>
                 </c:if>
             </div>
         </div>

@@ -42,12 +42,12 @@
             <div class="navigationItem">
                 <c:if test="${not empty workspace.branch}">
                 <div style="margin-bottom: 10px">
-                    <span class="label label-branch" style="font-size: 13px;"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/bezier2.svg" class="icon-sm icon-white" /> ${workspace.branch}</span>
+                    <span class="label label-branch"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/bezier2.svg" class="icon-sm icon-white" /> ${workspace.branch}</span>
                 </div>
                 </c:if>
                 <c:if test="${not empty param.version}">
                 <div style="margin-bottom: 10px">
-                    <span class="label label-version" style="font-size: 13px"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-sm icon-white" /> ${workspace.internalVersion}</span>
+                    <span class="label label-version"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/clock-history.svg" class="icon-sm icon-white" /> ${workspace.internalVersion}</span>
                 </div>
                 </c:if>
             </div>
