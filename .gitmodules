@@ -1,0 +1,3 @@
+[submodule "structurizr-ui"]
+	path = structurizr-ui
+	url = https://github.com/structurizr/ui.git
