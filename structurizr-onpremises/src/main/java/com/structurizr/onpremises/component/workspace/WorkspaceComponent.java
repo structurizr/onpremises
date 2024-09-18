@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Responsible for managing workspace data.
+ * Provides access to workspace data stored on the file system, Amazon Web Services S3, or Microsoft Azure Blob Storage.
  */
 public interface WorkspaceComponent {
 

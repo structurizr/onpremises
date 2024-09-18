@@ -1,6 +1,7 @@
 package com.structurizr.onpremises.web.review;
 
 import com.structurizr.onpremises.component.review.ReviewComponent;
+import com.structurizr.onpremises.component.workspace.WorkspaceComponent;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 import com.structurizr.onpremises.domain.Messages;
@@ -40,7 +41,13 @@ public class ReviewController extends AbstractController {
 
     private static final String FILE_PARAMETER_NAME = "file";
 
+    private WorkspaceComponent workspaceComponent;
     private ReviewComponent reviewComponent;
+
+    @Autowired
+    public void setWorkspaceComponent(WorkspaceComponent workspaceComponent) {
+        this.workspaceComponent = workspaceComponent;
+    }
 
     @Autowired
     public void setReviewComponent(ReviewComponent reviewComponent) {

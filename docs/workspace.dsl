@@ -1,5 +1,8 @@
 workspace "Structurizr on-premises installation" "The software architecture model for the Structurizr on-premises installation." {
 
+    !identifiers hierarchical
+    !const STRUCTURIZR_ONPREMISES_HOME "/Users/simon/sandbox/structurizr-onpremises"
+
     !docs docs
 
     model {
@@ -7,126 +10,168 @@ workspace "Structurizr on-premises installation" "The software architecture mode
         workspaceReader = person "Workspace Reader" "An authenticated user with read-only access to one or more workspaces."
         workspaceWriter = person "Workspace Writer" "An authenticated user with read/write access to one or more workspaces."
         adminUser = person "Admin User" "An authenticated user with admin access."
-        
+
+        structurizrLite = softwareSystem "Structurizr Lite" "Standalone tool to view/edit diagrams, view documentation, and view architecture decision records defined in workspace."
+        structurizrCli = softwareSystem "Structurizr CLI" "A command line utility designed to be used in conjunction with the Structurizr DSL."
+        structurizrClient = softwareSystem "Structurizr client" "Other Structurizr-compatible client (e.g. using structurizr-java)."
+
+        idp = softwareSystem "Identity Provider (optional)" {
+            tags "Optional"
+        }
+
         structurizr = softwareSystem "Structurizr on-premises installation" "Your team's software architecture documentation hub." {
             tags "Structurizr on-premises installation"
 
-            structurizrWeb = container "structurizr-onpremises" "Serves HTML/CSS/JavaScript content to users, and hosts the Structurizr web API." "Java/Spring MVC web app"
-            structurizrData = container "structurizr-data" "File-based data storage for on-premises data and log files." "File System" {
-                tags "File System"
+            ui = container "structurizr-ui" {
+                tags "Browser App"
             }
-            elasticsearch = container "Distributed search index" "Search indexes for Structurizr workspaces." "Elasticsearch index" {
-                tags "Elasticsearch, Optional"
-            } 
-            s3 = container "Object store" "Stores workspace and review data." "Amazon Web Services S3" "Object Store, Optional"
+
+            workspaceData = container "Workspace Data" "Stores workspace.json files." {
+                tag "Data"
+            }
+            reviewData = container "Review Data" "Stores diagram review data." {
+                tag "Data"
+            }
+            searchIndexData = container "Search Indexes" "Stores search indexes." {
+                tag "Data"
+            }
+
+            structurizrWeb = container "structurizr-onpremises" "Serves HTML/CSS/JavaScript content to users, and hosts the Structurizr web API." "Java/Spring MVC web app" {
+                !components {
+                    classes "${STRUCTURIZR_ONPREMISES_HOME}/structurizr-onpremises/build/libs/structurizr-onpremises.jar"
+                    source "${STRUCTURIZR_ONPREMISES_HOME}/structurizr-onpremises/src/main/java"
+                    strategy {
+                        technology "Java Component"
+                        matcher name-suffix "Component"
+                        supportingTypes in-package
+                        url prefix-src "https://github.com/structurizr/onpremises/blob/main/structurizr-onpremises/src/main/java/"
+                    }
+                    strategy {
+                        technology "Spring MVC Controller"
+                        matcher annotation "org.springframework.stereotype.Controller"
+                        filter exclude fqn-regex ".*AbstractController|.*.Http[0-9]*Controller"
+                        url prefix-src "https://github.com/structurizr/onpremises/blob/main/structurizr-onpremises/src/main/java/"
+                        forEach {
+                            -> ui "Renders HTML page in"
+                        }
+                    }
+                    strategy {
+                        technology "Spring MVC REST Controller"
+                        matcher annotation "org.springframework.web.bind.annotation.RestController"
+                        filter exclude fqn-regex ".*BcryptController"
+                        description first-sentence
+                        url prefix-src "https://github.com/structurizr/onpremises/blob/main/structurizr-onpremises/src/main/java/"
+                        forEach {
+                            tag "API Component"
+                        }
+                    }
+                }
+
+                !script groovy {
+                    element.components.findAll { it.properties["component.type"].matches("com\\.structurizr\\.onpremises\\.web\\.workspace\\.explore\\..*") }.each { it.addTags("Feature:Explore") }
+                    element.components.findAll { it.properties["component.type"].matches("com\\.structurizr\\.onpremises\\.web\\.workspace\\.management\\..*") }.each { it.addTags("Feature:WorkspaceManagement") }
+                }
+
+                ui -> workspaceApiController "Reads/writes workspaces using" "JSON/HTTPS"
+                ui -> graphvizController "Requests automatic layout information from" "JSON/HTTPS"
+                structurizrLite -> workspaceApiController "Reads/writes workspaces using" "JSON/HTTPS"
+                structurizrCli -> workspaceApiController "Reads/writes workspaces using" "JSON/HTTPS"
+                structurizrClient -> workspaceApiController "Reads/writes workspaces using" "JSON/HTTPS"
+                structurizrClient -> adminApiController "Manages workspaces using" "JSON/HTTPS"
+                ui -> embedController "Embeds diagrams using"
+            }
         }
 
-        structurizrClient = softwareSystem "Structurizr client" "Creates a software architecture model via the Web API, using the Structurizr CLI or a client library (Java, .NET, TypeScript, PHP, Python, etc)." "" 
+        anonymousUser -> structurizr.ui "Views public/shareable workspaces using"
+        workspaceWriter -> structurizr.ui "Views and updates workspaces using"
+        workspaceReader -> structurizr.ui "Views workspaces using"
+        adminUser -> structurizr.ui "Views, updates, and manages workspaces using"
 
-        idp = softwareSystem "Identity Provider" {
-            tags "Optional"
-        }
-        
-        anonymousUser -> structurizrWeb "Views public/shareable workspaces using" 
-        workspaceWriter -> Structurizrclient "Creates and manages workspaces using" 
-        workspaceWriter -> structurizrWeb "Views and updates workspaces using"
-        workspaceReader -> structurizrWeb "Views workspaces using"
-        adminUser -> structurizrWeb "Views, updates, and manages workspaces using"
+        structurizr.structurizrWeb.workspaceComponent -> structurizr.workspaceData "Reads from and writes to"
+        structurizr.structurizrWeb.reviewComponent -> structurizr.reviewData "Reads from and writes to"
+        structurizr.structurizrWeb.searchComponent -> structurizr.searchIndexData "Reads from and writes to"
 
-        structurizrClient -> structurizrWeb "Reads/writes workspaces using" "JSON/HTTPS"
-        structurizrWeb -> structurizrData "Reads from and writes to"
-        structurizrWeb -> elasticsearch "Reads from and writes to" "HTTPS"
-        structurizrWeb -> s3 "Reads from and writes to" "HTTPS"
-
-        structurizrWeb -> idp "Uses for authentication and/or authorisation" "LDAP or SAML 2.0"
+        structurizr.structurizrWeb -> idp "Uses for authentication and/or authorisation" "LDAP or SAML 2.0"
         
         deploymentEnvironment "Example1" {
-            deploymentNode "Customer data center, private cloud, or public cloud" {
+            deploymentNode "End-user's computer" {
+                deploymentNode "Web Browser" {
+                    containerInstance structurizr.ui
+                }
+            }
+            deploymentNode "On-premises or cloud environment" {
                 deploymentNode "Windows or Linux server" {
-                    containerInstance structurizrData
-                    deploymentNode "Docker" {
-                        deploymentNode "Apache Tomcat" {
-                            containerInstance structurizrWeb
-                        }
+                    deploymentNode "Local File System" {
+                        containerInstance structurizr.workspaceData
+                        containerInstance structurizr.reviewData
+                        containerInstance structurizr.searchIndexData
+                    }
+                    deploymentNode "Apache Tomcat" {
+                        containerInstance structurizr.structurizrWeb
                     }
                 }
             }
         }
 
         deploymentEnvironment "Example2" {
-            deploymentNode "Customer data center, private cloud, or public cloud" {
+            deploymentNode "On-premises or cloud environment" {
+                loadBalancer = infrastructureNode "Load Balancer"
+
                 deploymentNode "Windows or Linux server 1" {
-                    deploymentNode "Docker" {
-                        deploymentNode "Apache Tomcat" {
-                            containerInstance structurizrWeb
+                    deploymentNode "Apache Tomcat" {
+                        containerInstance structurizr.structurizrWeb {
+                            loadBalancer -> this "Forwards requests to"
                         }
                     }
                 }
     
                 deploymentNode "Windows or Linux server 2" {
-                    deploymentNode "Docker" {
-                        deploymentNode "Apache Tomcat" {
-                            containerInstance structurizrWeb
+                    deploymentNode "Apache Tomcat" {
+                        containerInstance structurizr.structurizrWeb {
+                            loadBalancer -> this "Forwards requests to"
                         }
                     }
                 }
-    
+
                 deploymentNode "Elasticsearch cluster" {
-                    containerInstance elasticsearch
+                    containerInstance structurizr.searchIndexData
                 }
     
                 deploymentNode "Network File Share" {
-                    containerInstance structurizrData
+                    containerInstance structurizr.workspaceData
+                    containerInstance structurizr.reviewData
                 }
             }
         }
-        
-        deploymentEnvironment "Example4" {
-            instance1 = deploymentGroup "Instance 1"
-            instance2 = deploymentGroup "Instance 2"
 
+        deploymentEnvironment "Example3" {
             deploymentNode "Amazon Web Services" {
+                loadBalancer = infrastructureNode "Application Load Balancer"
+
                 deploymentNode "Windows or Linux server 1" {
-                    deploymentNode "Docker" {
-                        deploymentNode "Apache Tomcat" {
-                            containerInstance structurizrWeb instance1
-                            containerInstance structurizrData instance1
+                    deploymentNode "Apache Tomcat" {
+                        containerInstance structurizr.structurizrWeb {
+                            loadBalancer -> this "Forwards requests to"
                         }
                     }
                 }
     
                 deploymentNode "Windows or Linux server 2" {
-                    deploymentNode "Docker" {
-                        deploymentNode "Apache Tomcat" {
-                            containerInstance structurizrWeb instance2
-                            containerInstance structurizrData instance2
+                    deploymentNode "Apache Tomcat" {
+                        containerInstance structurizr.structurizrWeb {
+                            loadBalancer -> this "Forwards requests to"
                         }
                     }
                 }
     
                 deploymentNode "Elasticsearch cluster" {
-                    containerInstance elasticsearch instance1,instance2
+                    containerInstance structurizr.searchIndexData
                 }
                 
                 deploymentNode "S3" {
-                    containerInstance s3 instance1,instance2
+                    containerInstance structurizr.workspaceData
+                    containerInstance structurizr.reviewData
                 }
-            }
-        }
-        
-        deploymentEnvironment "Example3" {
-            deploymentNode "Customer data center, private cloud, or public cloud" {
-                deploymentNode "Windows or Linux server" {
-                    containerInstance structurizrData
-                    deploymentNode "Docker" {
-                        deploymentNode "Apache Tomcat" {
-                            containerInstance structurizrWeb
-                        }
-                    }
-                }
-            }
-            deploymentNode "Auth0, Okta, Microsoft Azure, OneLogin, etc" {
-                softwareSystemInstance idp
             }
         }
 
@@ -140,7 +185,61 @@ workspace "Structurizr on-premises installation" "The software architecture mode
         container structurizr "Containers" {
             include *
         }
-        
+
+        component structurizr.structurizrWeb "Components-Diagrams" {
+            description "Component diagram for the diagrams functionality."
+            include ->structurizr.structurizrWeb.diagramViewerController->
+            include ->structurizr.structurizrWeb.diagramEditorController->
+            include structurizr.structurizrWeb.graphvizController
+            include structurizr.structurizrWeb.workspaceApiController
+            include structurizr.ui
+            include structurizr.workspaceData
+        }
+
+        component structurizr.structurizrWeb "Components-Documentation" {
+            description "Component diagram for the documentation functionality."
+            include ->structurizr.structurizrWeb.documentationController->
+            include structurizr.structurizrWeb.embedController
+            include structurizr.structurizrWeb.workspaceApiController
+            include structurizr.workspaceData
+        }
+
+        component structurizr.structurizrWeb "Components-Decisions" {
+            description "Component diagram for the decisions functionality."
+            include ->structurizr.structurizrWeb.decisionsController->
+            include structurizr.structurizrWeb.embedController
+            include structurizr.structurizrWeb.workspaceApiController
+            include structurizr.workspaceData
+        }
+
+        component structurizr.structurizrWeb "Components-Explore" {
+            description "Component diagram for the explore functionality."
+            include "->element.tag==Feature:Explore->"
+            include structurizr.workspaceData
+        }
+
+        component structurizr.structurizrWeb "Components-WorkspaceManagement" {
+            description "Component diagram for the workspace management functionality."
+            include "->element.tag==Feature:WorkspaceManagement->"
+            include structurizr.workspaceData
+            include structurizr.searchIndexData
+        }
+
+        component structurizr.structurizrWeb "Components-WorkspaceApi" {
+            description "Component diagram for the workspace API functionality."
+            include ->structurizr.structurizrWeb.workspaceApiController->
+            include structurizr.workspaceData
+            include structurizr.searchIndexData
+            autolayout
+        }
+
+        component structurizr.structurizrWeb "Components-AdminApi" {
+            description "Component diagram for the admin API functionality."
+            include ->structurizr.structurizrWeb.adminApiController->
+            include structurizr.workspaceData
+            autolayout
+        }
+
         deployment structurizr "Example1" "Deployment-Example1" "An example single-server installation." {
             include *
         }
@@ -148,12 +247,8 @@ workspace "Structurizr on-premises installation" "The software architecture mode
         deployment structurizr "Example2" "Deployment-Example2" "An example multi-server installation, with Elasticsearch" {
             include *
         }
-        
-        deployment structurizr "Example3" "Deployment-Example3" "An example single-server installation, with SAML 2.0 integration." {
-            include *
-        }
 
-        deployment structurizr "Example4" "Deployment-Example4" "An example multi-server installation, with Elasticsearch and AWS S3." {
+        deployment structurizr "Example3" "Deployment-Example4" "An example multi-server installation, with Elasticsearch and AWS S3." {
             include *
         }
 
@@ -172,19 +267,13 @@ workspace "Structurizr on-premises installation" "The software architecture mode
                 background "#438dd5" 
                 color "#ffffff" 
             }
-            element "File System" {
-                shape "Folder" 
-            }
-            element "Object Store" {
+            element "Data" {
                 shape "Folder" 
             }
             element "Person" {
                 shape "Person" 
                 background "#08427b" 
                 color "#ffffff" 
-            }
-            element "Elasticsearch" {
-                shape Cylinder
             }
             element "Optional" {
                 opacity 50

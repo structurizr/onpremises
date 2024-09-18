@@ -1,6 +1,8 @@
 package com.structurizr.onpremises.web.workspace;
 
+import com.structurizr.onpremises.component.search.SearchComponent;
 import com.structurizr.onpremises.component.workspace.WorkspaceBranch;
+import com.structurizr.onpremises.component.workspace.WorkspaceComponent;
 import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.domain.User;
@@ -12,6 +14,7 @@ import com.structurizr.onpremises.web.AbstractController;
 import com.structurizr.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 
 /**
@@ -20,6 +23,19 @@ import org.springframework.ui.ModelMap;
 public abstract class AbstractWorkspaceController extends AbstractController {
 
     private static final Log log = LogFactory.getLog(AbstractWorkspaceController.class);
+
+    protected WorkspaceComponent workspaceComponent;
+    protected SearchComponent searchComponent;
+
+    @Autowired
+    public void setWorkspaceComponent(WorkspaceComponent workspaceComponent) {
+        this.workspaceComponent = workspaceComponent;
+    }
+
+    @Autowired
+    public void setSearchComponent(SearchComponent searchComponent) {
+        this.searchComponent = searchComponent;
+    }
 
     protected final String showPublicView(String view, long workspaceId, ModelMap model, boolean showHeaderAndFooter) {
         WorkspaceMetaData workspaceMetaData = null;

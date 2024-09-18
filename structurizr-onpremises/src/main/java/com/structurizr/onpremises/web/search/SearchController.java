@@ -10,6 +10,7 @@ import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.HtmlUtils;
 import com.structurizr.onpremises.web.AbstractController;
+import com.structurizr.onpremises.web.workspace.AbstractWorkspaceController;
 import com.structurizr.util.StringUtils;
 import com.structurizr.util.WorkspaceUtils;
 import org.apache.commons.logging.Log;
@@ -30,7 +31,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 @Controller
-public class SearchController extends AbstractController {
+public class SearchController extends AbstractWorkspaceController {
 
     private static final Log log = LogFactory.getLog(SearchController.class);
 

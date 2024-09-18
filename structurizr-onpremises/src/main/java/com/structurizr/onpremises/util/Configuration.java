@@ -23,6 +23,7 @@ public class Configuration extends ConfigLookup {
     private String encryptionPassphrase;
     private String apiKey;
 
+    private boolean searchEnabled;
     private boolean graphvizEnabled = false;
     private boolean internetConnection = true;
 
@@ -229,12 +230,19 @@ public class Configuration extends ConfigLookup {
         String name = getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SEARCH_IMPLEMENTATION_PROPERTY, "");
 
         if (SearchComponent.ELASTICSEARCH.equalsIgnoreCase(name)) {
+            searchEnabled = true;
             return SearchComponent.ELASTICSEARCH;
         } else if (SearchComponent.NONE.equalsIgnoreCase(name)) {
+            searchEnabled = false;
             return SearchComponent.NONE;
         } else {
+            searchEnabled = true;
             return SearchComponent.LUCENE;
         }
+    }
+
+    public boolean isSearchEnabled() {
+        return searchEnabled;
     }
 
     public void setFeatureEnabled(String feature) {

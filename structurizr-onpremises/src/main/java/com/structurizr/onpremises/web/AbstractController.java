@@ -46,19 +46,6 @@ public abstract class AbstractController {
     protected static final String URL_PREFIX = "urlPrefix";
     private static final String URL_SUFFIX = "urlSuffix";
 
-    protected WorkspaceComponent workspaceComponent;
-    protected SearchComponent searchComponent;
-
-    @Autowired
-    public void setWorkspaceComponent(WorkspaceComponent workspaceComponent) {
-        this.workspaceComponent = workspaceComponent;
-    }
-
-    @Autowired
-    public void setSearchComponent(SearchComponent searchComponent) {
-        this.searchComponent = searchComponent;
-    }
-
     @ModelAttribute("structurizrConfiguration")
     public Configuration getConfiguration() {
         return Configuration.getInstance();
@@ -95,7 +82,7 @@ public abstract class AbstractController {
             model.addAttribute("username", user.getUsername());
         }
 
-        model.addAttribute("searchEnabled", searchComponent != null && searchComponent.isEnabled());
+        model.addAttribute("searchEnabled", Configuration.getInstance().isSearchEnabled());
 
         File cssFile = new File(Configuration.getInstance().getDataDirectory(), STRUCTURIZR_CSS_FILENAME);
         if (cssFile.exists()) {

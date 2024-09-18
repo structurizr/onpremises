@@ -1,11 +1,13 @@
 package com.structurizr.onpremises.web.home;
 
+import com.structurizr.onpremises.component.workspace.WorkspaceComponent;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.util.Features;
 import com.structurizr.onpremises.util.HtmlUtils;
 import com.structurizr.onpremises.web.AbstractController;
 import com.structurizr.util.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -23,6 +25,13 @@ public class HomePageController extends AbstractController {
 
     private static final String DEFAULT_PAGE_NUMBER = "1";
     private static final String DEFAULT_PAGE_SIZE = "" + PaginatedWorkspaceList.DEFAULT_PAGE_SIZE;
+
+    private WorkspaceComponent workspaceComponent;
+
+    @Autowired
+    public void setWorkspaceComponent(WorkspaceComponent workspaceComponent) {
+        this.workspaceComponent = workspaceComponent;
+    }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String showUnauthenticatedHomePage(

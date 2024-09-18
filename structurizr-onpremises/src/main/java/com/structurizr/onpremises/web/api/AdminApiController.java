@@ -1,5 +1,6 @@
 package com.structurizr.onpremises.web.api;
 
+import com.structurizr.onpremises.component.workspace.WorkspaceComponent;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.util.Configuration;
 import com.structurizr.onpremises.web.AbstractController;
@@ -13,16 +14,26 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
+/**
+ * An implementation of the Structurizr admin API.
+ */
 @RestController
+//@Property(name = "Documentation", value = "https://docs.structurizr.com/onpremises/workspace-api")
 public class AdminApiController extends AbstractController {
 
-    private static final Log log = LogFactory.getLog(ApiController.class);
+    private static final Log log = LogFactory.getLog(WorkspaceApiController.class);
 
+    private WorkspaceComponent workspaceComponent;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
     public AdminApiController(BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
+    @Autowired
+    public void setWorkspaceComponent(WorkspaceComponent workspaceComponent) {
+        this.workspaceComponent = workspaceComponent;
     }
 
     @RequestMapping(value = "/api/workspace", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")

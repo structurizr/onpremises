@@ -1,13 +1,13 @@
 package com.structurizr.onpremises.web.dsl;
 
 import com.structurizr.Workspace;
-import com.structurizr.autolayout.graphviz.GraphvizAutomaticLayout;
-import com.structurizr.autolayout.graphviz.RankDirection;
 import com.structurizr.dsl.DslUtils;
 import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.dsl.StructurizrDslParserException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
-import com.structurizr.onpremises.util.*;
+import com.structurizr.onpremises.util.HtmlUtils;
+import com.structurizr.onpremises.util.JsonUtils;
+import com.structurizr.onpremises.util.WorkspaceValidationUtils;
 import com.structurizr.onpremises.web.AbstractController;
 import com.structurizr.util.DslTemplate;
 import com.structurizr.util.StringUtils;
