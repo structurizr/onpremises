@@ -9,7 +9,8 @@ repositories {
 }
 
 dependencies {
-    api 'com.structurizr:structurizr-client:2.1.4'
+    def structurizrVersion = '3.0.0'
+    api "com.structurizr:structurizr-client:${structurizrVersion}"
 
     testImplementation 'org.junit.jupiter:junit-jupiter:5.9.2'
 }

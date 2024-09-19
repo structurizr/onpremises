@@ -9,7 +9,6 @@ targetCompatibility = '17'
 
 repositories {
 	mavenCentral()
-//	mavenLocal()
 	maven {
 		url "https://build.shibboleth.net/maven/releases/"
 	}
@@ -45,9 +44,11 @@ dependencies {
 
 	implementation project(':structurizr-onpremises-plugin')
 
-	implementation 'com.structurizr:structurizr-dsl:2.1.4'
-	implementation 'com.structurizr:structurizr-inspection:2.1.4'
-	implementation 'com.structurizr:structurizr-autolayout:2.1.4'
+	def structurizrVersion = '3.0.0'
+	implementation "com.structurizr:structurizr-annotation:${structurizrVersion}"
+	implementation "com.structurizr:structurizr-dsl:${structurizrVersion}"
+	implementation "com.structurizr:structurizr-inspection:${structurizrVersion}"
+	implementation "com.structurizr:structurizr-autolayout:${structurizrVersion}"
 
 	compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
 	implementation 'jakarta.servlet.jsp.jstl:jakarta.servlet.jsp.jstl-api:3.0.0'
