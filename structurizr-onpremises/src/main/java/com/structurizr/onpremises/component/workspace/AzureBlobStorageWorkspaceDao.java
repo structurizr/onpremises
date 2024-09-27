@@ -121,8 +121,9 @@ public class AzureBlobStorageWorkspaceDao extends AbstractWorkspaceDao {
             String content = stringWriter.toString();
 
             BlockBlobClient blobClient = blobContainerClient.getBlobClient(blobName).getBlockBlobClient();
-            try (ByteArrayInputStream dataStream = new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8))) {
-                blobClient.upload(dataStream, content.length(), true);
+            byte[] contentBytes = content.getBytes(StandardCharsets.UTF_8);
+            try (ByteArrayInputStream dataStream = new ByteArrayInputStream(contentBytes)) {
+                blobClient.upload(dataStream, contentBytes.length, true);
             } catch (IOException e) {
                 throw new WorkspaceComponentException("Error storing workspace metadata", e);
             }
@@ -167,8 +168,10 @@ public class AzureBlobStorageWorkspaceDao extends AbstractWorkspaceDao {
         String blobName = WORKSPACES_VIRTUAL_DIRECTORY + workspaceMetaData.getId() + "/" + WORKSPACE_CONTENT_FILENAME;
 
         BlockBlobClient blobClient = blobContainerClient.getBlobClient(blobName).getBlockBlobClient();
-        try (ByteArrayInputStream dataStream = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8))) {
-            blobClient.upload(dataStream, json.length(), true);
+        byte[] jsonBytes = json.getBytes(StandardCharsets.UTF_8);
+
+        try (ByteArrayInputStream dataStream = new ByteArrayInputStream(jsonBytes)) {
+            blobClient.upload(dataStream, jsonBytes.length, true);
         } catch (IOException e) {
             e.printStackTrace();
             throw new WorkspaceComponentException("Error storing workspace", e);
