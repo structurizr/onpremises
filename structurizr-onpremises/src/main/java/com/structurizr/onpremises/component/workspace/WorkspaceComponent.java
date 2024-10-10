@@ -17,8 +17,6 @@ public interface WorkspaceComponent {
     String AMAZON_WEB_SERVICES_S3 = "aws-s3";
     String AZURE_BLOB_STORAGE = "azure-blob";
 
-    List<Long> getWorkspaceIds() throws WorkspaceComponentException;
-
     Collection<WorkspaceMetaData> getWorkspaces() throws WorkspaceComponentException;
 
     Collection<WorkspaceMetaData> getWorkspaces(User user) throws WorkspaceComponentException;

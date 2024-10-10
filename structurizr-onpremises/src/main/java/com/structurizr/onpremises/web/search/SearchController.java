@@ -40,7 +40,7 @@ public class SearchController extends AbstractWorkspaceController {
     @Autowired
     private SearchComponent searchComponent;
 
-    private ExecutorService executorService;
+    private final ExecutorService executorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
     @PostConstruct
     public void rebuildSearchIndex() {
@@ -48,25 +48,21 @@ public class SearchController extends AbstractWorkspaceController {
         if (SearchComponent.LUCENE.equals(Configuration.getInstance().getSearchImplementationName())) {
             log.debug("Rebuilding search index...");
 
-            executorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
             try {
-                Collection<Long> workspaceIds = workspaceComponent.getWorkspaceIds();
-                for (Long workspaceId : workspaceIds) {
+                Collection<WorkspaceMetaData> workspaces = workspaceComponent.getWorkspaces();
+                for (WorkspaceMetaData workspaceMetaData : workspaces) {
                     executorService.submit(() -> {
                         try {
-                            WorkspaceMetaData workspaceMetaData = workspaceComponent.getWorkspaceMetaData(workspaceId);
-                            if (workspaceMetaData != null) {
-                                if (!workspaceMetaData.isClientEncrypted()) {
-                                    log.debug("Indexing workspace with ID " + workspaceMetaData.getId());
-                                    String json = workspaceComponent.getWorkspace(workspaceMetaData.getId(), null, null);
-                                    Workspace workspace = WorkspaceUtils.fromJson(json);
-                                    searchComponent.index(workspace);
-                                } else {
-                                    log.debug("Skipping workspace with ID " + workspaceMetaData.getId() + " because it's client-side encrypted");
-                                }
+                            if (!workspaceMetaData.isClientEncrypted()) {
+                                log.info("Indexing workspace with ID " + workspaceMetaData.getId());
+                                String json = workspaceComponent.getWorkspace(workspaceMetaData.getId(), null, null);
+                                Workspace workspace = WorkspaceUtils.fromJson(json);
+                                searchComponent.index(workspace);
+                            } else {
+                                log.debug("Skipping workspace with ID " + workspaceMetaData.getId() + " because it's client-side encrypted");
                             }
                         } catch (Exception e) {
-                            log.warn("Error indexing workspace with ID " + workspaceId, e);
+                            log.warn("Error indexing workspace with ID " + workspaceMetaData.getId(), e);
                         }
                     });
                 }
@@ -78,7 +74,7 @@ public class SearchController extends AbstractWorkspaceController {
 
     @PreDestroy
     public void stop() {
-        executorService.shutdown();
+        executorService.shutdownNow();
     }
 
     @RequestMapping(value = "/search", method = RequestMethod.GET)

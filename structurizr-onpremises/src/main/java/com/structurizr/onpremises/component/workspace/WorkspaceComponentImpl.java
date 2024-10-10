@@ -2,6 +2,7 @@ package com.structurizr.onpremises.component.workspace;
 
 import com.structurizr.AbstractWorkspace;
 import com.structurizr.Workspace;
+import com.structurizr.api.WorkspaceMetadata;
 import com.structurizr.configuration.Role;
 import com.structurizr.configuration.Visibility;
 import com.structurizr.configuration.WorkspaceConfiguration;
@@ -21,6 +22,7 @@ import com.structurizr.util.WorkspaceUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.annotation.PreDestroy;
 import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -28,17 +30,20 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.*;
 
 class WorkspaceComponentImpl implements WorkspaceComponent {
 
     private static final Log log = LogFactory.getLog(WorkspaceComponentImpl.class);
     private static final String ENCRYPTION_STRATEGY_STRING = "encryptionStrategy";
     private static final String CIPHERTEXT_STRING = "ciphertext";
+    private static final int DEFAULT_NUMBER_OF_THREADS = 50;
 
     private final WorkspaceDao workspaceDao;
     private final String encryptionPassphrase;
 
     private WorkspaceMetadataCache workspaceMetadataCache;
+    private ExecutorService executorService;
 
     WorkspaceComponentImpl() {
         String dataStorageImplementationName = Configuration.getInstance().getDataStorageImplementationName();
@@ -65,12 +70,14 @@ class WorkspaceComponentImpl implements WorkspaceComponent {
         encryptionPassphrase = Configuration.getInstance().getEncryptionPassphrase();
 
         initCache();
+        initThreadPool();
     }
 
     WorkspaceComponentImpl(WorkspaceDao workspaceDao, String encryptionPassphrase) {
         this.workspaceDao = workspaceDao;
         this.encryptionPassphrase = encryptionPassphrase;
         this.workspaceMetadataCache = new NoOpWorkspaceMetadataCache();
+        this.executorService = Executors.newSingleThreadExecutor();
     }
 
     private void initCache() {
@@ -98,13 +105,14 @@ class WorkspaceComponentImpl implements WorkspaceComponent {
         }
     }
 
-    public void stop() {
-        workspaceMetadataCache.stop();
+    private void initThreadPool() {
+        int threads = Integer.parseInt(Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.WORKSPACE_THREADS, "" + DEFAULT_NUMBER_OF_THREADS));
+         executorService = Executors.newFixedThreadPool(threads);
     }
 
-    @Override
-    public List<Long> getWorkspaceIds() throws WorkspaceComponentException {
-        return workspaceDao.getWorkspaceIds();
+    public void stop() {
+        workspaceMetadataCache.stop();
+        executorService.shutdownNow();
     }
 
     @Override
@@ -112,10 +120,18 @@ class WorkspaceComponentImpl implements WorkspaceComponent {
         List<WorkspaceMetaData> workspaces = new ArrayList<>();
         Collection<Long> workspaceIds = workspaceDao.getWorkspaceIds();
 
-        for (Long workspaceId : workspaceIds) {
-            WorkspaceMetaData workspace = getWorkspaceMetaData(workspaceId);
-            if (workspace != null) {
-                workspaces.add(workspace);
+        List<Future<WorkspaceMetaData>> futures = workspaceIds.stream()
+                .map(workspaceId -> executorService.submit(() -> getWorkspaceMetaData(workspaceId)))
+                .toList();
+
+        for (Future<WorkspaceMetaData> future : futures) {
+            try {
+                WorkspaceMetaData workspace = future.get();
+                if (workspace != null) {
+                    workspaces.add(workspace);
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                throw new WorkspaceComponentException("Error fetching workspace metadata", e);
             }
         }
 

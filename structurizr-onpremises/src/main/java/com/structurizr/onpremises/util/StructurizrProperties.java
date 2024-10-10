@@ -12,6 +12,8 @@ public class StructurizrProperties {
     public static final String CACHE_IMPLEMENTATION_PROPERTY = "structurizr.cache";
     public static final String CACHE_EXPIRY_IN_MINUTES_PROPERTY = "structurizr.cache.expiry";
 
+    public static final String WORKSPACE_THREADS = "structurizr.workspace.threads";
+
     public static final String WORKSPACE_EVENT_LISTENER_PLUGIN_PROPERTY = "structurizr.plugin.workspaceEventListener";
 
     public static final String URL_PROPERTY = "structurizr.url";
