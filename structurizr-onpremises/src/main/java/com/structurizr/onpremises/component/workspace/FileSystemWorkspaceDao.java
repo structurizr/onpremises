@@ -173,11 +173,7 @@ class FileSystemWorkspaceDao extends AbstractWorkspaceDao {
             if (file.exists()) {
                 return Files.readString(file.toPath());
             } else {
-                if (!StringUtils.isNullOrEmpty(version)) {
-                    throw new WorkspaceComponentException("Could not get workspace " + workspaceId + " with version " + version);
-                } else {
-                    throw new WorkspaceComponentException("Could not get workspace " + workspaceId);
-                }
+                return null;
             }
         } catch (IOException ioe) {
             throw new WorkspaceComponentException("Could not get workspace " + workspaceId, ioe);
