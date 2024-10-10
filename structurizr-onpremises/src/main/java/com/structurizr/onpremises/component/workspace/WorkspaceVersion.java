@@ -6,6 +6,8 @@ import java.util.Date;
 
 public final class WorkspaceVersion {
 
+    public static final String LATEST_VERSION = "";
+
     private static final String VERSION_IDENTIFIER_REGEX = "[0-9a-zA-Z+-:_.]*";
 
     private String versionId;
