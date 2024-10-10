@@ -28,6 +28,10 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 class WorkspaceComponentImpl implements WorkspaceComponent {
 
@@ -112,12 +116,24 @@ class WorkspaceComponentImpl implements WorkspaceComponent {
         List<WorkspaceMetaData> workspaces = new ArrayList<>();
         Collection<Long> workspaceIds = workspaceDao.getWorkspaceIds();
 
-        for (Long workspaceId : workspaceIds) {
-            WorkspaceMetaData workspace = getWorkspaceMetaData(workspaceId);
-            if (workspace != null) {
-                workspaces.add(workspace);
+        ExecutorService executorService = Executors.newFixedThreadPool(16);
+
+        List<CompletableFuture<WorkspaceMetaData>> futures = workspaceIds.stream()
+                .map(workspaceId -> CompletableFuture.supplyAsync(() -> getWorkspaceMetaData(workspaceId)))
+                .toList();
+
+        for (CompletableFuture<WorkspaceMetaData> future : futures) {
+            try {
+                WorkspaceMetaData workspace = future.get();
+                if (workspace != null) {
+                    workspaces.add(workspace);
+                }
+            } catch (InterruptedException | ExecutionException e) {
+                throw new WorkspaceComponentException("Error fetching workspace metadata", e);
             }
         }
+
+        executorService.shutdown();
 
         workspaces.sort(Comparator.comparing(wmd -> wmd.getName().toLowerCase()));
 
