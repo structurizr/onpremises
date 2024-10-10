@@ -203,6 +203,21 @@ class WorkspaceComponentImpl implements WorkspaceComponent {
         WorkspaceBranch.validateBranchName(branch);
         String json = workspaceDao.getWorkspace(workspaceId, branch, version);
 
+        if (json == null) {
+            if (!StringUtils.isNullOrEmpty(branch)) {
+                // branch likely doesn't exist, so return the main branch instead
+                json = workspaceDao.getWorkspace(workspaceId, WorkspaceBranch.NO_BRANCH, WorkspaceVersion.LATEST_VERSION);
+            }
+        }
+
+        if (json == null) {
+            if (!StringUtils.isNullOrEmpty(version)) {
+                throw new WorkspaceComponentException("Could not get workspace " + workspaceId + " with version " + version);
+            } else {
+                throw new WorkspaceComponentException("Could not get workspace " + workspaceId);
+            }
+        }
+
         if (json.contains(ENCRYPTION_STRATEGY_STRING) && json.contains(CIPHERTEXT_STRING)) {
             EncryptedJsonReader encryptedJsonReader = new EncryptedJsonReader();
             StringReader stringReader = new StringReader(json);
