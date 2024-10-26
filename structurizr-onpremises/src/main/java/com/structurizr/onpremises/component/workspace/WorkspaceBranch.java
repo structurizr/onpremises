@@ -8,6 +8,7 @@ public final class WorkspaceBranch {
     public static final String MAIN_BRANCH = "main";
 
     private static final String BRANCH_NAME_REGEX = "[a-zA-Z0-9][a-zA-Z0-9-_.]*";
+    private static final int MAX_LENGTH = 100;
 
     private final String name;
 
@@ -30,7 +31,7 @@ public final class WorkspaceBranch {
     }
 
     public static boolean isValidBranchName(String name) {
-        return name.matches(BRANCH_NAME_REGEX);
+        return name.matches(BRANCH_NAME_REGEX) && name.length() < MAX_LENGTH;
     }
 
 }

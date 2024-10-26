@@ -14,10 +14,12 @@ public class WorkspaceBranchTests {
         assertTrue(WorkspaceBranch.isValidBranchName("dev"));
         assertTrue(WorkspaceBranch.isValidBranchName("dev-0.0.1"));
         assertTrue(WorkspaceBranch.isValidBranchName("0.0.1"));
+        assertTrue(WorkspaceBranch.isValidBranchName("123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"));
 
         assertFalse(WorkspaceBranch.isValidBranchName("-dev"));
         assertFalse(WorkspaceBranch.isValidBranchName("_dev"));
         assertFalse(WorkspaceBranch.isValidBranchName(".dev"));
+        assertFalse(WorkspaceBranch.isValidBranchName("1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890"));
     }
 
     @Test
