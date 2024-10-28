@@ -2,7 +2,6 @@ package com.structurizr.onpremises.component.workspace;
 
 import com.structurizr.AbstractWorkspace;
 import com.structurizr.Workspace;
-import com.structurizr.api.WorkspaceMetadata;
 import com.structurizr.configuration.Role;
 import com.structurizr.configuration.Visibility;
 import com.structurizr.configuration.WorkspaceConfiguration;
@@ -22,7 +21,6 @@ import com.structurizr.util.WorkspaceUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.annotation.PreDestroy;
 import java.io.File;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -30,7 +28,10 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 class WorkspaceComponentImpl implements WorkspaceComponent {
 
@@ -94,11 +95,12 @@ class WorkspaceComponentImpl implements WorkspaceComponent {
             workspaceMetadataCache = new LocalWorkspaceMetadataCache(expiryInMinutes);
         } else if (cacheImplementation.equalsIgnoreCase(StructurizrProperties.CACHE_VARIANT_REDIS)) {
             String host = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.REDIS_HOST, "localhost");
-            String port = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.REDIS_PORT, "6379");
+            int port = Integer.parseInt(Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.REDIS_PORT, "6379"));
             String password = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.REDIS_PASSWORD, "");
+            int database = Integer.parseInt(Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.REDIS_DATABASE, "0"));
 
-            log.debug("Creating cache for workspace metadata: implementation=redis; host=" + host + "; port=" + port + "; expiry=" + expiryInMinutes + " minute(s)");
-            workspaceMetadataCache = new RedisWorkspaceMetadataCache(host, Integer.parseInt(port), password, expiryInMinutes);
+            log.debug("Creating cache for workspace metadata: implementation=redis; host=" + host + "; port=" + port + "; database=" + database + "; expiry=" + expiryInMinutes + " minute(s)");
+            workspaceMetadataCache = new RedisWorkspaceMetadataCache(host, port, password, database, expiryInMinutes);
 
         } else {
             workspaceMetadataCache = new NoOpWorkspaceMetadataCache();

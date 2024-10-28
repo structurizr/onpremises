@@ -19,10 +19,11 @@ public class RedisWorkspaceMetadataCache extends JCacheWorkspaceMetadataCache {
 
     private static final String CACHE_NAME = "structurizr.workspace.metadata";
 
-    RedisWorkspaceMetadataCache(String host, int port, String password, int expiryInMinutes) {
+    RedisWorkspaceMetadataCache(String host, int port, String password, int database, int expiryInMinutes) {
         Config config = new Config();
         SingleServerConfig singleServerConfig = config.useSingleServer();
         singleServerConfig.setAddress(String.format("redis://%s:%s", host, port));
+        singleServerConfig.setDatabase(database);
         if (!StringUtils.isNullOrEmpty(password)) {
             singleServerConfig.setPassword(password);
         }
