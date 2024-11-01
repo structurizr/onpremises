@@ -14,6 +14,8 @@ import java.util.*;
 
 public class Configuration extends ConfigLookup {
 
+    private static final boolean EARLY_ACCESS_BUILD = false;
+
     private static final String PLUGINS_DIRECTORY_NAME = "plugins";
 
     private File dataDirectory;
@@ -85,6 +87,10 @@ public class Configuration extends ConfigLookup {
 
     public static Configuration getInstance() {
         return INSTANCE;
+    }
+
+    public boolean isEarlyAccessBuild() {
+        return EARLY_ACCESS_BUILD;
     }
 
     public String getEncryptionPassphrase() {
@@ -208,7 +214,11 @@ public class Configuration extends ConfigLookup {
         if (WorkspaceComponent.AMAZON_WEB_SERVICES_S3.equalsIgnoreCase(name)) {
             return WorkspaceComponent.AMAZON_WEB_SERVICES_S3;
         } else if (WorkspaceComponent.AZURE_BLOB_STORAGE.equalsIgnoreCase(name)) {
+            if (isEarlyAccessBuild()) {
                 return WorkspaceComponent.AZURE_BLOB_STORAGE;
+            } else {
+                throw new EarlyAccessBuildException("Microsoft Azure Blob Storage");
+            }
         } else {
             return WorkspaceComponent.FILE;
         }
