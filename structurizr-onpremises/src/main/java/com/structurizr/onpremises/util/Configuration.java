@@ -14,7 +14,7 @@ import java.util.*;
 
 public class Configuration extends ConfigLookup {
 
-    private static final boolean EARLY_ACCESS_BUILD = false;
+    private static final boolean EARLY_ACCESS_FEATURES = false;
 
     private static final String PLUGINS_DIRECTORY_NAME = "plugins";
 
@@ -75,7 +75,7 @@ public class Configuration extends ConfigLookup {
         features.put(Features.UI_WORKSPACE_SETTINGS, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.UI_WORKSPACE_SETTINGS, "true")));
         features.put(Features.UI_DSL_EDITOR, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.UI_DSL_EDITOR, "false")));
         features.put(Features.WORKSPACE_ARCHIVING, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.WORKSPACE_ARCHIVING, "false")));
-        features.put(Features.WORKSPACE_BRANCHES, isEarlyAccessBuild() && Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.WORKSPACE_BRANCHES, "false")));
+        features.put(Features.WORKSPACE_BRANCHES, earlyAccessFeaturesAvailable() && Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.WORKSPACE_BRANCHES, "false")));
         features.put(Features.WORKSPACE_SCOPE_VALIDATION, getConfigurationParameterFromStructurizrPropertiesFile(Features.WORKSPACE_SCOPE_VALIDATION, "relaxed").equalsIgnoreCase("strict"));
         features.put(Features.DIAGRAM_REVIEWS, Boolean.parseBoolean(getConfigurationParameterFromStructurizrPropertiesFile(Features.DIAGRAM_REVIEWS, "true")));
 
@@ -89,8 +89,8 @@ public class Configuration extends ConfigLookup {
         return INSTANCE;
     }
 
-    public boolean isEarlyAccessBuild() {
-        return EARLY_ACCESS_BUILD;
+    public boolean earlyAccessFeaturesAvailable() {
+        return EARLY_ACCESS_FEATURES;
     }
 
     public String getEncryptionPassphrase() {
@@ -214,10 +214,10 @@ public class Configuration extends ConfigLookup {
         if (WorkspaceComponent.AMAZON_WEB_SERVICES_S3.equalsIgnoreCase(name)) {
             return WorkspaceComponent.AMAZON_WEB_SERVICES_S3;
         } else if (WorkspaceComponent.AZURE_BLOB_STORAGE.equalsIgnoreCase(name)) {
-            if (isEarlyAccessBuild()) {
+            if (earlyAccessFeaturesAvailable()) {
                 return WorkspaceComponent.AZURE_BLOB_STORAGE;
             } else {
-                throw new EarlyAccessBuildException("Microsoft Azure Blob Storage");
+                throw new EarlyAccessFeaturesNotAvailableException("Microsoft Azure Blob Storage");
             }
         } else {
             return WorkspaceComponent.FILE;
