@@ -108,13 +108,6 @@ dependencies {
 	testImplementation 'org.testcontainers:elasticsearch:1.20.3'
 }
 
-configurations.all {
-	resolutionStrategy {
-		force 'com.google.guava:guava:14.0.1'
-		force 'com.google.guava:guava-gwt:14.0.1'
-	}
-}
-
 tasks.withType(JavaCompile).configureEach {
 	options.compilerArgs.add("-parameters")
 }
