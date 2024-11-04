@@ -1,5 +1,5 @@
-FROM tomcat:10.1.30-jre17-temurin-jammy
-ENV PORT 8080
+FROM tomcat:10.1.31-jre17-temurin-jammy
+ENV PORT=8080
 
 RUN set -eux; \
 	apt-get update; \

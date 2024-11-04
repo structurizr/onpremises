@@ -18,6 +18,8 @@ public class Configuration extends ConfigLookup {
 
     private static final String PLUGINS_DIRECTORY_NAME = "plugins";
 
+    private final String versionSuffix;
+
     private File dataDirectory;
     private String webUrl;
     private Set<String> adminUsersAndRoles = new HashSet<>();
@@ -41,6 +43,13 @@ public class Configuration extends ConfigLookup {
     }
 
     private Configuration() {
+        String buildNumber = new Version().getBuildNumber();
+        if (StringUtils.isNullOrEmpty(buildNumber)) {
+            versionSuffix = "";
+        } else {
+            versionSuffix = "-" + buildNumber;
+        }
+
         setDataDirectory(new File(getDataDirectoryLocation()));
         setEncryptionPassphrase(getConfigurationParameter("structurizr.encryption", "STRUCTURIZR_ENCRYPTION", StructurizrProperties.ENCRYPTION_PASSPHRASE_PROPERTY, null));
         setWebUrl(getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.URL_PROPERTY, ""));
@@ -128,7 +137,7 @@ public class Configuration extends ConfigLookup {
     }
 
     public String getVersionSuffix() {
-        return "";
+        return versionSuffix;
     }
 
     public Set<String> getAdminUsersAndRoles() {
