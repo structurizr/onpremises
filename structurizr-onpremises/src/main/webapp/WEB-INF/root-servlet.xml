@@ -29,7 +29,7 @@
 
 	<mvc:annotation-driven content-negotiation-manager="contentNegotiationManager" />
 
-	<mvc:resources mapping="/static/**" location="/static/" />
+	<mvc:resources mapping="/static/**" location="/static/" cache-period="86400" />
 
 	<security:global-method-security pre-post-annotations="enabled" />
 
