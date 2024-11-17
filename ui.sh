@@ -7,6 +7,7 @@ export STRUCTURIZR_BUILD_NUMBER=$1
 export STRUCTURIZR_UI_DIR=../structurizr-ui
 export STRUCTURIZR_ONPREMISES_DIR=./structurizr-onpremises
 
+rm -rf $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static
 mkdir -p $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static
 
 # JavaScript
@@ -23,6 +24,7 @@ then
     then
       echo "Skipping $filename"
     else
+      echo "Renaming $filename-$STRUCTURIZR_BUILD_NUMBER.js"
       mv "$filename.js" "$filename-$STRUCTURIZR_BUILD_NUMBER.js"
     fi
   done
