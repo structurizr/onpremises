@@ -8,6 +8,6 @@
     <bean class="org.springframework.session.data.redis.config.annotation.web.http.RedisHttpSessionConfiguration"/>
 
     <bean name="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory"
-          p:hostName="${structurizr.redis.host}" p:port="${structurizr.redis.port}" p:password="${structurizr.redis.password}" p:database="${structurizr.redis.database}" />
+          p:hostName="${structurizr.redis.host}" p:port="${structurizr.redis.port}" p:password="${structurizr.redis.password}" p:database="${structurizr.redis.database:0}" />
 
 </beans>
