@@ -12,7 +12,7 @@ repositories {
 	maven {
 		url "https://build.shibboleth.net/maven/releases/"
 	}
-	//mavenLocal()
+	mavenLocal()
 }
 
 testing {
@@ -49,7 +49,6 @@ dependencies {
 
 	implementation project(':structurizr-onpremises-plugin')
 
-	def structurizrVersion = '3.1.0'
 	implementation "com.structurizr:structurizr-annotation:${structurizrVersion}"
 	implementation "com.structurizr:structurizr-dsl:${structurizrVersion}"
 	implementation "com.structurizr:structurizr-inspection:${structurizrVersion}"
