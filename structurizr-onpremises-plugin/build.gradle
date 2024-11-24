@@ -6,6 +6,7 @@ defaultTasks 'clean', 'compileJava', 'test'
 
 repositories {
     mavenCentral()
+    mavenLocal()
 }
 
 dependencies {
