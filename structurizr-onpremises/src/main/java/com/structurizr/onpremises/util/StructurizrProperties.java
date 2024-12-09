@@ -47,5 +47,6 @@ public class StructurizrProperties {
     public static final String REDIS_PORT = "structurizr.redis.port";
     public static final String REDIS_PASSWORD = "structurizr.redis.password";
     public static final String REDIS_DATABASE = "structurizr.redis.database";
+    public static final String REDIS_TLS = "structurizr.redis.tls";
 
 }
