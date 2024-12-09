@@ -98,9 +98,10 @@ class WorkspaceComponentImpl implements WorkspaceComponent {
             int port = Integer.parseInt(Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.REDIS_PORT, "6379"));
             String password = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.REDIS_PASSWORD, "");
             int database = Integer.parseInt(Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.REDIS_DATABASE, "0"));
+            boolean tls = Boolean.parseBoolean(Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.REDIS_TLS, "false"));
 
-            log.debug("Creating cache for workspace metadata: implementation=redis; host=" + host + "; port=" + port + "; database=" + database + "; expiry=" + expiryInMinutes + " minute(s)");
-            workspaceMetadataCache = new RedisWorkspaceMetadataCache(host, port, password, database, expiryInMinutes);
+            log.debug("Creating cache for workspace metadata: implementation=redis; host=" + host + "; port=" + port + "; database=" + database + "; tls=" + tls + "; expiry=" + expiryInMinutes + " minute(s)");
+            workspaceMetadataCache = new RedisWorkspaceMetadataCache(host, port, password, database, tls, expiryInMinutes);
 
         } else {
             workspaceMetadataCache = new NoOpWorkspaceMetadataCache();
