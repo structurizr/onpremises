@@ -13,10 +13,6 @@ import java.util.List;
  */
 public interface WorkspaceComponent {
 
-    String FILE = "file";
-    String AMAZON_WEB_SERVICES_S3 = "aws-s3";
-    String AZURE_BLOB_STORAGE = "azure-blob";
-
     Collection<WorkspaceMetaData> getWorkspaces() throws WorkspaceComponentException;
 
     Collection<WorkspaceMetaData> getWorkspaces(User user) throws WorkspaceComponentException;
@@ -35,7 +31,7 @@ public interface WorkspaceComponent {
 
     void putWorkspace(long workspaceId, String branch, String json) throws WorkspaceComponentException;
 
-    List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, String branch, int maxVersions) throws WorkspaceComponentException;
+    List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, String branch) throws WorkspaceComponentException;
 
     List<WorkspaceBranch> getWorkspaceBranches(long workspaceId) throws WorkspaceComponentException;
 

@@ -3,9 +3,9 @@ package com.structurizr.onpremises.component.workspace;
 import com.structurizr.Workspace;
 import com.structurizr.onpremises.domain.AuthenticationMethod;
 import com.structurizr.onpremises.domain.User;
-import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.configuration.Configuration;
 import com.structurizr.onpremises.util.DateUtils;
-import com.structurizr.onpremises.util.Features;
+import com.structurizr.onpremises.configuration.Features;
 import com.structurizr.util.WorkspaceUtils;
 
 
@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.TimeZone;
 
 import static com.structurizr.onpremises.util.DateUtils.UTC_TIME_ZONE;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class WorkspaceComponentTests {
@@ -57,7 +56,7 @@ public class WorkspaceComponentTests {
         assertEquals(1, workspaces.size());
         assertEquals(workspaceId, workspaces.iterator().next().getId());
 
-        List<WorkspaceVersion> workspaceVersions = workspaceComponent.getWorkspaceVersions(1, "", 10);
+        List<WorkspaceVersion> workspaceVersions = workspaceComponent.getWorkspaceVersions(1, "");
         assertEquals(1, workspaceVersions.size());
         WorkspaceVersion version1 = workspaceVersions.get(0); // keep this for later
         assertNull(workspaceVersions.get(0).getVersionId());
@@ -74,7 +73,7 @@ public class WorkspaceComponentTests {
                 {"configuration":{},"description":"...","documentation":{},"id":1,"lastModifiedDate":"%s","model":{},"name":"Financial Risk System","views":{"configuration":{"branding":{},"styles":{},"terminology":{}}}}""", DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()));
         assertEquals(jsonV2, workspaceComponent.getWorkspace(1, "", ""));
 
-        workspaceVersions = workspaceComponent.getWorkspaceVersions(1, "", 10);
+        workspaceVersions = workspaceComponent.getWorkspaceVersions(1, "");
         assertEquals(2, workspaceVersions.size());
         assertNull(workspaceVersions.get(0).getVersionId());
         assertEquals(DateUtils.formatIsoDate(workspaceMetaData.getLastModifiedDate()), DateUtils.formatIsoDate(workspaceVersions.get(0).getLastModifiedDate()));

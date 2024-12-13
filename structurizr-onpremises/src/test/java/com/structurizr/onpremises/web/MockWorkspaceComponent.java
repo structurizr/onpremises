@@ -57,7 +57,7 @@ public abstract class MockWorkspaceComponent implements WorkspaceComponent {
     }
 
     @Override
-    public List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, String branch, int maxVersions) {
+    public List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, String branch) {
         return List.of();
     }
 

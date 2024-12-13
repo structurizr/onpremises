@@ -2,8 +2,8 @@ package com.structurizr.onpremises.web.security;
 
 import com.structurizr.onpremises.domain.Role;
 import com.structurizr.onpremises.domain.User;
-import com.structurizr.onpremises.util.Configuration;
-import com.structurizr.onpremises.util.StructurizrProperties;
+import com.structurizr.onpremises.configuration.Configuration;
+import com.structurizr.onpremises.configuration.StructurizrProperties;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -12,10 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.saml2.provider.service.authentication.Saml2AuthenticatedPrincipal;
 import org.springframework.security.saml2.provider.service.authentication.Saml2Authentication;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -48,7 +45,7 @@ public class SecurityUtilsTests {
 
             @Override
             public String getFirstAttribute(String name) {
-                if (StructurizrProperties.DEFAULT_SAML_ATTRIBUTE_USERNAME.equals(name)) {
+                if ("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress".equals(name)) {
                     return "user";
                 } else {
                     return null;
@@ -57,7 +54,7 @@ public class SecurityUtilsTests {
 
             @Override
             public List<Object> getAttribute(String name) {
-                if (StructurizrProperties.DEFAULT_SAML_ATTRIBUTE_ROLE.equals(name)) {
+                if ("http://schemas.xmlsoap.org/claims/Group".equals(name)) {
                     List<Object> list = new ArrayList<>();
                     list.add("role1");
                     list.add("role2");
@@ -72,7 +69,9 @@ public class SecurityUtilsTests {
         //Authentication authentication = new UsernamePasswordAuthenticationToken("structurizr", credential, new HashSet<Role>());
         SecurityContextHolder.getContext().setAuthentication(credential);
 
-        Configuration.init();
+        Properties properties = new Properties();
+        properties.setProperty(StructurizrProperties.AUTHENTICATION_IMPLEMENTATION, StructurizrProperties.AUTHENTICATION_VARIANT_SAML);
+        Configuration.init(properties);
         User user = SecurityUtils.getUser();
         assertEquals("user", user.getUsername());
         assertEquals(2, user.getRoles().size());

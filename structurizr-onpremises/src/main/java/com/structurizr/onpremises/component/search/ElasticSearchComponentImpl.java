@@ -7,6 +7,7 @@ import com.structurizr.documentation.Decision;
 import com.structurizr.documentation.Documentation;
 import com.structurizr.documentation.Section;
 import com.structurizr.model.*;
+import com.structurizr.onpremises.configuration.Configuration;
 import com.structurizr.util.StringUtils;
 import com.structurizr.view.*;
 import org.apache.commons.logging.Log;
@@ -24,6 +25,8 @@ import org.apache.http.util.EntityUtils;
 import org.elasticsearch.client.*;
 
 import java.util.*;
+
+import static com.structurizr.onpremises.configuration.StructurizrProperties.*;
 
 /**
  * A search component implementation that uses Elasticsearch.
@@ -43,18 +46,18 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
     private final String host;
     private final int port;
     private final String protocol;
-    private final String user;
+    private final String username;
     private final String password;
     private String indexName = INDEX_NAME;
 
     private RestClient restLowLevelClient;
 
-    ElasticSearchComponentImpl(String host, int port, String protocol, String user, String password) {
-        this.host = host;
-        this.port = port;
-        this.protocol = protocol;
-        this.user = user;
-        this.password = password;
+    ElasticSearchComponentImpl() {
+        this.protocol = com.structurizr.onpremises.configuration.Configuration.getInstance().getProperty(ELASTICSEARCH_PROTOCOL);
+        this.host = com.structurizr.onpremises.configuration.Configuration.getInstance().getProperty(ELASTICSEARCH_HOST);
+        this.port = Integer.parseInt(com.structurizr.onpremises.configuration.Configuration.getInstance().getProperty(ELASTICSEARCH_PORT));
+        this.username = com.structurizr.onpremises.configuration.Configuration.getInstance().getProperty(ELASTICSEARCH_USERNAME);
+        this.password = Configuration.getInstance().getProperty(ELASTICSEARCH_PASSWORD);
     }
 
     String getIndexName() {
@@ -425,11 +428,11 @@ class ElasticSearchComponentImpl extends AbstractSearchComponentImpl {
     }
 
     public void start() {
-        if (StringUtils.isNullOrEmpty(user)) {
+        if (StringUtils.isNullOrEmpty(username)) {
             restLowLevelClient = RestClient.builder(new HttpHost(host, port, protocol)).build();
         } else {
             final CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-            credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(user, password));
+            credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(username, password));
 
             RestClientBuilder clientBuilder = RestClient.builder(
                     new HttpHost(host, port, protocol))

@@ -6,7 +6,8 @@ import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.dsl.StructurizrDslParserException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.domain.User;
-import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.configuration.Configuration;
+import com.structurizr.onpremises.configuration.Features;
 import com.structurizr.onpremises.util.WorkspaceValidationUtils;
 import com.structurizr.onpremises.web.workspace.AbstractWorkspaceEditorController;
 import com.structurizr.util.DslTemplate;
@@ -37,7 +38,7 @@ public class DslEditorController extends AbstractWorkspaceEditorController {
             @RequestParam(required = false) String version,
             ModelMap model
     ) {
-        if (!Configuration.getInstance().isDslEditorEnabled()) {
+        if (!Configuration.getInstance().isFeatureEnabled(Features.UI_DSL_EDITOR)) {
             return showError("dsl-editor-disabled", model);
         }
 

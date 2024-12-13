@@ -4,6 +4,10 @@ import com.structurizr.Workspace;
 import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.autolayout.graphviz.GraphvizAutomaticLayout;
 import com.structurizr.importer.documentation.DefaultDocumentationImporter;
+import com.structurizr.onpremises.configuration.Configuration;
+import com.structurizr.onpremises.configuration.Features;
+import com.structurizr.onpremises.configuration.StructurizrDataDirectory;
+import com.structurizr.onpremises.configuration.StructurizrProperties;
 import com.structurizr.onpremises.util.*;
 import com.structurizr.util.StringUtils;
 import jakarta.servlet.ServletContextEvent;
@@ -19,6 +23,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Properties;
 
+import static com.structurizr.onpremises.configuration.StructurizrProperties.*;
+
 public class ContextLoaderListener implements ServletContextListener {
 
     private static final String LOGS_DIRECTORY_NAME = "logs";
@@ -28,19 +34,14 @@ public class ContextLoaderListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent event) {
         // push the Structurizr data directory into a system property, so it can be used to import Spring context files
         // (this can help keep, e.g., an installation's LDAP configuration separate to the application)
-        File structurizrDataDirectory = new File(ConfigLookup.getDataDirectoryLocation());
-        System.setProperty(ConfigLookup.DATA_DIRECTORY_SYSTEM_PROPERTY_NAME, structurizrDataDirectory.getAbsolutePath());
+        File structurizrDataDirectory = new File(StructurizrDataDirectory.getLocation());
+        System.setProperty(StructurizrProperties.DATA_DIRECTORY, structurizrDataDirectory.getAbsolutePath());
 
+        Properties properties = new Properties();
         try {
-            Properties properties = new Properties();
             File propertiesFile = new File(structurizrDataDirectory, StructurizrProperties.FILENAME);
             if (propertiesFile.exists()) {
                 properties.load(new FileReader(propertiesFile));
-                System.setProperty(StructurizrProperties.AUTHENTICATION_IMPLEMENTATION_PROPERTY, properties.getProperty(StructurizrProperties.AUTHENTICATION_IMPLEMENTATION_PROPERTY, StructurizrProperties.DEFAULT_AUTHENTICATION_VARIANT));
-                System.setProperty(StructurizrProperties.SESSION_IMPLEMENTATION_PROPERTY, properties.getProperty(StructurizrProperties.SESSION_IMPLEMENTATION_PROPERTY, StructurizrProperties.DEFAULT_SESSION_VARIANT));
-            } else {
-                System.setProperty(StructurizrProperties.AUTHENTICATION_IMPLEMENTATION_PROPERTY, StructurizrProperties.DEFAULT_AUTHENTICATION_VARIANT);
-                System.setProperty(StructurizrProperties.SESSION_IMPLEMENTATION_PROPERTY, StructurizrProperties.DEFAULT_SESSION_VARIANT);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -78,9 +79,31 @@ public class ContextLoaderListener implements ServletContextListener {
 
         Thread.setDefaultUncaughtExceptionHandler(new UncaughtExceptionHandler());
         Log log = LogFactory.getLog(ContextLoaderListener.class);
-        Configuration.init();
+        Configuration.init(properties);
 
         try {
+            log.info("***********************************************************************************");
+            log.info("MIT License");
+            log.info("");
+            log.info("Copyright (c) 2024 Structurizr Limited");
+            log.info("");
+            log.info("Permission is hereby granted, free of charge, to any person obtaining a copy");
+            log.info("of this software and associated documentation files (the \"Software\"), to deal");
+            log.info("in the Software without restriction, including without limitation the rights");
+            log.info("to use, copy, modify, merge, publish, distribute, sublicense, and/or sell");
+            log.info("copies of the Software, and to permit persons to whom the Software is");
+            log.info("furnished to do so, subject to the following conditions:");
+            log.info("");
+            log.info("The above copyright notice and this permission notice shall be included in all");
+            log.info("copies or substantial portions of the Software.");
+            log.info("");
+            log.info("THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR");
+            log.info("IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,");
+            log.info("FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE");
+            log.info("AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER");
+            log.info("LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,");
+            log.info("OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE");
+            log.info("SOFTWARE.");
             log.info("***********************************************************************************");
             log.info("  _____ _                   _              _          ");
             log.info(" / ____| |                 | |            (_)         ");
@@ -116,25 +139,44 @@ public class ContextLoaderListener implements ServletContextListener {
                 e.printStackTrace();
             }
 
-            log.info("Data directory: " + structurizrDataDirectory + " (r: " + structurizrDataDirectory.canRead() + "; w: " + structurizrDataDirectory.canWrite() + "; x: " + structurizrDataDirectory.canExecute() + ")");
-            log.info("URL: " + Configuration.getInstance().getWebUrl());
-            log.info("Memory: used=" + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024)) + "MB; free=" + (Runtime.getRuntime().freeMemory() / (1024 * 1024)) + "MB; total=" + (Runtime.getRuntime().totalMemory() / (1024 * 1024)) + "MB; max=" + (Runtime.getRuntime().maxMemory() / (1024 * 1024)) + "MB");
             log.info("");
-            log.info("Internet connection: " + Configuration.getInstance().hasInternetConnection());
-            log.info("Authentication: " + Configuration.getInstance().getAuthenticationVariant());
-            log.info("API key: " + !StringUtils.isNullOrEmpty(Configuration.getInstance().getApiKey()));
-            log.info("Session: " + Configuration.getInstance().getSessionVariant());
-            log.info("Data storage: " + Configuration.getInstance().getDataStorageImplementationName());
-            log.info("Caching: " + Configuration.getInstance().getCacheImplementationName());
-            log.info("Workspace archiving: " + Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_ARCHIVING));
-            log.info("Workspace branches: " + Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_BRANCHES));
-            log.info("Workspace scope: " + (Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_SCOPE_VALIDATION) ? "strict" : "relaxed"));
-            log.info("Search: " + Configuration.getInstance().getSearchImplementationName());
+            logConfiguration(StructurizrProperties.DATA_DIRECTORY, structurizrDataDirectory + " (r: " + structurizrDataDirectory.canRead() + "; w: " + structurizrDataDirectory.canWrite() + "; x: " + structurizrDataDirectory.canExecute() + ")");
+            logConfiguration(StructurizrProperties.ENCRYPTION_PASSPHRASE, !StringUtils.isNullOrEmpty(Configuration.getInstance().getProperty(StructurizrProperties.ENCRYPTION_PASSPHRASE)) ? "********" : "");
+            logConfiguration(StructurizrProperties.URL, Configuration.getInstance().getWebUrl());
+            logConfiguration(StructurizrProperties.AUTHENTICATION_IMPLEMENTATION, Configuration.getInstance().getProperty(StructurizrProperties.AUTHENTICATION_IMPLEMENTATION));
+            logConfiguration(StructurizrProperties.API_KEY, !StringUtils.isNullOrEmpty(Configuration.getInstance().getProperty(StructurizrProperties.API_KEY)) ? "********" : "");
+
+            String sessionImplementation = Configuration.getInstance().getProperty(SESSION_IMPLEMENTATION);
+            if (sessionImplementation.equals(SESSION_VARIANT_REDIS)) {
+                logConfiguration(SESSION_IMPLEMENTATION, sessionImplementation + " (" + Configuration.getInstance().getProperty(REDIS_ENDPOINT) + ")");
+            } else {
+                logConfiguration(StructurizrProperties.SESSION_IMPLEMENTATION, sessionImplementation);
+            }
+
+            logConfiguration(StructurizrProperties.DATA_STORAGE_IMPLEMENTATION, Configuration.getInstance().getProperty(DATA_STORAGE_IMPLEMENTATION));
+
+            String cacheImplementation = Configuration.getInstance().getProperty(CACHE_IMPLEMENTATION);
+            if (cacheImplementation.equals(CACHE_VARIANT_REDIS)) {
+                logConfiguration(StructurizrProperties.CACHE_IMPLEMENTATION, cacheImplementation + " (" + Configuration.getInstance().getProperty(REDIS_ENDPOINT) + ")");
+            } else {
+                logConfiguration(StructurizrProperties.CACHE_IMPLEMENTATION, cacheImplementation);
+            }
+
+            logConfiguration(StructurizrProperties.SEARCH_IMPLEMENTATION, Configuration.getInstance().getProperty(SEARCH_IMPLEMENTATION));
+            logConfiguration(StructurizrProperties.INTERNET_CONNECTION, Configuration.getInstance().hasInternetConnection());
+
+            log.info("");
+            logConfiguration(Features.UI_DSL_EDITOR, Configuration.getInstance().isFeatureEnabled(Features.UI_DSL_EDITOR));
+            logConfiguration(Features.WORKSPACE_ARCHIVING, Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_ARCHIVING));
+            logConfiguration(Features.WORKSPACE_BRANCHES, Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_BRANCHES));
+            logConfiguration(Features.WORKSPACE_SCOPE_VALIDATION, (Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_SCOPE_VALIDATION) ? "strict" : "relaxed"));
 
             if (Configuration.getInstance().getWorkspaceEventListener() != null) {
+                log.info("");
                 log.info("Workspace event listener: " + Configuration.getInstance().getWorkspaceEventListener().getClass().getName());
             }
 
+            log.info("");
             try {
                 ProcessBuilder processBuilder = new ProcessBuilder();
                 processBuilder.command("dot", "-V");
@@ -153,34 +195,21 @@ public class ContextLoaderListener implements ServletContextListener {
             }
             log.info("Graphviz (dot): " + Configuration.getInstance().isGraphvizEnabled());
 
-            log.info("DSL editor: " + Configuration.getInstance().isDslEditorEnabled());
-
-            log.info("***********************************************************************************");
-            log.info("MIT License");
-            log.info("");
-            log.info("Copyright (c) 2024 Structurizr Limited");
-            log.info("");
-            log.info("Permission is hereby granted, free of charge, to any person obtaining a copy");
-            log.info("of this software and associated documentation files (the \"Software\"), to deal");
-            log.info("in the Software without restriction, including without limitation the rights");
-            log.info("to use, copy, modify, merge, publish, distribute, sublicense, and/or sell");
-            log.info("copies of the Software, and to permit persons to whom the Software is");
-            log.info("furnished to do so, subject to the following conditions:");
-            log.info("");
-            log.info("The above copyright notice and this permission notice shall be included in all");
-            log.info("copies or substantial portions of the Software.");
-            log.info("");
-            log.info("THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR");
-            log.info("IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,");
-            log.info("FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE");
-            log.info("AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER");
-            log.info("LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,");
-            log.info("OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE");
-            log.info("SOFTWARE.");
+            log.info("Memory: used=" + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024)) + "MB; free=" + (Runtime.getRuntime().freeMemory() / (1024 * 1024)) + "MB; total=" + (Runtime.getRuntime().totalMemory() / (1024 * 1024)) + "MB; max=" + (Runtime.getRuntime().maxMemory() / (1024 * 1024)) + "MB");
             log.info("***********************************************************************************");
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void logConfiguration(String name, String value) {
+        Log log = LogFactory.getLog(ContextLoaderListener.class);
+        log.info(name + ": " + (StringUtils.isNullOrEmpty(value) ? "(not set)" : value));
+    }
+
+    private void logConfiguration(String name, boolean value) {
+        Log log = LogFactory.getLog(ContextLoaderListener.class);
+        log.info(name + ": " + value);
     }
 
     @Override

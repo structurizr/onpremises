@@ -5,7 +5,7 @@ import com.structurizr.onpremises.domain.review.Comment;
 import com.structurizr.onpremises.domain.review.Review;
 import com.structurizr.onpremises.domain.review.ReviewType;
 import com.structurizr.onpremises.domain.review.Session;
-import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.configuration.Configuration;
 import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 import com.structurizr.onpremises.util.DateUtils;
 import com.structurizr.onpremises.util.RandomGuidGenerator;
@@ -15,6 +15,8 @@ import org.apache.commons.logging.LogFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+
+import static com.structurizr.onpremises.configuration.StructurizrProperties.*;
 
 class ReviewComponentImpl implements ReviewComponent {
 
@@ -29,17 +31,10 @@ class ReviewComponentImpl implements ReviewComponent {
     private final ReviewDao reviewDao;
 
     ReviewComponentImpl() {
-        String dataStorageImplementationName = Configuration.getInstance().getDataStorageImplementationName();
+        String dataStorageImplementationName = Configuration.getInstance().getProperty(DATA_STORAGE_IMPLEMENTATION);
 
         if (AMAZON_WEB_SERVICES_S3.equals(dataStorageImplementationName)) {
-            String accessKeyId = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3ReviewDao.ACCESS_KEY_ID_PROPERTY, "");
-            String secretAccessKey = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3ReviewDao.SECRET_ACCESS_KEY_PROPERTY, "");
-            String region = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3ReviewDao.REGION_PROPERTY, "");
-            String bucketName = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3ReviewDao.BUCKET_NAME_PROPERTY, "");
-            String endpoint = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3ReviewDao.ENDPOINT_PROPERTY, "");
-            boolean pathAccessEnabled = Boolean.parseBoolean(Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3ReviewDao.PATH_STYLE_ACCESS_PROPERTY, "false"));
-
-            this.reviewDao = new AmazonWebServicesS3ReviewDao(accessKeyId, secretAccessKey, region, bucketName, endpoint, pathAccessEnabled);
+            this.reviewDao = new AmazonWebServicesS3ReviewDao();
         } else {
             this.reviewDao = new FileSystemReviewDao();
         }

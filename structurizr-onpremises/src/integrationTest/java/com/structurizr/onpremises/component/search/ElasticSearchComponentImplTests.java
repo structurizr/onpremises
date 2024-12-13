@@ -1,11 +1,15 @@
 package com.structurizr.onpremises.component.search;
 
 
+import com.structurizr.onpremises.configuration.Configuration;
+import com.structurizr.onpremises.configuration.StructurizrProperties;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.testcontainers.elasticsearch.ElasticsearchContainer;
+
+import java.util.Properties;
 
 public class ElasticSearchComponentImplTests extends AbstractSearchComponentTests {
 
@@ -26,7 +30,15 @@ public class ElasticSearchComponentImplTests extends AbstractSearchComponentTest
 
     @BeforeEach
     public void setUp() {
-        searchComponent = new ElasticSearchComponentImpl("localhost", elasticsearchContainer.getFirstMappedPort(), "http", null, null);
+        Properties properties = new Properties();
+        properties.setProperty(StructurizrProperties.ELASTICSEARCH_HOST, "localhost");
+        properties.setProperty(StructurizrProperties.ELASTICSEARCH_PORT, "" + elasticsearchContainer.getFirstMappedPort());
+        properties.setProperty(StructurizrProperties.ELASTICSEARCH_PROTOCOL, "http");
+        properties.setProperty(StructurizrProperties.ELASTICSEARCH_USERNAME, "");
+        properties.setProperty(StructurizrProperties.ELASTICSEARCH_PASSWORD, "");
+        Configuration.init(properties);
+
+        searchComponent = new ElasticSearchComponentImpl();
         searchComponent.async = false; // disable async indexing for testing
         searchComponent.setIndexName("structurizr-test");
         searchComponent.start();

@@ -2,9 +2,9 @@ package com.structurizr.onpremises.web.security;
 
 import com.structurizr.onpremises.domain.AuthenticationMethod;
 import com.structurizr.onpremises.domain.User;
-import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.configuration.Configuration;
 import com.structurizr.onpremises.util.RandomGuidGenerator;
-import com.structurizr.onpremises.util.StructurizrProperties;
+import com.structurizr.onpremises.configuration.StructurizrProperties;
 import com.structurizr.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,14 +61,14 @@ public final class SecurityUtils {
                         }
                     }
 
-                    String usernameAttribute = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAML_ATTRIBUTE_USERNAME, StructurizrProperties.DEFAULT_SAML_ATTRIBUTE_USERNAME);
+                    String usernameAttribute = Configuration.getInstance().getProperty(StructurizrProperties.SAML_ATTRIBUTE_USERNAME);
                     String username = saml2AuthenticatedPrincipal.getFirstAttribute(usernameAttribute);
                     if (StringUtils.isNullOrEmpty(username)) {
                         log.error("Could not find a SAML attribute named " + usernameAttribute);
                         username = new RandomGuidGenerator().generate();
                     }
 
-                    String roleAttribute = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAML_ATTRIBUTE_ROLE, StructurizrProperties.DEFAULT_SAML_ATTRIBUTE_ROLE);
+                    String roleAttribute = Configuration.getInstance().getProperty(StructurizrProperties.SAML_ATTRIBUTE_ROLE);
                     List<Object> groups = saml2AuthenticatedPrincipal.getAttribute(roleAttribute);
                     if (groups != null) {
                         for (Object g : groups) {

@@ -5,7 +5,7 @@ import com.structurizr.onpremises.component.search.SearchComponentException;
 import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.domain.User;
-import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.configuration.Configuration;
 import com.structurizr.onpremises.web.workspace.AbstractWorkspaceController;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

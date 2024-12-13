@@ -1,32 +1,23 @@
 package com.structurizr.onpremises.component.search;
 
 import com.structurizr.Workspace;
-import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.configuration.Configuration;
+import com.structurizr.onpremises.configuration.StructurizrProperties;
 
 import java.util.List;
 import java.util.Set;
 
-class SearchComponentImpl implements SearchComponent {
+import static com.structurizr.onpremises.configuration.StructurizrProperties.SEARCH_IMPLEMENTATION;
 
-    private static final String ELASTICSEARCH_PROTOCOL_PROPERTY = "elasticsearch.protocol";
-    private static final String ELASTICSEARCH_HOST_PROPERTY = "elasticsearch.host";
-    private static final String ELASTICSEARCH_PORT_PROPERTY = "elasticsearch.port";
-    private static final String ELASTICSEARCH_USERNAME_PROPERTY = "elasticsearch.username";
-    private static final String ELASTICSEARCH_PASSWORD_PROPERTY = "elasticsearch.password";
+class SearchComponentImpl implements SearchComponent {
 
     private final SearchComponent searchComponent;
 
     SearchComponentImpl() {
-        String searchImplementation = Configuration.getInstance().getSearchImplementationName();
-        if (ELASTICSEARCH.equals(searchImplementation)) {
-            String protocol = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(ELASTICSEARCH_PROTOCOL_PROPERTY, "http");
-            String host = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(ELASTICSEARCH_HOST_PROPERTY, "localhost");
-            String port = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(ELASTICSEARCH_PORT_PROPERTY, "9200");
-            String username = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(ELASTICSEARCH_USERNAME_PROPERTY, "");
-            String password = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(ELASTICSEARCH_PASSWORD_PROPERTY, "");
-
-            searchComponent = new ElasticSearchComponentImpl(host, Integer.parseInt(port), protocol, username, password);
-        } else if (NONE.equalsIgnoreCase(searchImplementation)) {
+        String searchImplementation = Configuration.getInstance().getProperty(SEARCH_IMPLEMENTATION);
+        if (StructurizrProperties.SEARCH_VARIANT_ELASTICSEARCH.equals(searchImplementation)) {
+            searchComponent = new ElasticSearchComponentImpl();
+        } else if (StructurizrProperties.SEARCH_VARIANT_NONE.equalsIgnoreCase(searchImplementation)) {
             searchComponent = new NoOpSearchComponentImpl();
         } else {
             searchComponent = new ApacheLuceneSearchComponentImpl(Configuration.getInstance().getDataDirectory());

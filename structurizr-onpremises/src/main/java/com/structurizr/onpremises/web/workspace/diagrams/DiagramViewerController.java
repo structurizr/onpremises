@@ -1,8 +1,8 @@
 package com.structurizr.onpremises.web.workspace.diagrams;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
-import com.structurizr.onpremises.util.Configuration;
-import com.structurizr.onpremises.util.Features;
+import com.structurizr.onpremises.configuration.Configuration;
+import com.structurizr.onpremises.configuration.Features;
 import com.structurizr.onpremises.util.HtmlUtils;
 import com.structurizr.onpremises.web.workspace.AbstractWorkspaceController;
 import com.structurizr.util.StringUtils;

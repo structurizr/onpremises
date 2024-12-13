@@ -12,10 +12,15 @@ import com.structurizr.encryption.EncryptionLocation;
 import com.structurizr.encryption.EncryptionStrategy;
 import com.structurizr.io.json.EncryptedJsonReader;
 import com.structurizr.io.json.EncryptedJsonWriter;
+import com.structurizr.onpremises.configuration.Configuration;
+import com.structurizr.onpremises.configuration.Features;
+import com.structurizr.onpremises.configuration.StructurizrProperties;
 import com.structurizr.onpremises.domain.Image;
 import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 import com.structurizr.onpremises.domain.User;
-import com.structurizr.onpremises.util.*;
+import com.structurizr.onpremises.util.DateUtils;
+import com.structurizr.onpremises.util.EarlyAccessFeaturesNotAvailableException;
+import com.structurizr.onpremises.util.WorkspaceValidationUtils;
 import com.structurizr.util.StringUtils;
 import com.structurizr.util.WorkspaceUtils;
 import org.apache.commons.logging.Log;
@@ -33,12 +38,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import static com.structurizr.onpremises.configuration.StructurizrProperties.*;
+
 class WorkspaceComponentImpl implements WorkspaceComponent {
 
     private static final Log log = LogFactory.getLog(WorkspaceComponentImpl.class);
     private static final String ENCRYPTION_STRATEGY_STRING = "encryptionStrategy";
     private static final String CIPHERTEXT_STRING = "ciphertext";
-    private static final int DEFAULT_NUMBER_OF_THREADS = 50;
 
     private final WorkspaceDao workspaceDao;
     private final String encryptionPassphrase;
@@ -47,28 +53,21 @@ class WorkspaceComponentImpl implements WorkspaceComponent {
     private ExecutorService executorService;
 
     WorkspaceComponentImpl() {
-        String dataStorageImplementationName = Configuration.getInstance().getDataStorageImplementationName();
+        String dataStorageImplementationName = Configuration.getInstance().getProperty(DATA_STORAGE_IMPLEMENTATION);
 
-        if (AMAZON_WEB_SERVICES_S3.equals(dataStorageImplementationName)) {
-            String accessKeyId = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3WorkspaceDao.ACCESS_KEY_ID_PROPERTY, "");
-            String secretAccessKey = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3WorkspaceDao.SECRET_ACCESS_KEY_PROPERTY, "");
-            String region = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3WorkspaceDao.REGION_PROPERTY, "");
-            String bucketName = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3WorkspaceDao.BUCKET_NAME_PROPERTY, "");
-            String endpoint = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3WorkspaceDao.ENDPOINT_PROPERTY, "");
-            boolean pathAccessEnabled = Boolean.parseBoolean(Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AmazonWebServicesS3WorkspaceDao.PATH_STYLE_ACCESS_PROPERTY, "false"));
+        if (StructurizrProperties.DATA_STORAGE_VARIANT_AMAZON_WEB_SERVICES_S3.equals(dataStorageImplementationName)) {
+            this.workspaceDao = new AmazonWebServicesS3WorkspaceDao();
+        } else if (StructurizrProperties.DATA_STORAGE_VARIANT_AZURE_BLOB_STORAGE.equals(dataStorageImplementationName)) {
+            if (!Configuration.getInstance().earlyAccessFeaturesAvailable()) {
+                throw new EarlyAccessFeaturesNotAvailableException("Microsoft Azure Blob Storage");
+            }
 
-            this.workspaceDao = new AmazonWebServicesS3WorkspaceDao(accessKeyId, secretAccessKey, region, bucketName, endpoint,pathAccessEnabled);
-        } else if (AZURE_BLOB_STORAGE.equals(dataStorageImplementationName)) {
-            String accountName = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AzureBlobStorageWorkspaceDao.ACCOUNT_NAME_PROPERTY, "");
-            String accessKey = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AzureBlobStorageWorkspaceDao.ACCESS_KEY_PROPERTY, "");
-            String containerName = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(AzureBlobStorageWorkspaceDao.CONTAINER_NAME_PROPERTY, "");
-
-            this.workspaceDao = new AzureBlobStorageWorkspaceDao(accountName, accessKey, containerName);
+            this.workspaceDao = new AzureBlobStorageWorkspaceDao();
         } else {
             this.workspaceDao = new FileSystemWorkspaceDao(Configuration.getInstance().getDataDirectory());
         }
 
-        encryptionPassphrase = Configuration.getInstance().getEncryptionPassphrase();
+        encryptionPassphrase = Configuration.getInstance().getProperty(StructurizrProperties.ENCRYPTION_PASSPHRASE);
 
         initCache();
         initThreadPool();
@@ -82,33 +81,19 @@ class WorkspaceComponentImpl implements WorkspaceComponent {
     }
 
     private void initCache() {
-        String cacheImplementation = Configuration.getInstance().getCacheImplementationName();
-        int expiryInMinutes = Integer.parseInt("" + WorkspaceMetadataCache.DEFAULT_CACHE_EXPIRY_IN_MINUTES);
-        try {
-            expiryInMinutes = Integer.parseInt(Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.CACHE_EXPIRY_IN_MINUTES_PROPERTY, "" + WorkspaceMetadataCache.DEFAULT_CACHE_EXPIRY_IN_MINUTES));
-        } catch (NumberFormatException nfe) {
-            log.warn(nfe);
-        }
+        String cacheImplementation = Configuration.getInstance().getProperty(CACHE_IMPLEMENTATION);
 
         if (cacheImplementation.equalsIgnoreCase(StructurizrProperties.CACHE_VARIANT_LOCAL)) {
-            log.debug("Creating cache for workspace metadata: implementation=local; expiry=" + expiryInMinutes + " minute(s)");
-            workspaceMetadataCache = new LocalWorkspaceMetadataCache(expiryInMinutes);
+            workspaceMetadataCache = new LocalWorkspaceMetadataCache();
         } else if (cacheImplementation.equalsIgnoreCase(StructurizrProperties.CACHE_VARIANT_REDIS)) {
-            String host = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.REDIS_HOST, "localhost");
-            int port = Integer.parseInt(Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.REDIS_PORT, "6379"));
-            String password = Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.REDIS_PASSWORD, "");
-            int database = Integer.parseInt(Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.REDIS_DATABASE, "0"));
-
-            log.debug("Creating cache for workspace metadata: implementation=redis; host=" + host + "; port=" + port + "; database=" + database + "; expiry=" + expiryInMinutes + " minute(s)");
-            workspaceMetadataCache = new RedisWorkspaceMetadataCache(host, port, password, database, expiryInMinutes);
-
+            workspaceMetadataCache = new RedisWorkspaceMetadataCache();
         } else {
             workspaceMetadataCache = new NoOpWorkspaceMetadataCache();
         }
     }
 
     private void initThreadPool() {
-        int threads = Integer.parseInt(Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.WORKSPACE_THREADS, "" + DEFAULT_NUMBER_OF_THREADS));
+        int threads = Integer.parseInt(Configuration.getInstance().getProperty(StructurizrProperties.WORKSPACE_THREADS));
          executorService = Executors.newFixedThreadPool(threads);
     }
 
@@ -488,9 +473,10 @@ class WorkspaceComponentImpl implements WorkspaceComponent {
     }
 
     @Override
-    public List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, String branch, int maxVersions) throws WorkspaceComponentException {
+    public List<WorkspaceVersion> getWorkspaceVersions(long workspaceId, String branch) throws WorkspaceComponentException {
         WorkspaceBranch.validateBranchName(branch);
 
+        int maxVersions = Integer.parseInt(Configuration.getInstance().getProperty(StructurizrProperties.MAX_WORKSPACE_VERSIONS));
         List<WorkspaceVersion> versions = workspaceDao.getWorkspaceVersions(workspaceId, branch, maxVersions);
         versions.sort((v1, v2) -> v2.getLastModifiedDate().compareTo(v1.getLastModifiedDate()));
 

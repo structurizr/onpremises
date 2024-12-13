@@ -1,6 +1,8 @@
 package com.structurizr.onpremises.util;
 
 import com.structurizr.Workspace;
+import com.structurizr.onpremises.configuration.Configuration;
+import com.structurizr.onpremises.configuration.Features;
 import com.structurizr.validation.WorkspaceScopeValidationException;
 import com.structurizr.validation.WorkspaceScopeValidatorFactory;
 

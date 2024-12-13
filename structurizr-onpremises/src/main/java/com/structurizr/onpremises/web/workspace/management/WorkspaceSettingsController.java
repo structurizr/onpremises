@@ -1,8 +1,8 @@
 package com.structurizr.onpremises.web.workspace.management;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
-import com.structurizr.onpremises.util.Configuration;
-import com.structurizr.onpremises.util.Features;
+import com.structurizr.onpremises.configuration.Configuration;
+import com.structurizr.onpremises.configuration.Features;
 import com.structurizr.onpremises.web.workspace.AbstractWorkspaceController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

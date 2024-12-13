@@ -25,7 +25,7 @@ import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 
-import com.structurizr.onpremises.util.StructurizrProperties;
+import com.structurizr.onpremises.configuration.StructurizrProperties;
 import com.structurizr.onpremises.web.security.CsrfSecurityRequestMatcher;
 import com.structurizr.util.StringUtils;
 import org.apache.commons.logging.Log;
@@ -44,15 +44,12 @@ import org.springframework.security.saml2.provider.service.registration.RelyingP
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository;
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrations;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @org.springframework.context.annotation.Configuration
 @EnableWebSecurity
 class Configuration {
 
 	private static final Log log = LogFactory.getLog(Configuration.class);
-
-	private static final String DEFAULT_REGISTRATION_ID = "structurizr";
 
 	@Bean
 	SecurityFilterChain app(HttpSecurity http) throws Exception {
@@ -72,14 +69,14 @@ class Configuration {
 
 	@Bean
 	RelyingPartyRegistrationRepository relyingPartyRegistrationRepository() {
-		String registrationId = com.structurizr.onpremises.util.Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAML_REGISTRATION_ID, DEFAULT_REGISTRATION_ID);
-		String entityId = com.structurizr.onpremises.util.Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAML_ENTITY_ID, "");
-		String metadata = com.structurizr.onpremises.util.Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAML_METADATA, "");
-		String signingCertificate = com.structurizr.onpremises.util.Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAML_SIGNING_CERTIFICATE, "");
-		String privateKey = com.structurizr.onpremises.util.Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAML_SIGNING_PRIVATE_KEY, "");
+		String registrationId = com.structurizr.onpremises.configuration.Configuration.getInstance().getProperty(StructurizrProperties.SAML_REGISTRATION_ID);
+		String entityId = com.structurizr.onpremises.configuration.Configuration.getInstance().getProperty(StructurizrProperties.SAML_ENTITY_ID);
+		String metadata = com.structurizr.onpremises.configuration.Configuration.getInstance().getProperty(StructurizrProperties.SAML_METADATA);
+		String signingCertificate = com.structurizr.onpremises.configuration.Configuration.getInstance().getProperty(StructurizrProperties.SAML_SIGNING_CERTIFICATE);
+		String privateKey = com.structurizr.onpremises.configuration.Configuration.getInstance().getProperty(StructurizrProperties.SAML_SIGNING_PRIVATE_KEY);
 
-		String attributeNameForUsername = com.structurizr.onpremises.util.Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAML_ATTRIBUTE_USERNAME, StructurizrProperties.DEFAULT_SAML_ATTRIBUTE_USERNAME);
-		String attributeNameForRole = com.structurizr.onpremises.util.Configuration.getConfigurationParameterFromStructurizrPropertiesFile(StructurizrProperties.SAML_ATTRIBUTE_ROLE, StructurizrProperties.DEFAULT_SAML_ATTRIBUTE_ROLE);
+		String attributeNameForUsername = com.structurizr.onpremises.configuration.Configuration.getInstance().getProperty(StructurizrProperties.SAML_ATTRIBUTE_USERNAME);
+		String attributeNameForRole = com.structurizr.onpremises.configuration.Configuration.getInstance().getProperty(StructurizrProperties.SAML_ATTRIBUTE_ROLE);
 		
 		log.debug("Configuring SAML authentication...");
 		log.debug(StructurizrProperties.SAML_REGISTRATION_ID + ": " + registrationId);
@@ -115,7 +112,7 @@ class Configuration {
 	}
 
 	X509Certificate relyingPartyCertificate(String signingCertificate) {
-		Resource resource = new FileSystemResource(new File(com.structurizr.onpremises.util.Configuration.getInstance().getDataDirectory(), signingCertificate));
+		Resource resource = new FileSystemResource(new File(com.structurizr.onpremises.configuration.Configuration.getInstance().getDataDirectory(), signingCertificate));
 		try (InputStream is = resource.getInputStream()) {
 			return (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(is);
 		} catch (Exception ex) {
@@ -124,7 +121,7 @@ class Configuration {
 	}
 
 	public RSAPrivateKey privateKey(String privateKey) {
-		File file = new File(com.structurizr.onpremises.util.Configuration.getInstance().getDataDirectory(), privateKey);
+		File file = new File(com.structurizr.onpremises.configuration.Configuration.getInstance().getDataDirectory(), privateKey);
 		try {
 			String key = Files.readString(file.toPath(), Charset.defaultCharset());
 

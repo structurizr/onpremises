@@ -1,7 +1,7 @@
 package com.structurizr.onpremises.web.security;
 
 import com.structurizr.onpremises.domain.Role;
-import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.configuration.Configuration;
 import com.structurizr.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

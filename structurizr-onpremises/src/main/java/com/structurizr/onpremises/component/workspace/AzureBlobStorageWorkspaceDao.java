@@ -11,6 +11,7 @@ import com.azure.storage.blob.models.BlobListDetails;
 import com.azure.storage.blob.models.ListBlobsOptions;
 import com.azure.storage.blob.specialized.BlockBlobClient;
 import com.azure.storage.common.StorageSharedKeyCredential;
+import com.structurizr.onpremises.configuration.Configuration;
 import com.structurizr.onpremises.domain.Image;
 import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 import org.apache.commons.logging.Log;
@@ -20,14 +21,12 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+import static com.structurizr.onpremises.configuration.StructurizrProperties.*;
+
 /**
  * A workspace DAO implementation that uses the Azure Blob Storage.
  */
 public class AzureBlobStorageWorkspaceDao extends AbstractWorkspaceDao {
-
-    static final String ACCOUNT_NAME_PROPERTY = "azure-blob.accountName";
-    static final String ACCESS_KEY_PROPERTY = "azure-blob.accessKey";
-    static final String CONTAINER_NAME_PROPERTY = "azure-blob.containerName";
 
     private static final Log log = LogFactory.getLog(AzureBlobStorageWorkspaceDao.class);
 
@@ -42,14 +41,10 @@ public class AzureBlobStorageWorkspaceDao extends AbstractWorkspaceDao {
 
     private final BlobContainerClient blobContainerClient;
 
-    AzureBlobStorageWorkspaceDao(
-            String accountName,
-            String accessKey,
-            String containerName
-    ) {
-        this.accountName = accountName;
-        this.accessKey = accessKey;
-        this.containerName = containerName;
+    AzureBlobStorageWorkspaceDao() {
+        this.accountName = Configuration.getInstance().getProperty(AZURE_BLOB_STORAGE_ACCOUNT_NAME);
+        this.accessKey = Configuration.getInstance().getProperty(AZURE_BLOB_STORAGE_ACCESS_KEY);
+        this.containerName = Configuration.getInstance().getProperty(AZURE_BLOB_STORAGE_CONTAINER_NAME);
 
         this.blobContainerClient = createBlobContainerClient();
     }

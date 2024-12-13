@@ -6,7 +6,7 @@ import com.structurizr.onpremises.domain.Messages;
 import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.domain.review.Review;
 import com.structurizr.onpremises.domain.review.ReviewType;
-import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.configuration.Configuration;
 import com.structurizr.onpremises.util.DateUtils;
 import com.structurizr.onpremises.web.ControllerTestsBase;
 import com.structurizr.onpremises.web.MockHttpServletRequest;
@@ -41,7 +41,7 @@ public class ReviewControllerTests extends ControllerTestsBase {
 
     @Test
     public void showCreateReviewPage() {
-        Configuration.getInstance().setAdminUsersAndRoles();
+        Configuration.init();
         setUser("user@example.com");
 
         String result = controller.showCreateReviewPage(model);

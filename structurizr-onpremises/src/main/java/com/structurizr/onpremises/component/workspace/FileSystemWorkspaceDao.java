@@ -1,9 +1,9 @@
 package com.structurizr.onpremises.component.workspace;
 
 import com.structurizr.onpremises.domain.Image;
-import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.configuration.Configuration;
 import com.structurizr.onpremises.domain.InputStreamAndContentLength;
-import com.structurizr.onpremises.util.DateUtils;
+import com.structurizr.onpremises.configuration.StructurizrProperties;
 import com.structurizr.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -260,7 +260,8 @@ class FileSystemWorkspaceDao extends AbstractWorkspaceDao {
 
     @Scheduled(cron="0 0 * * * ?")
     public void removeOldWorkspaceVersions() {
-        removeOldWorkspaceVersions(Configuration.getInstance().getMaxWorkspaceVersions());
+        int maxVersions = Integer.parseInt(Configuration.getInstance().getProperty(StructurizrProperties.MAX_WORKSPACE_VERSIONS));
+        removeOldWorkspaceVersions(maxVersions);
     }
 
     @Override

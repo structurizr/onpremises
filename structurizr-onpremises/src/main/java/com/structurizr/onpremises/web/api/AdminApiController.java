@@ -2,7 +2,8 @@ package com.structurizr.onpremises.web.api;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceComponent;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
-import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.configuration.Configuration;
+import com.structurizr.onpremises.configuration.StructurizrProperties;
 import com.structurizr.onpremises.web.AbstractController;
 import com.structurizr.util.StringUtils;
 import jakarta.servlet.http.HttpServletResponse;
@@ -112,11 +113,11 @@ public class AdminApiController extends AbstractController {
             throw new HttpUnauthorizedException("Authorization header must be provided");
         }
 
-        if (StringUtils.isNullOrEmpty(Configuration.getInstance().getApiKey())) {
+        if (StringUtils.isNullOrEmpty(Configuration.getInstance().getProperty(StructurizrProperties.API_KEY))) {
             throw new ApiException("The API key is not configured for this installation - please refer to the documentation");
         }
 
-        if (!bCryptPasswordEncoder.matches(apiKey, Configuration.getInstance().getApiKey())) {
+        if (!bCryptPasswordEncoder.matches(apiKey, Configuration.getInstance().getProperty(StructurizrProperties.API_KEY))) {
             throw new HttpUnauthorizedException("Incorrect API key");
         }
     }

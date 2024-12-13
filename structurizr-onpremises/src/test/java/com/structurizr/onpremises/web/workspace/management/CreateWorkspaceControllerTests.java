@@ -2,13 +2,16 @@ package com.structurizr.onpremises.web.workspace.management;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
 import com.structurizr.onpremises.domain.User;
-import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.configuration.Configuration;
+import com.structurizr.onpremises.configuration.StructurizrProperties;
 import com.structurizr.onpremises.web.ControllerTestsBase;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ModelMap;
+
+import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -27,7 +30,7 @@ public class CreateWorkspaceControllerTests extends ControllerTestsBase {
 
     @Test
     public void createWorkspace_CreatesAWorkspace_WhenNoAdminUsersAreDefined() {
-        Configuration.getInstance().setAdminUsersAndRoles();
+        Configuration.init();
         setUser("user@example.com");
 
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
@@ -43,7 +46,9 @@ public class CreateWorkspaceControllerTests extends ControllerTestsBase {
 
     @Test
     public void createWorkspace_CreatesAWorkspace_WhenAnAdminUserIsDefined() {
-        Configuration.getInstance().setAdminUsersAndRoles("admin@example.com");
+        Properties properties = new Properties();
+        properties.setProperty(StructurizrProperties.ADMIN_USERS_AND_ROLES, "admin@example.com");
+        Configuration.init(properties);
         setUser("admin@example.com");
 
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
@@ -59,7 +64,9 @@ public class CreateWorkspaceControllerTests extends ControllerTestsBase {
 
     @Test
     public void createWorkspace_ReturnsThe404Page_WhenTheUserIsNotAnAdmin() {
-        Configuration.getInstance().setAdminUsersAndRoles("admin@example.com");
+        Properties properties = new Properties();
+        properties.setProperty(StructurizrProperties.ADMIN_USERS_AND_ROLES, "admin@example.com");
+        Configuration.init(properties);
         setUser("user@example.com");
 
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {});

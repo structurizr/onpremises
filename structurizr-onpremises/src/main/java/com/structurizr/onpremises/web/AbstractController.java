@@ -1,13 +1,11 @@
 package com.structurizr.onpremises.web;
 
-import com.structurizr.onpremises.component.search.SearchComponent;
 import com.structurizr.onpremises.component.workspace.WorkspaceBranch;
-import com.structurizr.onpremises.component.workspace.WorkspaceComponent;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.component.workspace.WorkspaceVersion;
 import com.structurizr.onpremises.domain.User;
-import com.structurizr.onpremises.util.Configuration;
-import com.structurizr.onpremises.util.Features;
+import com.structurizr.onpremises.configuration.Configuration;
+import com.structurizr.onpremises.configuration.Features;
 import com.structurizr.onpremises.util.RandomGuidGenerator;
 import com.structurizr.onpremises.util.Version;
 import com.structurizr.onpremises.web.security.SecurityUtils;
@@ -16,7 +14,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -82,7 +79,7 @@ public abstract class AbstractController {
             model.addAttribute("username", user.getUsername());
         }
 
-        model.addAttribute("searchEnabled", Configuration.getInstance().isSearchEnabled());
+        model.addAttribute("searchEnabled", Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_SEARCH));
 
         File cssFile = new File(Configuration.getInstance().getDataDirectory(), STRUCTURIZR_CSS_FILENAME);
         if (cssFile.exists()) {

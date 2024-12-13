@@ -4,19 +4,16 @@ import com.structurizr.Workspace;
 import com.structurizr.onpremises.component.search.SearchComponent;
 import com.structurizr.onpremises.component.search.SearchComponentException;
 import com.structurizr.onpremises.component.search.SearchResult;
-import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
-import com.structurizr.onpremises.domain.User;
-import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.configuration.Configuration;
 import com.structurizr.onpremises.util.HtmlUtils;
-import com.structurizr.onpremises.web.AbstractController;
+import com.structurizr.onpremises.configuration.StructurizrProperties;
 import com.structurizr.onpremises.web.workspace.AbstractWorkspaceController;
 import com.structurizr.util.StringUtils;
 import com.structurizr.util.WorkspaceUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +25,8 @@ import javax.annotation.PreDestroy;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+
+import static com.structurizr.onpremises.configuration.StructurizrProperties.SEARCH_IMPLEMENTATION;
 
 @Controller
 public class SearchController extends AbstractWorkspaceController {
@@ -45,7 +43,7 @@ public class SearchController extends AbstractWorkspaceController {
     @PostConstruct
     public void rebuildSearchIndex() {
         // rebuild local (Lucene) search indexes on startup
-        if (SearchComponent.LUCENE.equals(Configuration.getInstance().getSearchImplementationName())) {
+        if (StructurizrProperties.SEARCH_VARIANT_LUCENE.equals(Configuration.getInstance().getProperty(SEARCH_IMPLEMENTATION))) {
             log.debug("Rebuilding search index...");
 
             try {

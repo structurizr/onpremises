@@ -2,7 +2,8 @@ package com.structurizr.onpremises.web.workspace.management;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
-import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.configuration.Configuration;
+import com.structurizr.onpremises.configuration.StructurizrProperties;
 import com.structurizr.onpremises.web.ControllerTestsBase;
 import com.structurizr.onpremises.web.MockSearchComponent;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
@@ -10,6 +11,8 @@ import com.structurizr.onpremises.web.MockWorkspaceComponent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.ui.ModelMap;
+
+import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -42,7 +45,10 @@ public class DeleteWorkspaceControllerTests extends ControllerTestsBase {
 
     @Test
     public void deleteWorkspace_RedirectsToTheDashboard_WhenUserIsNotAnAdmin() {
-        Configuration.getInstance().setAdminUsersAndRoles("admin@example.com");
+        Properties properties = new Properties();
+        properties.setProperty(StructurizrProperties.ADMIN_USERS_AND_ROLES, "admin@example.com");
+        Configuration.init(properties);
+
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
             @Override
             public WorkspaceMetaData getWorkspaceMetaData(long workspaceId) {
@@ -62,7 +68,7 @@ public class DeleteWorkspaceControllerTests extends ControllerTestsBase {
 
     @Test
     public void deleteWorkspace_DeletesTheWorkspace_WhenNoAdminUsersAreDefined() {
-        Configuration.getInstance().setAdminUsersAndRoles();
+        Configuration.init();
 
         final StringBuilder buf = new StringBuilder();
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {
@@ -92,7 +98,9 @@ public class DeleteWorkspaceControllerTests extends ControllerTestsBase {
 
     @Test
     public void deleteWorkspace_DeletesTheWorkspace_WhenTheUserIsAnAdmin() {
-        Configuration.getInstance().setAdminUsersAndRoles("user@example.com");
+        Properties properties = new Properties();
+        properties.setProperty(StructurizrProperties.ADMIN_USERS_AND_ROLES, "user@example.com");
+        Configuration.init(properties);
 
         final StringBuilder buf = new StringBuilder();
         controller.setWorkspaceComponent(new MockWorkspaceComponent() {

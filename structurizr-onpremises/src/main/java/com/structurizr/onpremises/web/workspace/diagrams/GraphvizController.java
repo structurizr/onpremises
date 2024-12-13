@@ -3,7 +3,7 @@ package com.structurizr.onpremises.web.workspace.diagrams;
 import com.structurizr.Workspace;
 import com.structurizr.autolayout.graphviz.GraphvizAutomaticLayout;
 import com.structurizr.autolayout.graphviz.RankDirection;
-import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.configuration.Configuration;
 import com.structurizr.util.StringUtils;
 import com.structurizr.util.WorkspaceUtils;
 import com.structurizr.view.*;

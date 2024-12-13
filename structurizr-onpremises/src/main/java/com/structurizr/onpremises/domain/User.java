@@ -1,6 +1,6 @@
 package com.structurizr.onpremises.domain;
 
-import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.configuration.Configuration;
 
 import java.util.HashSet;
 import java.util.Set;

@@ -1,21 +1,15 @@
-package com.structurizr.onpremises.util;
+package com.structurizr.onpremises.configuration;
 
 import java.io.File;
-import java.io.FileReader;
 import java.util.Properties;
 
 public final class PropertyPlaceholderConfigurer extends org.springframework.beans.factory.config.PropertyPlaceholderConfigurer {
 
     private static final String STRUCTURIZR_DATA_DIRECTORY_PROPERTY_NAME = "structurizr.dataDirectory";
 
-    public PropertyPlaceholderConfigurer() throws Exception {
-        Properties properties = new Properties();
+    public PropertyPlaceholderConfigurer() {
+        Properties properties = Configuration.getInstance().getProperties();
         File dataDirectory = Configuration.getInstance().getDataDirectory();
-        File propertiesFile = new File(dataDirectory, StructurizrProperties.FILENAME);
-        if (propertiesFile.exists()) {
-            properties.load(new FileReader(propertiesFile));
-        }
-
         properties.setProperty(STRUCTURIZR_DATA_DIRECTORY_PROPERTY_NAME, dataDirectory.getAbsolutePath());
 
         setLocalOverride(true);

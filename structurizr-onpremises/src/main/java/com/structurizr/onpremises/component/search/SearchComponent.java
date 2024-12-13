@@ -10,10 +10,6 @@ import java.util.Set;
  */
 public interface SearchComponent {
 
-    String NONE = "none";
-    String LUCENE = "lucene";
-    String ELASTICSEARCH = "elasticsearch";
-
     void start();
 
     void stop();

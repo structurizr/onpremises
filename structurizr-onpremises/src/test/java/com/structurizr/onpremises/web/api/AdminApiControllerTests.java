@@ -3,7 +3,8 @@ package com.structurizr.onpremises.web.api;
 import com.structurizr.onpremises.component.workspace.WorkspaceComponentException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.domain.User;
-import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.configuration.Configuration;
+import com.structurizr.onpremises.configuration.StructurizrProperties;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -23,8 +25,9 @@ public class AdminApiControllerTests {
     public void setUp() throws Exception {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-        Configuration.init();
-        Configuration.getInstance().setApiKey(encoder.encode("1234567890"));
+        Properties properties = new Properties();
+        properties.setProperty(StructurizrProperties.API_KEY, encoder.encode("1234567890"));
+        Configuration.init(properties);
 
         controller = new AdminApiController(encoder);
     }
@@ -56,7 +59,7 @@ public class AdminApiControllerTests {
     @Test
     public void getWorkspaces_ReturnsAnApiError_WhenNoApiKeyIsConfigured() {
         try {
-            Configuration.getInstance().setApiKey(null);
+            Configuration.init();
             controller.getWorkspaces("1234567890");
             fail();
         } catch (ApiException e) {
@@ -134,7 +137,7 @@ public class AdminApiControllerTests {
     @Test
     public void createWorkspace_ReturnsAnApiError_WhenNoApiKeyIsConfigured() {
         try {
-            Configuration.getInstance().setApiKey(null);
+            Configuration.init();
             controller.createWorkspace("1234567890");
             fail();
         } catch (ApiException e) {
@@ -204,7 +207,7 @@ public class AdminApiControllerTests {
     @Test
     public void deleteWorkspace_ReturnsAnApiError_WhenNoApiKeyIsConfigured() {
         try {
-            Configuration.getInstance().setApiKey(null);
+            Configuration.init();
             controller.deleteWorkspace("1234567890", 1);
             fail();
         } catch (ApiException e) {

@@ -2,7 +2,8 @@ package com.structurizr.onpremises.web.home;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.domain.User;
-import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.configuration.Configuration;
+import com.structurizr.onpremises.configuration.StructurizrProperties;
 import com.structurizr.onpremises.web.ControllerTestsBase;
 import com.structurizr.onpremises.web.MockWorkspaceComponent;
 import org.junit.jupiter.api.BeforeEach;
@@ -11,6 +12,7 @@ import org.springframework.ui.ModelMap;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -87,7 +89,9 @@ public class HomePageControllerTests extends ControllerTestsBase {
             }
         });
 
-        Configuration.getInstance().setAdminUsersAndRoles("admin@exmaple.com");
+        Properties properties = new Properties();
+        properties.setProperty(StructurizrProperties.ADMIN_USERS_AND_ROLES, "admin@example.com");
+        Configuration.init(properties);
         setUser("user@example.com");
 
         String result = controller.showAuthenticatedDashboard("", 1, 20, model);
@@ -109,7 +113,9 @@ public class HomePageControllerTests extends ControllerTestsBase {
             }
         });
 
-        Configuration.getInstance().setAdminUsersAndRoles("admin@exmaple.com");
+        Properties properties = new Properties();
+        properties.setProperty(StructurizrProperties.ADMIN_USERS_AND_ROLES, "admin@example.com");
+        Configuration.init(properties);
         setUser("admin@example.com");
 
         String result = controller.showAuthenticatedDashboard("", 1, 20, model);
@@ -117,7 +123,7 @@ public class HomePageControllerTests extends ControllerTestsBase {
         assertEquals(1, model.getAttribute("numberOfWorkspaces"));
         assertTrue(((Collection)model.getAttribute("workspaces")).contains(workspace1));
         assertEquals("dashboard", result);
-        assertEquals(false, model.getAttribute("userCanCreateWorkspace"));
+        assertEquals(true, model.getAttribute("userCanCreateWorkspace"));
     }
 
 }

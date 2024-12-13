@@ -1,10 +1,12 @@
 package com.structurizr.onpremises.domain;
 
-import com.structurizr.onpremises.util.Configuration;
+import com.structurizr.onpremises.configuration.Configuration;
+import com.structurizr.onpremises.configuration.StructurizrProperties;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Properties;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -136,22 +138,26 @@ public class UserTests {
         roles.add("role1");
         user = new User("user@example.com", roles, AuthenticationMethod.LOCAL);
 
-        Configuration.init();
-        Configuration.getInstance().setAdminUsersAndRoles(new String[0]);
+        Properties properties = new Properties();
+        properties.setProperty(StructurizrProperties.ADMIN_USERS_AND_ROLES, "");
+        Configuration.init(properties);
         assertFalse(user.isAdmin());
 
-        Configuration.getInstance().setAdminUsersAndRoles(new String[] { "user@google.com" });
+        properties.setProperty(StructurizrProperties.ADMIN_USERS_AND_ROLES, "user@google.com");
+        Configuration.init(properties);
         assertFalse(user.isAdmin()); // not a named user
 
-        Configuration.getInstance().setAdminUsersAndRoles(new String[] { "user@example.com" });
+        properties.setProperty(StructurizrProperties.ADMIN_USERS_AND_ROLES, "user@example.com");
+        Configuration.init(properties);
         assertTrue(user.isAdmin()); // a named user
 
-        Configuration.getInstance().setAdminUsersAndRoles(new String[] { "role1" });
+        properties.setProperty(StructurizrProperties.ADMIN_USERS_AND_ROLES, "role1");
+        Configuration.init(properties);
         assertTrue(user.isAdmin()); // a named role
 
-        Configuration.getInstance().setAdminUsersAndRoles(new String[] { "role2" });
+        properties.setProperty(StructurizrProperties.ADMIN_USERS_AND_ROLES, "role2");
+        Configuration.init(properties);
         assertFalse(user.isAdmin()); // not a named role
-
     }
 
 }

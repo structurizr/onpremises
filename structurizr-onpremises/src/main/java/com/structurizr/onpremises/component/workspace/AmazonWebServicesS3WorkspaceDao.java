@@ -5,6 +5,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.*;
+import com.structurizr.onpremises.configuration.Configuration;
 import com.structurizr.onpremises.domain.Image;
 import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 import com.structurizr.util.StringUtils;
@@ -16,19 +17,14 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+import static com.structurizr.onpremises.configuration.StructurizrProperties.*;
+
 /**
  * A workspace DAO implementation that uses the Amazon Web Services S3.
  */
 public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
 
     private static final Log log = LogFactory.getLog(AmazonWebServicesS3WorkspaceDao.class);
-
-    static final String ACCESS_KEY_ID_PROPERTY = "aws-s3.accessKeyId";
-    static final String SECRET_ACCESS_KEY_PROPERTY = "aws-s3.secretAccessKey";
-    static final String REGION_PROPERTY = "aws-s3.region";
-    static final String BUCKET_NAME_PROPERTY = "aws-s3.bucketName";
-    static final String ENDPOINT_PROPERTY = "aws-s3.endpoint";
-    static final String PATH_STYLE_ACCESS_PROPERTY = "aws-s3.pathStyleAccess";
 
     private static final String WORKSPACE_PROPERTIES_FILENAME = "workspace.properties";
     private static final String WORKSPACE_CONTENT_FILENAME = "workspace.json";
@@ -50,20 +46,13 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
 
     private final AmazonS3 amazonS3;
 
-    AmazonWebServicesS3WorkspaceDao(
-            String accessKeyId,
-            String secretAccessKey,
-            String region,
-            String bucketName,
-            String endpoint,
-            boolean pathStyleAccessEnabled
-    ) {
-        this.accessKeyId = accessKeyId;
-        this.secretAccessKey = secretAccessKey;
-        this.region = region;
-        this.bucketName = bucketName;
-        this.endpoint = endpoint;
-        this.pathStyleAccessEnabled = pathStyleAccessEnabled;
+    AmazonWebServicesS3WorkspaceDao() {
+        this.accessKeyId = Configuration.getInstance().getProperty(AWS_S3_ACCESS_KEY_ID);
+        this.secretAccessKey = Configuration.getInstance().getProperty(AWS_S3_SECRET_ACCESS_KEY);
+        this.region = Configuration.getInstance().getProperty(AWS_S3_REGION);
+        this.bucketName = Configuration.getInstance().getProperty(AWS_S3_BUCKET_NAME);
+        this.endpoint = Configuration.getInstance().getProperty(AWS_S3_ENDPOINT);
+        this.pathStyleAccessEnabled = Boolean.parseBoolean(Configuration.getInstance().getProperty(AWS_S3_PATH_STYLE_ACCESS));
 
         this.amazonS3 = createAmazonS3Client();
     }

@@ -2,8 +2,8 @@ package com.structurizr.onpremises.web.workspace.management;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceBranch;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
-import com.structurizr.onpremises.util.Configuration;
-import com.structurizr.onpremises.util.Features;
+import com.structurizr.onpremises.configuration.Configuration;
+import com.structurizr.onpremises.configuration.Features;
 import com.structurizr.onpremises.web.workspace.AbstractWorkspaceController;
 import com.structurizr.util.StringUtils;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,7 +25,7 @@ public class WorkspaceSummaryController extends AbstractWorkspaceController {
             ModelMap model
     ) {
         model.addAttribute("branch", "");
-        model.addAttribute("versions", workspaceComponent.getWorkspaceVersions(workspaceId, null, Configuration.getInstance().getMaxWorkspaceVersions()));
+        model.addAttribute("versions", workspaceComponent.getWorkspaceVersions(workspaceId, null));
 
         return showPublicView(VIEW, workspaceId, model, true);
     }
@@ -37,7 +37,7 @@ public class WorkspaceSummaryController extends AbstractWorkspaceController {
             ModelMap model
     ) {
         model.addAttribute("branch", "");
-        model.addAttribute("versions", workspaceComponent.getWorkspaceVersions(workspaceId, null, Configuration.getInstance().getMaxWorkspaceVersions()));
+        model.addAttribute("versions", workspaceComponent.getWorkspaceVersions(workspaceId, null));
 
         return showSharedView(VIEW, workspaceId, token, model, true);
     }
@@ -69,7 +69,7 @@ public class WorkspaceSummaryController extends AbstractWorkspaceController {
             return showError("workspace-branches-not-enabled", model);
         }
 
-        model.addAttribute("versions", workspaceComponent.getWorkspaceVersions(workspaceId, branch, Configuration.getInstance().getMaxWorkspaceVersions()));
+        model.addAttribute("versions", workspaceComponent.getWorkspaceVersions(workspaceId, branch));
 
         model.addAttribute("reviewsEnabled", Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_REVIEWS));
 
