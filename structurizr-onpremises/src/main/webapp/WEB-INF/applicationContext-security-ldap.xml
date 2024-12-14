@@ -27,6 +27,6 @@
     <!--
         Place your LDAP configuration in the file below.
     -->
-    <beans:import resource="file:${structurizr.dataDirectory}/ldap.xml" />
+    <beans:import resource="file:${structurizr.datadirectory}/ldap.xml" />
 
 </beans:beans>

@@ -1,15 +1,14 @@
 package com.structurizr.onpremises.web;
 
 import com.structurizr.Workspace;
-import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.autolayout.graphviz.GraphvizAutomaticLayout;
+import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.importer.documentation.DefaultDocumentationImporter;
 import com.structurizr.onpremises.configuration.Configuration;
-import com.structurizr.onpremises.configuration.Features;
 import com.structurizr.onpremises.configuration.StructurizrDataDirectory;
 import com.structurizr.onpremises.configuration.StructurizrProperties;
-import com.structurizr.onpremises.util.*;
-import com.structurizr.util.StringUtils;
+import com.structurizr.onpremises.util.DateUtils;
+import com.structurizr.onpremises.util.Version;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import org.apache.commons.logging.Log;
@@ -22,6 +21,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static com.structurizr.onpremises.configuration.StructurizrProperties.*;
 
@@ -30,22 +31,21 @@ public class ContextLoaderListener implements ServletContextListener {
     private static final String LOGS_DIRECTORY_NAME = "logs";
     private static final String LOG4J_PROPERTIES_FILENAME = "log4j2.properties";
 
+    private static final String PROPERTY_NAME_PREFIX = "structurizr.";
+    private static final String ENVIRONMENT_VARIABLE_NAME_PREFIX = "structurizr_";
+
     @Override
     public void contextInitialized(ServletContextEvent event) {
         // push the Structurizr data directory into a system property, so it can be used to import Spring context files
         // (this can help keep, e.g., an installation's LDAP configuration separate to the application)
         File structurizrDataDirectory = new File(StructurizrDataDirectory.getLocation());
-        System.setProperty(StructurizrProperties.DATA_DIRECTORY, structurizrDataDirectory.getAbsolutePath());
 
-        Properties properties = new Properties();
-        try {
-            File propertiesFile = new File(structurizrDataDirectory, StructurizrProperties.FILENAME);
-            if (propertiesFile.exists()) {
-                properties.load(new FileReader(propertiesFile));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        Properties properties = loadProperties(new File(structurizrDataDirectory, StructurizrProperties.FILENAME));
+        loadSystemProperties(properties);
+        loadEnvironmentVariables(properties);
+
+        properties.setProperty(DATA_DIRECTORY, structurizrDataDirectory.getAbsolutePath());
+        System.setProperty(StructurizrProperties.DATA_DIRECTORY, structurizrDataDirectory.getAbsolutePath());
 
         // reconfigure the logging system
         LoggerContext loggerContext = (LoggerContext)LogManager.getContext(false);
@@ -140,43 +140,6 @@ public class ContextLoaderListener implements ServletContextListener {
             }
 
             log.info("");
-            logConfiguration(StructurizrProperties.DATA_DIRECTORY, structurizrDataDirectory + " (r: " + structurizrDataDirectory.canRead() + "; w: " + structurizrDataDirectory.canWrite() + "; x: " + structurizrDataDirectory.canExecute() + ")");
-            logConfiguration(StructurizrProperties.ENCRYPTION_PASSPHRASE, !StringUtils.isNullOrEmpty(Configuration.getInstance().getProperty(StructurizrProperties.ENCRYPTION_PASSPHRASE)) ? "********" : "");
-            logConfiguration(StructurizrProperties.URL, Configuration.getInstance().getWebUrl());
-            logConfiguration(StructurizrProperties.AUTHENTICATION_IMPLEMENTATION, Configuration.getInstance().getProperty(StructurizrProperties.AUTHENTICATION_IMPLEMENTATION));
-            logConfiguration(StructurizrProperties.API_KEY, !StringUtils.isNullOrEmpty(Configuration.getInstance().getProperty(StructurizrProperties.API_KEY)) ? "********" : "");
-
-            String sessionImplementation = Configuration.getInstance().getProperty(SESSION_IMPLEMENTATION);
-            if (sessionImplementation.equals(SESSION_VARIANT_REDIS)) {
-                logConfiguration(SESSION_IMPLEMENTATION, sessionImplementation + " (" + Configuration.getInstance().getProperty(REDIS_ENDPOINT) + ")");
-            } else {
-                logConfiguration(StructurizrProperties.SESSION_IMPLEMENTATION, sessionImplementation);
-            }
-
-            logConfiguration(StructurizrProperties.DATA_STORAGE_IMPLEMENTATION, Configuration.getInstance().getProperty(DATA_STORAGE_IMPLEMENTATION));
-
-            String cacheImplementation = Configuration.getInstance().getProperty(CACHE_IMPLEMENTATION);
-            if (cacheImplementation.equals(CACHE_VARIANT_REDIS)) {
-                logConfiguration(StructurizrProperties.CACHE_IMPLEMENTATION, cacheImplementation + " (" + Configuration.getInstance().getProperty(REDIS_ENDPOINT) + ")");
-            } else {
-                logConfiguration(StructurizrProperties.CACHE_IMPLEMENTATION, cacheImplementation);
-            }
-
-            logConfiguration(StructurizrProperties.SEARCH_IMPLEMENTATION, Configuration.getInstance().getProperty(SEARCH_IMPLEMENTATION));
-            logConfiguration(StructurizrProperties.INTERNET_CONNECTION, Configuration.getInstance().hasInternetConnection());
-
-            log.info("");
-            logConfiguration(Features.UI_DSL_EDITOR, Configuration.getInstance().isFeatureEnabled(Features.UI_DSL_EDITOR));
-            logConfiguration(Features.WORKSPACE_ARCHIVING, Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_ARCHIVING));
-            logConfiguration(Features.WORKSPACE_BRANCHES, Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_BRANCHES));
-            logConfiguration(Features.WORKSPACE_SCOPE_VALIDATION, (Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_SCOPE_VALIDATION) ? "strict" : "relaxed"));
-
-            if (Configuration.getInstance().getWorkspaceEventListener() != null) {
-                log.info("");
-                log.info("Workspace event listener: " + Configuration.getInstance().getWorkspaceEventListener().getClass().getName());
-            }
-
-            log.info("");
             try {
                 ProcessBuilder processBuilder = new ProcessBuilder();
                 processBuilder.command("dot", "-V");
@@ -193,23 +156,76 @@ public class ContextLoaderListener implements ServletContextListener {
             } catch (Exception e) {
                 log.error(e);
             }
-            log.info("Graphviz (dot): " + Configuration.getInstance().isGraphvizEnabled());
+            log.info("Graphviz (dot) available: " + Configuration.getInstance().isGraphvizEnabled());
 
             log.info("Memory: used=" + ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / (1024 * 1024)) + "MB; free=" + (Runtime.getRuntime().freeMemory() / (1024 * 1024)) + "MB; total=" + (Runtime.getRuntime().totalMemory() / (1024 * 1024)) + "MB; max=" + (Runtime.getRuntime().maxMemory() / (1024 * 1024)) + "MB");
+            log.info("***********************************************************************************");
+
+            logAllProperties(log, properties);
             log.info("***********************************************************************************");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void logConfiguration(String name, String value) {
-        Log log = LogFactory.getLog(ContextLoaderListener.class);
-        log.info(name + ": " + (StringUtils.isNullOrEmpty(value) ? "(not set)" : value));
+    private void logAllProperties(Log log, Properties properties) {
+        log.info("Configuration:");
+
+        Set<String> propertiesToMask = Set.of(
+                ENCRYPTION_PASSPHRASE, API_KEY, AWS_S3_SECRET_ACCESS_KEY, AZURE_BLOB_STORAGE_ACCESS_KEY, ELASTICSEARCH_PASSWORD, REDIS_PASSWORD
+        );
+
+        Set<String> propertyNames = new TreeSet<>(properties.stringPropertyNames());
+        for (String name : propertyNames) {
+            if (propertiesToMask.contains(name)) {
+                log.info(" - " + name + ": ********");
+            } else {
+                log.info(" - " + name + ": " + properties.get(name));
+            }
+        }
     }
 
-    private void logConfiguration(String name, boolean value) {
-        Log log = LogFactory.getLog(ContextLoaderListener.class);
-        log.info(name + ": " + value);
+    private Properties loadProperties(File file) {
+        Properties propertiesFromFile = new Properties();
+        Properties properties = new Properties();
+        try {
+            if (file.exists()) {
+                propertiesFromFile.load(new FileReader(file));
+
+                for (String key : propertiesFromFile.stringPropertyNames()) {
+                    String name = key.toLowerCase();
+                    if (name.startsWith(PROPERTY_NAME_PREFIX)) {
+                        properties.setProperty(name, propertiesFromFile.getProperty(key));
+                    } else {
+                        properties.setProperty(PROPERTY_NAME_PREFIX + name, propertiesFromFile.getProperty(key));
+                    }
+                }
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return properties;
+    }
+
+    private void loadSystemProperties(Properties properties) {
+        for (String name : System.getProperties().stringPropertyNames()) {
+            String lowerCaseName = name.toLowerCase();
+            if (lowerCaseName.startsWith(PROPERTY_NAME_PREFIX)) {
+                properties.setProperty(lowerCaseName, System.getProperty(name));
+            }
+        }
+    }
+
+    private void loadEnvironmentVariables(Properties properties) {
+        for (String name : System.getenv().keySet()) {
+            String lowerCaseName = name.toLowerCase();
+            if (lowerCaseName.startsWith(ENVIRONMENT_VARIABLE_NAME_PREFIX)) {
+                lowerCaseName = lowerCaseName.replace('_', '.');
+                properties.setProperty(lowerCaseName, System.getenv(name));
+            }
+        }
     }
 
     @Override

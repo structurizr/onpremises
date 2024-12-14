@@ -20,7 +20,6 @@ public final class Configuration {
 
     private final String versionSuffix;
 
-    private File dataDirectory;
     private String webUrl;
     private Set<String> adminUsersAndRoles = new HashSet<>();
 
@@ -45,10 +44,8 @@ public final class Configuration {
         return properties;
     }
 
-    private Configuration(Properties properties) {
-        this.properties = properties;
-
-        setDataDirectory(new File(StructurizrDataDirectory.getLocation()));
+    private Configuration(Properties props) {
+        this.properties = props;
 
         new DefaultsConfigurer(properties).apply();
         setWebUrl(getProperty(URL));
@@ -58,10 +55,6 @@ public final class Configuration {
         System.setProperty(AUTHENTICATION_IMPLEMENTATION, getProperty(AUTHENTICATION_IMPLEMENTATION));
         // applicationContext-security.xml: <import resource="applicationContext-security-${structurizr.authentication}.xml" />
         System.setProperty(SESSION_IMPLEMENTATION, getProperty(SESSION_IMPLEMENTATION));
-
-        // configure structurizr.encryption
-        configurePropertyFromEnvironmentVariable(StructurizrEnvironmentVariables.ENCRYPTION_PASSPHRASE, ENCRYPTION_PASSPHRASE);
-        configurePropertyFromSystemProperty(ENCRYPTION_PASSPHRASE, ENCRYPTION_PASSPHRASE);
 
         configurePlugins();
         configureFeatures();
@@ -125,6 +118,8 @@ public final class Configuration {
         if (!isFeatureEnabled(Features.UI_DSL_EDITOR)) {
             features.put(Features.UI_DSL_EDITOR, Boolean.parseBoolean(getProperty(DSL_EDITOR)));
         }
+
+        properties.remove(DSL_EDITOR); // not needed after the feature has been configured
     }
 
     public static Configuration getInstance() {
@@ -192,6 +187,10 @@ public final class Configuration {
         return "onpremises";
     }
 
+    public boolean isDslEditorEnabled() {
+        return isFeatureEnabled(Features.UI_DSL_EDITOR);
+    }
+
     public boolean isGraphvizEnabled() {
         return graphvizEnabled;
     }
@@ -209,11 +208,7 @@ public final class Configuration {
     }
 
     public File getDataDirectory() {
-        return dataDirectory;
-    }
-
-    void setDataDirectory(File dataDirectory) {
-        this.dataDirectory = dataDirectory;
+        return new File(getProperty(DATA_DIRECTORY));
     }
 
     public void setFeatureEnabled(String feature) {
@@ -229,7 +224,7 @@ public final class Configuration {
     }
 
     private Class loadClass(String fqn) throws Exception {
-        File pluginsDirectory = new File(dataDirectory, PLUGINS_DIRECTORY_NAME);
+        File pluginsDirectory = new File(getDataDirectory(), PLUGINS_DIRECTORY_NAME);
         URL[] urls = new URL[0];
 
         if (pluginsDirectory.exists()) {
@@ -256,20 +251,6 @@ public final class Configuration {
 
     public void setWorkspaceEventListener(WorkspaceEventListener workspaceEventListener) {
         this.workspaceEventListener = workspaceEventListener;
-    }
-
-    private void configurePropertyFromEnvironmentVariable(String environmentVariableName, String propertyName) {
-        String value = System.getenv(environmentVariableName);
-        if (value != null) {
-            properties.setProperty(propertyName, value);
-        }
-    }
-
-    private void configurePropertyFromSystemProperty(String systemPropertyName, String propertyName) {
-        String value = System.getProperty(systemPropertyName);
-        if (value != null) {
-            properties.setProperty(propertyName, value);
-        }
     }
 
     public String getProperty(String structurizrPropertyName) {

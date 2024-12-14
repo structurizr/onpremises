@@ -11,6 +11,7 @@ class DefaultsConfigurer extends Configurer {
     }
 
     void apply() {
+        setDefault(DATA_DIRECTORY, StructurizrDataDirectory.DEFAULT_DATA_DIRECTORY_PATH);
         setDefault(AUTHENTICATION_IMPLEMENTATION, AUTHENTICATION_VARIANT_FILE);
         setDefault(SESSION_IMPLEMENTATION, SESSION_VARIANT_LOCAL);
         setDefault(URL, "");
