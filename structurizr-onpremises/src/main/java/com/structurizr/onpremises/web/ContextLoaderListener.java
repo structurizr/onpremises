@@ -9,6 +9,7 @@ import com.structurizr.onpremises.configuration.StructurizrDataDirectory;
 import com.structurizr.onpremises.configuration.StructurizrProperties;
 import com.structurizr.onpremises.util.DateUtils;
 import com.structurizr.onpremises.util.Version;
+import com.structurizr.util.StringUtils;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import org.apache.commons.logging.Log;
@@ -177,10 +178,15 @@ public class ContextLoaderListener implements ServletContextListener {
 
         Set<String> propertyNames = new TreeSet<>(properties.stringPropertyNames());
         for (String name : propertyNames) {
+            String value = properties.getProperty(name);
             if (propertiesToMask.contains(name)) {
-                log.info(" - " + name + ": ********");
+                if (!StringUtils.isNullOrEmpty(value)) {
+                    log.info(" - " + name + ": ********");
+                } else {
+                    log.info(" - " + name + ":");
+                }
             } else {
-                log.info(" - " + name + ": " + properties.get(name));
+                log.info(" - " + name + ": " + value);
             }
         }
     }
