@@ -1,4 +1,4 @@
-FROM tomcat:10.1.31-jre17-temurin-jammy
+FROM tomcat:10.1.34-jre17-temurin-jammy
 ENV PORT=8080
 
 RUN set -eux; \
