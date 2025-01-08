@@ -12,6 +12,13 @@ import static org.junit.jupiter.api.Assertions.*;
 public class WorkspaceMetaDataTests {
 
     @Test
+    void getName_WhenNull() {
+        WorkspaceMetaData workspace = new WorkspaceMetaData(1);
+        workspace.setName(null);
+        assertEquals("Workspace 1", workspace.getName());
+    }
+
+    @Test
     public void isPublic() {
         WorkspaceMetaData workspace = new WorkspaceMetaData(1);
         assertFalse(workspace.isPublicWorkspace());

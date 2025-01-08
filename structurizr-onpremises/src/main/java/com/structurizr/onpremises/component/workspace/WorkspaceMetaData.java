@@ -76,7 +76,7 @@ public class WorkspaceMetaData {
     }
 
     public String getName() {
-        return name;
+        return name != null ? name : "Workspace " + id;
     }
 
     public void setName(String name) {
