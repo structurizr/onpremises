@@ -13,7 +13,7 @@ import static com.structurizr.onpremises.configuration.StructurizrProperties.*;
 
 public final class Configuration {
 
-    private static final boolean EARLY_ACCESS_FEATURES = false;
+    public static final boolean PREVIEW_FEATURES = false;
 
     private static final String PLUGINS_DIRECTORY_NAME = "plugins";
     private static final String COMMA = ",";
@@ -26,7 +26,7 @@ public final class Configuration {
     private boolean graphvizEnabled = false;
 
     private final Properties properties;
-    private final Map<String,Boolean> features = new HashMap<>();
+    private final com.structurizr.util.Features features = new com.structurizr.util.Features();
 
     private WorkspaceEventListener workspaceEventListener;
 
@@ -103,20 +103,20 @@ public final class Configuration {
     }
 
     private void configureFeatures() {
-        features.put(Features.UI_WORKSPACE_USERS, Boolean.parseBoolean(getProperty(Features.UI_WORKSPACE_USERS)));
-        features.put(Features.UI_WORKSPACE_SETTINGS, Boolean.parseBoolean(getProperty(Features.UI_WORKSPACE_SETTINGS)));
-        features.put(Features.UI_DSL_EDITOR, Boolean.parseBoolean(getProperty(Features.UI_DSL_EDITOR)));
-        features.put(Features.WORKSPACE_ARCHIVING, Boolean.parseBoolean(getProperty(Features.WORKSPACE_ARCHIVING)));
-        features.put(Features.WORKSPACE_BRANCHES, earlyAccessFeaturesAvailable() && Boolean.parseBoolean(getProperty(Features.WORKSPACE_BRANCHES)));
-        features.put(Features.WORKSPACE_SCOPE_VALIDATION, getProperty(Features.WORKSPACE_SCOPE_VALIDATION).equalsIgnoreCase(Features.WORKSPACE_SCOPE_VALIDATION_STRICT));
-        features.put(Features.DIAGRAM_REVIEWS, Boolean.parseBoolean(getProperty(Features.DIAGRAM_REVIEWS)));
+        features.configure(Features.UI_WORKSPACE_USERS, Boolean.parseBoolean(getProperty(Features.UI_WORKSPACE_USERS)));
+        features.configure(Features.UI_WORKSPACE_SETTINGS, Boolean.parseBoolean(getProperty(Features.UI_WORKSPACE_SETTINGS)));
+        features.configure(Features.UI_DSL_EDITOR, Boolean.parseBoolean(getProperty(Features.UI_DSL_EDITOR)));
+        features.configure(Features.WORKSPACE_ARCHIVING, Boolean.parseBoolean(getProperty(Features.WORKSPACE_ARCHIVING)));
+        features.configure(Features.WORKSPACE_BRANCHES, PREVIEW_FEATURES && Boolean.parseBoolean(getProperty(Features.WORKSPACE_BRANCHES)));
+        features.configure(Features.WORKSPACE_SCOPE_VALIDATION, getProperty(Features.WORKSPACE_SCOPE_VALIDATION).equalsIgnoreCase(Features.WORKSPACE_SCOPE_VALIDATION_STRICT));
+        features.configure(Features.DIAGRAM_REVIEWS, Boolean.parseBoolean(getProperty(Features.DIAGRAM_REVIEWS)));
 
         String search = getProperty(SEARCH_IMPLEMENTATION);
-        features.put(Features.WORKSPACE_SEARCH, search.equals(SEARCH_VARIANT_LUCENE) || search.equals(SEARCH_VARIANT_ELASTICSEARCH));
+        features.configure(Features.WORKSPACE_SEARCH, search.equals(SEARCH_VARIANT_LUCENE) || search.equals(SEARCH_VARIANT_ELASTICSEARCH));
 
         // for backwards compatibility (older versions had structurizr.dslEditor=true)
         if (!isFeatureEnabled(Features.UI_DSL_EDITOR)) {
-            features.put(Features.UI_DSL_EDITOR, Boolean.parseBoolean(getProperty(DSL_EDITOR)));
+            features.configure(Features.UI_DSL_EDITOR, Boolean.parseBoolean(getProperty(DSL_EDITOR)));
         }
 
         properties.remove(DSL_EDITOR); // not needed after the feature has been configured
@@ -124,10 +124,6 @@ public final class Configuration {
 
     public static Configuration getInstance() {
         return INSTANCE;
-    }
-
-    public boolean earlyAccessFeaturesAvailable() {
-        return EARLY_ACCESS_FEATURES;
     }
 
     public String getWebUrl() {
@@ -212,15 +208,15 @@ public final class Configuration {
     }
 
     public void setFeatureEnabled(String feature) {
-        features.put(feature, true);
+        features.enable(feature);
     }
 
     public void setFeatureDisabled(String feature) {
-        features.put(feature, false);
+        features.disable(feature);
     }
 
     public boolean isFeatureEnabled(String feature) {
-        return features.getOrDefault(feature, true);
+        return features.isEnabled(feature);
     }
 
     private Class loadClass(String fqn) throws Exception {

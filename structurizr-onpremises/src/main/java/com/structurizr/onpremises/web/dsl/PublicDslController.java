@@ -2,9 +2,11 @@ package com.structurizr.onpremises.web.dsl;
 
 import com.structurizr.Workspace;
 import com.structurizr.dsl.DslUtils;
+import com.structurizr.dsl.Features;
 import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.dsl.StructurizrDslParserException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
+import com.structurizr.onpremises.configuration.Configuration;
 import com.structurizr.onpremises.util.HtmlUtils;
 import com.structurizr.onpremises.util.JsonUtils;
 import com.structurizr.onpremises.util.WorkspaceValidationUtils;
@@ -115,6 +117,7 @@ public class PublicDslController extends AbstractController {
 
     private Workspace fromDsl(String dsl) throws StructurizrDslParserException, WorkspaceScopeValidationException {
         StructurizrDslParser parser = new StructurizrDslParser();
+        parser.getFeatures().configure(Features.ARCHETYPES, Configuration.PREVIEW_FEATURES);
         parser.setRestricted(true);
         parser.parse(dsl);
 

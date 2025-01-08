@@ -58,7 +58,7 @@ class WorkspaceComponentImpl implements WorkspaceComponent {
         if (StructurizrProperties.DATA_STORAGE_VARIANT_AMAZON_WEB_SERVICES_S3.equals(dataStorageImplementationName)) {
             this.workspaceDao = new AmazonWebServicesS3WorkspaceDao();
         } else if (StructurizrProperties.DATA_STORAGE_VARIANT_AZURE_BLOB_STORAGE.equals(dataStorageImplementationName)) {
-            if (!Configuration.getInstance().earlyAccessFeaturesAvailable()) {
+            if (!Configuration.PREVIEW_FEATURES) {
                 throw new EarlyAccessFeaturesNotAvailableException("Microsoft Azure Blob Storage");
             }
 
