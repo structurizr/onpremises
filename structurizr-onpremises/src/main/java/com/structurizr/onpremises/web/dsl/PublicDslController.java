@@ -39,6 +39,10 @@ public class PublicDslController extends AbstractController {
             @RequestParam(required = false, defaultValue = "") String view,
             ModelMap model) throws Exception {
 
+        if (!Configuration.getInstance().isFeatureEnabled(com.structurizr.onpremises.configuration.Features.UI_DSL_EDITOR)) {
+            return showError("public-dsl-editor-disabled", model);
+        }
+
         if (!StringUtils.isNullOrEmpty(src) && src.startsWith("https://")) {
             src = getContentFromUrl(src, model);
         }
@@ -53,6 +57,10 @@ public class PublicDslController extends AbstractController {
                        @RequestParam(required = true) String source,
                        @RequestParam(required = false) String json,
                        @RequestParam(required = false, defaultValue = "") String view) throws Exception {
+
+        if (!Configuration.getInstance().isFeatureEnabled(com.structurizr.onpremises.configuration.Features.UI_DSL_EDITOR)) {
+            return showError("public-dsl-editor-disabled", model);
+        }
 
         model.addAttribute("method", "post");
 

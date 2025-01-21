@@ -13,8 +13,10 @@
 
             <br />
 
+            <c:if test="${dslEditorEnabled}">
             <a href="/dsl">DSL editor</a>
             |
+            </c:if>
 
             <c:choose>
             <c:when test="${authenticated}">

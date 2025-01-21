@@ -80,6 +80,7 @@ public abstract class AbstractController {
         }
 
         model.addAttribute("searchEnabled", Configuration.getInstance().isFeatureEnabled(Features.WORKSPACE_SEARCH));
+        model.addAttribute("dslEditorEnabled", Configuration.getInstance().isFeatureEnabled(Features.UI_DSL_EDITOR));
 
         File cssFile = new File(Configuration.getInstance().getDataDirectory(), STRUCTURIZR_CSS_FILENAME);
         if (cssFile.exists()) {
