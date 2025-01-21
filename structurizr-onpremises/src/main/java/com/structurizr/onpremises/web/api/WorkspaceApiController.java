@@ -309,9 +309,13 @@ public class WorkspaceApiController extends AbstractController {
 
     @ExceptionHandler(Throwable.class)
     @ResponseBody
-    public ApiResponse handleGeneralError(HttpServletResponse response, String message) {
+    public ApiResponse error(Throwable t, HttpServletResponse response) {
+        while (t.getCause() != null) {
+            t = t.getCause();
+        }
+        t.printStackTrace();
         response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        return new ApiResponse(false, message);
+        return new ApiResponse(false, t.getMessage());
     }
 
 }
