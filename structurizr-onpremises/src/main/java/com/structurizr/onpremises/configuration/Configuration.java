@@ -171,6 +171,10 @@ public final class Configuration {
         return webUrl + "/graphviz";
     }
 
+    public String getThemesUrl() {
+        return webUrl + "/static/themes/";
+    }
+
     public boolean isCloud() {
         return false;
     }
