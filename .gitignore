@@ -9,11 +9,11 @@ structurizr-onpremises-plugin/build/*
 .idea/*
 **/structurizr.log
 
-structurizr-onpremises/src/main/webapp/static/js/*
 structurizr-onpremises/src/main/webapp/static/bootstrap-icons/*
 structurizr-onpremises/src/main/webapp/static/css/*
 structurizr-onpremises/src/main/webapp/static/html/*
 structurizr-onpremises/src/main/webapp/static/img/*
+structurizr-onpremises/src/main/webapp/static/js/*
 
 structurizr-onpremises/src/main/webapp/WEB-INF/fragments/graphviz.jspf
 structurizr-onpremises/src/main/webapp/WEB-INF/fragments/progress-message.jspf

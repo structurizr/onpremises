@@ -1,0 +1,3 @@
+[submodule "structurizr-onpremises/src/main/webapp/static/themes"]
+	path = structurizr-onpremises/src/main/webapp/static/themes
+	url = https://github.com/structurizr/themes

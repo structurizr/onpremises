@@ -7,8 +7,11 @@ export STRUCTURIZR_BUILD_NUMBER=$1
 export STRUCTURIZR_UI_DIR=../structurizr-ui
 export STRUCTURIZR_ONPREMISES_DIR=./structurizr-onpremises
 
-rm -rf $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static
-mkdir -p $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static
+rm -rf $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static/bootstrap-icons
+rm -rf $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static/css
+rm -rf $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static/html
+rm -rf $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static/img
+rm -rf $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static/js
 
 # JavaScript
 mkdir -p $STRUCTURIZR_ONPREMISES_DIR/src/main/webapp/static/js
