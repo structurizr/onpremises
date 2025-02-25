@@ -64,13 +64,13 @@ public class AmazonWebServicesS3WorkspaceDao extends AbstractWorkspaceDao {
             if (!StringUtils.isNullOrEmpty(endpoint)) {
                 return AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials)).withEndpointConfiguration(new AmazonS3ClientBuilder.EndpointConfiguration(endpoint, region)).withPathStyleAccessEnabled(pathStyleAccessEnabled).build();
             }
-            return AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials)).withRegion(region).build();
+            return AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials)).withRegion(region).withPathStyleAccessEnabled(pathStyleAccessEnabled).build();
         } else {
             log.debug("Creating AWS client with default credentials provider chain");
             if (!StringUtils.isNullOrEmpty(region)) {
-                return AmazonS3ClientBuilder.standard().withRegion(region).build();
+                return AmazonS3ClientBuilder.standard().withRegion(region).withPathStyleAccessEnabled(pathStyleAccessEnabled).build();
             } else {
-                return AmazonS3ClientBuilder.standard().build();
+                return AmazonS3ClientBuilder.standard().withPathStyleAccessEnabled(pathStyleAccessEnabled).build();
             }
         }
     }
