@@ -9,6 +9,7 @@ import com.structurizr.onpremises.configuration.Configuration;
 import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 import com.structurizr.onpremises.domain.review.Review;
 import com.structurizr.onpremises.domain.review.Session;
+import com.structurizr.onpremises.util.AmazonS3ClientUtils;
 import com.structurizr.util.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -35,42 +36,18 @@ class AmazonWebServicesS3ReviewDao implements ReviewDao {
 
     private static final String REVIEW_JSON_FILENAME = "review.json";
 
-    private final String accessKeyId;
-    private final String secretAccessKey;
-    private final String region;
-    private final String bucketName;
-    private final String endpoint;
-    private final boolean pathStyleAccessEnabled;
-
     private final AmazonS3 amazonS3;
+    private final String bucketName;
 
     AmazonWebServicesS3ReviewDao() {
-        this.accessKeyId = Configuration.getInstance().getProperty(AWS_S3_ACCESS_KEY_ID);
-        this.secretAccessKey = Configuration.getInstance().getProperty(AWS_S3_SECRET_ACCESS_KEY);
-        this.region = Configuration.getInstance().getProperty(AWS_S3_REGION);
+        String accessKeyId = Configuration.getInstance().getProperty(AWS_S3_ACCESS_KEY_ID);
+        String secretAccessKey = Configuration.getInstance().getProperty(AWS_S3_SECRET_ACCESS_KEY);
+        String region = Configuration.getInstance().getProperty(AWS_S3_REGION);
+        String endpoint = Configuration.getInstance().getProperty(AWS_S3_ENDPOINT);
+        boolean pathStyleAccessEnabled = Boolean.parseBoolean(Configuration.getInstance().getProperty(AWS_S3_PATH_STYLE_ACCESS));
+
+        this.amazonS3 = AmazonS3ClientUtils.create(accessKeyId, secretAccessKey, region, endpoint, pathStyleAccessEnabled);
         this.bucketName = Configuration.getInstance().getProperty(AWS_S3_BUCKET_NAME);
-        this.endpoint = Configuration.getInstance().getProperty(AWS_S3_ENDPOINT);
-        this.pathStyleAccessEnabled = Boolean.parseBoolean(Configuration.getInstance().getProperty(AWS_S3_PATH_STYLE_ACCESS));
-
-        this.amazonS3 = createAmazonS3Client();
-    }
-
-    private AmazonS3 createAmazonS3Client() {
-        if (!StringUtils.isNullOrEmpty(accessKeyId) && !StringUtils.isNullOrEmpty(secretAccessKey)) {
-            log.debug("Creating AWS client with credentials from structurizr.properties file");
-            BasicAWSCredentials credentials = new BasicAWSCredentials(accessKeyId, secretAccessKey);
-            if (!StringUtils.isNullOrEmpty(endpoint)) {
-                return AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials)).withEndpointConfiguration(new AmazonS3ClientBuilder.EndpointConfiguration(endpoint, region)).withPathStyleAccessEnabled(pathStyleAccessEnabled).build();
-            }
-            return AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials)).withRegion(region).withPathStyleAccessEnabled(pathStyleAccessEnabled).build();
-        } else {
-            log.debug("Creating AWS client with default credentials provider chain");
-            if (!StringUtils.isNullOrEmpty(region)) {
-                return AmazonS3ClientBuilder.standard().withRegion(region).withPathStyleAccessEnabled(pathStyleAccessEnabled).build();
-            } else {
-                return AmazonS3ClientBuilder.standard().withPathStyleAccessEnabled(pathStyleAccessEnabled).build();
-            }
-        }
     }
 
     @Override
