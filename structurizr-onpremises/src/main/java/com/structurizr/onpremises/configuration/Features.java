@@ -15,4 +15,6 @@ public class Features {
 
     public static final String DIAGRAM_REVIEWS = "structurizr.feature.diagramreviews";
 
+    public static final String DIAGRAM_ANONYMOUS_THUMBNAILS = "structurizr.feature.diagram.anonymousthumbnails";
+
 }

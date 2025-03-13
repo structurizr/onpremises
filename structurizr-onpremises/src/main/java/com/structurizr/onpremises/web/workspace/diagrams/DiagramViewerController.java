@@ -25,7 +25,7 @@ public class DiagramViewerController extends AbstractWorkspaceController {
             @RequestParam(required = false) String perspective,
             ModelMap model
     ) {
-        model.addAttribute("publishThumbnails", false);
+        model.addAttribute("publishThumbnails", Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_ANONYMOUS_THUMBNAILS));
         model.addAttribute("quickNavigationPath", "diagrams");
         model.addAttribute("perspective", HtmlUtils.filterHtml(perspective));
         model.addAttribute("includeEditButton", false);
@@ -40,7 +40,7 @@ public class DiagramViewerController extends AbstractWorkspaceController {
             @PathVariable("token") String token,
             ModelMap model
     ) {
-        model.addAttribute("publishThumbnails", false);
+        model.addAttribute("publishThumbnails", Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_ANONYMOUS_THUMBNAILS));
         model.addAttribute("quickNavigationPath", "diagrams");
         model.addAttribute("perspective", HtmlUtils.filterHtml(perspective));
         model.addAttribute("includeEditButton", false);

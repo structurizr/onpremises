@@ -34,6 +34,7 @@ class DefaultsConfigurer extends Configurer {
         setDefault(Features.WORKSPACE_BRANCHES, "false");
         setDefault(Features.WORKSPACE_SCOPE_VALIDATION, Features.WORKSPACE_SCOPE_VALIDATION_RELAXED);
         setDefault(Features.DIAGRAM_REVIEWS, "true");
+        setDefault(Features.DIAGRAM_ANONYMOUS_THUMBNAILS, "false");
     }
 
 }

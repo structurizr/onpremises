@@ -1,6 +1,8 @@
 package com.structurizr.onpremises.web.workspace.images;
 
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
+import com.structurizr.onpremises.configuration.Configuration;
+import com.structurizr.onpremises.configuration.Features;
 import com.structurizr.onpremises.domain.InputStreamAndContentLength;
 import com.structurizr.onpremises.util.HtmlUtils;
 import com.structurizr.onpremises.web.api.ApiException;
@@ -116,8 +118,12 @@ public class ImageController extends AbstractWorkspaceController {
         }
     }
 
+    public boolean isAnonymousThumbnailsEnabled() {
+        return Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_ANONYMOUS_THUMBNAILS);
+    }
+
     @RequestMapping(value = "/workspace/{workspaceId}/images/{filename:.+}", method = RequestMethod.OPTIONS)
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() || this.isAnonymousThumbnailsEnabled()")
     public void optionsImage(@PathVariable("workspaceId") long workspaceId, @PathVariable("filename") String filename, HttpServletResponse response) {
         addAccessControlAllowHeaders(response);
     }
@@ -129,7 +135,7 @@ public class ImageController extends AbstractWorkspaceController {
     }
 
     @RequestMapping(value = "/workspace/{workspaceId}/images/{filename:.+}", method = RequestMethod.PUT, consumes = "text/plain", produces = "application/json; charset=UTF-8")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("isAuthenticated() || this.isAnonymousThumbnailsEnabled()")
     public @ResponseBody ApiResponse putImage(@PathVariable("workspaceId")long workspaceId,
                                               @PathVariable("filename")String filename,
                                               @RequestBody String imageAsBase64EncodedDataUri,
