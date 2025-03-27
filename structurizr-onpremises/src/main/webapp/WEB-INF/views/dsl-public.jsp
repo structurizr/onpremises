@@ -105,7 +105,7 @@
             </form>
 
             <div class="smaller" style="margin-top: 5px">
-                Structurizr DSL <a href="https://github.com/structurizr/java/blob/master/changelog.md" target="_blank">v${dslVersion}</a> - some features (e.g. <code>!docs</code>, <code>!adrs</code>, <code>!script</code>, etc) are unavailable via this page; see <a href="https://docs.structurizr.com/dsl#comparison" target="_blank">DSL - comparison</a> for details.
+                Structurizr DSL <a href="https://github.com/structurizr/java/blob/master/changelog.md" target="_blank">v${dslVersion}</a> - some features (e.g. <code>!docs</code>, <code>!script</code>, etc) are unavailable via this page; see <a href="https://docs.structurizr.com/dsl#comparison" target="_blank">DSL - comparison</a> for details.
             </div>
         </div>
         <div id="diagramsPanel" class="col-sm-6 centered">

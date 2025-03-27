@@ -19,11 +19,6 @@
         margin-bottom: 10px;
     }
 
-    .navigationItemHeading {
-        font-size: 30px;
-        margin-bottom: 20px;
-    }
-
     .navigationItemSeparator {
         margin-bottom: 40px;
     }
@@ -33,10 +28,6 @@
 
     <div class="col-sm-2" style="padding-left: 30px; margin-bottom: 100px">
         <div id="navigationPanel" class="hidden-xs">
-
-            <div class="navigationItemHeading">
-                Workspace
-            </div>
 
             <c:if test="${not empty workspace.branch || not empty param.version}">
             <div class="navigationItem">

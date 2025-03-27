@@ -4,36 +4,28 @@
     <div id="footer">
         <p>
             Structurizr on-premises installation
+            -
+            <span id="buildNumber">${version.buildNumber}</span> <!-- <fmt:formatDate value="${version.buildTimestamp}" pattern="EEE dd MMM yyyy HH:mm z" /> -->
             |
-            <span id="buildNumber">Build ${version.buildNumber}</span> <!-- <fmt:formatDate value="${version.buildTimestamp}" pattern="EEE dd MMM yyyy HH:mm z" /> -->
-            |
-            <a href="https://docs.structurizr.com/onpremises" target="_blank">Documentation</a>
-            |
-            <a href="https://structurizr.com/help/support" target="_blank">Help and Support</a>
-
-            <br />
-
             <c:if test="${dslEditorEnabled}">
             <a href="/dsl">DSL editor</a>
             |
             </c:if>
-
-            <c:choose>
-            <c:when test="${authenticated}">
-                <c:if test="${reviewsEnabled}">
-                <a href="/reviews">Reviews</a>
-                |
-                </c:if>
-                <a href="/user/profile">User profile</a>
-                |
-                <a href="/signout">Sign out</a>
-            </c:when>
-            <c:otherwise>
             <c:if test="${reviewsEnabled}">
-                <a href="/reviews">Reviews</a>
+            <a href="/reviews">Reviews</a>
+            |
             </c:if>
-            </c:otherwise>
-            </c:choose>
+            <a href="https://docs.structurizr.com/onpremises" target="_blank">Help</a>
+            <c:if test="${authenticated}">
+            |
+            <a href="/signout">Sign out</a>
+            </c:if>
+        </p>
+        <p>
+            <img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/moon.svg" class="icon-sm" />
+            <a id="renderingModeLightLink" href="">Light</a> |
+            <a id="renderingModeDarkLink" href="">Dark</a> |
+            <a id="renderingModeSystemLink" href="">System</a>
         </p>
     </div>
     </c:if>
@@ -44,6 +36,21 @@
             console.log(url + ':' + lineNo + ':' + columnNo);
             console.log(error);
         };
+
+        $('#renderingModeLightLink').click(function(event) {
+            event.preventDefault();
+            structurizr.ui.setRenderingMode(structurizr.ui.RENDERING_MODE_LIGHT);
+        });
+
+        $('#renderingModeDarkLink').click(function(event) {
+            event.preventDefault();
+            structurizr.ui.setRenderingMode(structurizr.ui.RENDERING_MODE_DARK);
+        });
+
+        $('#renderingModeSystemLink').click(function(event) {
+            event.preventDefault();
+            structurizr.ui.setRenderingMode(structurizr.ui.RENDERING_MODE_SYSTEM);
+        });
     </script>
 
     </body>
