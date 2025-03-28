@@ -47,6 +47,10 @@
                     <a href="${workspace.urlPrefix}/${workspace.id}"><c:out value="${workspace.name}" escapeXml="true" /></a>
                 </div>
 
+                <div style="margin-top: 5px; margin-bottom: 5px; font-size: 11px">
+                    <c:out value="${workspace.description}" escapeXml="true" />
+                </div>
+
                 <div style="margin-top: 5px">
                     <c:if test="${workspace.open}">
                         <a href="/share/${workspace.id}" target="_blank"><span><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/unlock.svg" class="icon-sm" alt="Public workspace" /></span></a>
@@ -59,10 +63,6 @@
                     </c:if>
                 </div>
 
-                <div style="margin-top: 10px; margin-bottom: 10px; font-size: 11px">
-                    <c:out value="${workspace.description}" escapeXml="true" />
-                </div>
-
                 <div class="workspaceThumbnail">
                     <a href="${workspace.urlPrefix}/${workspace.id}"><img src="${workspace.urlPrefix}/${workspace.id}/images/thumbnail.png" alt="Thumbnail" class="img-responsive workspaceThumbnailImage" /></a>
                 </div>
@@ -71,7 +71,7 @@
 
         <c:if test="${userCanCreateWorkspace}">
             <div class="workspaceSummary centered">
-                <div style="margin-top: 5px">
+                <div>
                     New workspace
                 </div>
 

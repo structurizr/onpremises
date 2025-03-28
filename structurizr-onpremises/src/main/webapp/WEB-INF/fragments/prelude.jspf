@@ -75,7 +75,7 @@
                 <c:choose>
                     <c:when test="${authenticated eq true}">
                         <span class="topNavigationItem" style="margin-right: 0">
-                            <a href="/dashboard"><span class="label structurizrBackgroundLight" style="font-size: 18px"><img src="/static/bootstrap-icons/person.svg" class="icon-sm icon-white" /> ${user.username}</span></a>
+                            <a href="/user/profile"><span class="label structurizrBackgroundLight" style="font-size: 18px"><img src="/static/bootstrap-icons/person.svg" class="icon-sm icon-white" /> ${user.username}</span></a>
                         </span>
                     </c:when>
                     <c:otherwise>
