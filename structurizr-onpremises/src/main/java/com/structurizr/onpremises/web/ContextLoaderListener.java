@@ -167,6 +167,9 @@ public class ContextLoaderListener implements ServletContextListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        // todo: https://github.com/structurizr/onpremises/issues/136
+        System.setProperty("aws.java.v1.disableDeprecationAnnouncement", "true");
     }
 
     private void logAllProperties(Log log, Properties properties) {
