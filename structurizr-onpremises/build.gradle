@@ -86,7 +86,7 @@ dependencies {
 	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.777'
 	implementation 'com.amazonaws:aws-java-sdk-sts:1.12.777'
 
-	implementation 'com.azure:azure-storage-blob:12.28.1'
+	implementation 'com.azure:azure-storage-blob:12.29.0'
 
 	implementation 'javax.cache:cache-api:1.1.1'
 	implementation 'org.ehcache:ehcache:3.10.8'
