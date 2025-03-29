@@ -47,6 +47,7 @@
         <c:choose>
             <c:when test="${workspace.editable}">
             <form action="/workspace/${workspace.id}/users" method="post">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
 
                 <div class="row">
                     <div class="col-sm-6">
