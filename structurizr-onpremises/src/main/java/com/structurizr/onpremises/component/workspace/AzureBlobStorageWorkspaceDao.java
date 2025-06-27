@@ -52,7 +52,7 @@ public class AzureBlobStorageWorkspaceDao extends AbstractWorkspaceDao {
 
     private BlobContainerClient createBlobContainerClient() {
         BlobServiceClientBuilder builder = new BlobServiceClientBuilder()
-            .endpoint(String.format("https://%s.blob.core.windows.net/", accountName);
+            .endpoint(String.format("https://%s.blob.core.windows.net/", accountName));
 
         if (accessKey != null && !accessKey.isEmpty()) {
             builder.credential(new StorageSharedKeyCredential(accountName, accessKey));
