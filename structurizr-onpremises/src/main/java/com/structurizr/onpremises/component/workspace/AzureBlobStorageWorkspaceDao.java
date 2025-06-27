@@ -11,6 +11,7 @@ import com.azure.storage.blob.models.BlobListDetails;
 import com.azure.storage.blob.models.ListBlobsOptions;
 import com.azure.storage.blob.specialized.BlockBlobClient;
 import com.azure.storage.common.StorageSharedKeyCredential;
+import com.azure.identity.DefaultAzureCredentialBuilder;
 import com.structurizr.onpremises.configuration.Configuration;
 import com.structurizr.onpremises.domain.Image;
 import com.structurizr.onpremises.domain.InputStreamAndContentLength;
@@ -50,12 +51,16 @@ public class AzureBlobStorageWorkspaceDao extends AbstractWorkspaceDao {
     }
 
     private BlobContainerClient createBlobContainerClient() {
-        StorageSharedKeyCredential credential = new StorageSharedKeyCredential(accountName, accessKey);
-        
-        BlobServiceClient blobServiceClient = new BlobServiceClientBuilder()
-                .endpoint(String.format("https://%s.blob.core.windows.net/", accountName))
-                .credential(credential)
-                .buildClient();
+        BlobServiceClientBuilder builder = new BlobServiceClientBuilder()
+            .endpoint(String.format("https://%s.blob.core.windows.net/", accountName);
+
+        if (accessKey != null && !accessKey.isEmpty()) {
+            builder.credential(new StorageSharedKeyCredential(accountName, accessKey));
+        } else {
+            builder.credential(new DefaultAzureCredentialBuilder().build());
+        }
+
+        BlobServiceClient blobServiceClient = builder.buildClient();
 
         return blobServiceClient.getBlobContainerClient(containerName);
     }
