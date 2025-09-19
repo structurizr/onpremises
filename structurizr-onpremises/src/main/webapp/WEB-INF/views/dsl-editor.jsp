@@ -63,7 +63,7 @@
     <div id="banner"></div>
     <div class="row" style="padding-bottom: 0px">
         <div class="col-sm-2" style="padding: 18px 30px 10px 30px">
-            <a href="/"><img src="${structurizrConfiguration.cdnUrl}/img/structurizr-banner.png" alt="Structurizr" class="structurizrBannerLight img-responsive brandingLogo" /><img src="${structurizrConfiguration.cdnUrl}/img/structurizr-banner-dark.png" alt="Structurizr" class="structurizrBannerDark img-responsive brandingLogo" /></a>
+            <a href="/"><img src="${structurizrConfiguration.cdnUrl}/img/structurizr-banner.png" alt="Structurizr" class="img-light img-responsive brandingLogo" /><img src="${structurizrConfiguration.cdnUrl}/img/structurizr-banner-dark.png" alt="Structurizr" class="img-dark img-responsive brandingLogo" /></a>
         </div>
         <div class="col-sm-10 small" style="padding: 18px 30px 10px 30px">
             <div class="form-group"style="margin-bottom: 10px;">

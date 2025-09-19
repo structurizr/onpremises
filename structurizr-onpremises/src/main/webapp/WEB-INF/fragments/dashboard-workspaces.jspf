@@ -64,7 +64,10 @@
                 </div>
 
                 <div class="workspaceThumbnail">
-                    <a href="${workspace.urlPrefix}/${workspace.id}"><img src="${workspace.urlPrefix}/${workspace.id}/images/thumbnail.png" alt="Thumbnail" class="img-responsive workspaceThumbnailImage" /></a>
+                    <a href="${workspace.urlPrefix}/${workspace.id}">
+                    <img src="${workspace.urlPrefix}/${workspace.id}/images/thumbnail.png" alt="Thumbnail" class="img-light img-responsive workspaceThumbnailImage" />
+                    <img src="${workspace.urlPrefix}/${workspace.id}/images/thumbnail-dark.png" alt="Thumbnail" class="img-dark img-responsive workspaceThumbnailImage" />
+                    </a>
                 </div>
             </div>
         </c:forEach>

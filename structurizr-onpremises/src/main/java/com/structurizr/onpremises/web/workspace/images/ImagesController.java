@@ -40,7 +40,7 @@ public class ImagesController extends AbstractWorkspaceController {
                 }
             }
 
-            images = images.stream().filter(i -> !i.getName().endsWith("thumbnail.png")).collect(Collectors.toList());
+            images = images.stream().filter(i -> !i.getName().endsWith("thumbnail.png") && !i.getName().endsWith("thumbnail-dark.png")).collect(Collectors.toList());
             images.sort(Comparator.comparing(i -> i.getName().toLowerCase()));
 
             model.addAttribute("images", images);
