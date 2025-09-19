@@ -4,7 +4,7 @@
         <p>
             Structurizr supports the ability to embed diagrams via a static PNG file via a regular image tag in HTML, Markdown, AsciiDoc, etc.
             <br />
-            See <a href="https://structurizr.com/help/embed-image" target="_blank">Image embed</a> for more details.
+            See <a href="https://docs.structurizr.com/onpremises/embed" target="_blank">Structurizr on-premises - Embedding diagrams - PNG embed</a> for more details.
         </p>
         <p class="smaller">
             (<a href="/workspace/${workspaceId}">back to workspace summary</a>)
