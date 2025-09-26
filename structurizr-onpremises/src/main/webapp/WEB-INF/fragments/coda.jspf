@@ -3,29 +3,25 @@
     <c:if test="${showFooter eq true}">
     <div id="footer">
         <p>
-            Structurizr on-premises installation
-            -
-            <span id="buildNumber">${version.buildNumber}</span> <!-- <fmt:formatDate value="${version.buildTimestamp}" pattern="EEE dd MMM yyyy HH:mm z" /> -->
-            |
+            <a href="https://docs.structurizr.com/onpremises" target="_blank">Structurizr on-premises - <span id="buildNumber">${version.buildNumber}</span></a>
+        </p>
+        <p>
             <c:if test="${dslEditorEnabled}">
             <a href="/dsl">DSL editor</a>
             |
             </c:if>
             <c:if test="${reviewsEnabled}">
             <a href="/reviews">Reviews</a>
-            |
             </c:if>
-            <a href="https://docs.structurizr.com/onpremises" target="_blank">Help</a>
             <c:if test="${authenticated}">
             |
             <a href="/signout">Sign out</a>
             </c:if>
         </p>
         <p>
-            <img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/moon.svg" class="icon-sm" />
-            <a id="renderingModeLightLink" href="">Light</a> |
-            <a id="renderingModeDarkLink" href="">Dark</a> |
-            <a id="renderingModeSystemLink" href="">System</a>
+            <a id="renderingModeLightLink" href="" title="Light"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/sun.svg" class="icon-sm" /></a> |
+            <a id="renderingModeDarkLink" href="" title="Dark"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/moon-fill.svg" class="icon-sm" /></a> |
+            <a id="renderingModeSystemLink" href="" title="System"><img src="${structurizrConfiguration.cdnUrl}/bootstrap-icons/sliders.svg" class="icon-sm" /></a>
         </p>
     </div>
     </c:if>
