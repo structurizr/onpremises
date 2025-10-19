@@ -164,6 +164,10 @@ public class ContextLoaderListener implements ServletContextListener {
 
             logAllProperties(log, properties);
             log.info("***********************************************************************************");
+
+            if (!Boolean.parseBoolean(Configuration.getInstance().getProperty(INTERNET_CONNECTION))) {
+                log.warn(INTERNET_CONNECTION + " has been deprecated; use structurizr.urls.allowed instead");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

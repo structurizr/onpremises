@@ -58,6 +58,11 @@ public final class Configuration {
         // applicationContext-security.xml: <import resource="applicationContext-security-${structurizr.authentication}.xml" />
         System.setProperty(SESSION_IMPLEMENTATION, getProperty(SESSION_IMPLEMENTATION));
 
+        // for backwards compatibility - don't configure any allowed URLs
+        if (!Boolean.parseBoolean(getProperty(INTERNET_CONNECTION))) {
+            properties.setProperty(URLS_ALLOWED, "");
+        }
+
         configurePlugins();
         configureFeatures();
 
@@ -206,10 +211,6 @@ public final class Configuration {
         return false;
     }
     
-    public boolean hasInternetConnection() {
-        return Boolean.parseBoolean(getProperty(INTERNET_CONNECTION));
-    }
-
     public File getDataDirectory() {
         return new File(getProperty(DATA_DIRECTORY));
     }

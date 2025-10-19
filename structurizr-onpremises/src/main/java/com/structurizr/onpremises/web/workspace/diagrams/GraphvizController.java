@@ -42,17 +42,13 @@ public class GraphvizController {
             if (configuration.isGraphvizEnabled()) {
                 Workspace workspace = WorkspaceUtils.fromJson(json);
 
-                if (configuration.hasInternetConnection()) {
-                    try {
-                        if (themesNeedToBeLoaded(workspace)) {
-                            log.debug("Loading themes");
-                            ThemeUtils.loadThemes(workspace, Configuration.getInstance().createHttpClient());
-                        }
-                    } catch (Exception e) {
-                        log.warn("Ignoring themes: " + e.getMessage());
+                try {
+                    if (themesNeedToBeLoaded(workspace)) {
+                        log.debug("Loading themes");
+                        ThemeUtils.loadThemes(workspace, Configuration.getInstance().createHttpClient());
                     }
-                } else {
-                    log.debug("No internet connection - ignoring themes");
+                } catch (Exception e) {
+                    log.warn("Ignoring themes: " + e.getMessage());
                 }
 
                 File workspaceDirectory = new File(configuration.getDataDirectory(), "" + workspace.getId());
