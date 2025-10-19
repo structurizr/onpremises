@@ -119,8 +119,7 @@ public class DslEditorController extends AbstractWorkspaceEditorController {
     }
 
     private Workspace fromDsl(String dsl) throws StructurizrDslParserException, WorkspaceScopeValidationException {
-        StructurizrDslParser parser = new StructurizrDslParser();
-        parser.setRestricted(true);
+        StructurizrDslParser parser = Configuration.getInstance().createStructurizrDslParser();
         parser.parse(dsl);
 
         Workspace workspace = parser.getWorkspace();

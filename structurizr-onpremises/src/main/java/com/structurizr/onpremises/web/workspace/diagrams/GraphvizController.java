@@ -46,7 +46,7 @@ public class GraphvizController {
                     try {
                         if (themesNeedToBeLoaded(workspace)) {
                             log.debug("Loading themes");
-                            ThemeUtils.loadThemes(workspace);
+                            ThemeUtils.loadThemes(workspace, Configuration.getInstance().createHttpClient());
                         }
                     } catch (Exception e) {
                         log.warn("Ignoring themes: " + e.getMessage());

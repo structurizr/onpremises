@@ -2,9 +2,9 @@ package com.structurizr.onpremises.web.dsl;
 
 import com.structurizr.Workspace;
 import com.structurizr.dsl.DslUtils;
-import com.structurizr.dsl.Features;
 import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.dsl.StructurizrDslParserException;
+import com.structurizr.http.HttpClientException;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.configuration.Configuration;
 import com.structurizr.onpremises.util.HtmlUtils;
@@ -13,13 +13,11 @@ import com.structurizr.onpremises.util.WorkspaceValidationUtils;
 import com.structurizr.onpremises.web.AbstractController;
 import com.structurizr.util.DslTemplate;
 import com.structurizr.util.StringUtils;
+import com.structurizr.util.Url;
 import com.structurizr.util.WorkspaceUtils;
 import com.structurizr.validation.WorkspaceScopeValidationException;
-import org.apache.hc.client5.http.classic.methods.HttpGet;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +29,7 @@ import java.util.Date;
 @Controller
 public class PublicDslController extends AbstractController {
 
-    private static final int HTTP_OK_STATUS = 200;
+    private static final Log log = LogFactory.getLog(PublicDslController.class);
 
     @RequestMapping(value = "/dsl", method = RequestMethod.GET)
     public String showDslDemoPage(
@@ -43,13 +41,28 @@ public class PublicDslController extends AbstractController {
             return showError("public-dsl-editor-disabled", model);
         }
 
-        if (!StringUtils.isNullOrEmpty(src) && src.startsWith("https://")) {
-            src = getContentFromUrl(src, model);
+        String json = null;
+
+        try {
+            if (!StringUtils.isNullOrEmpty(src) && Url.isHttpsUrl(src)) {
+                if (src.endsWith(".json")) {
+                    json = Configuration.getInstance().createHttpClient().get(src).getContentAsString();
+                    Workspace workspace = WorkspaceUtils.fromJson(json);
+                    src = DslUtils.getDsl(workspace);
+                } else {
+                    src = Configuration.getInstance().createHttpClient().get(src).getContentAsString();
+                }
+            }
+        } catch (HttpClientException hce) {
+            log.error(hce);
+            model.addAttribute("customErrorMessage", hce.getMessage());
+
+            return show500Page(model);
         }
 
         model.addAttribute("method", "get");
 
-        return show(model, src, null, view);
+        return show(model, src, json, view);
     }
 
     @RequestMapping(value = "/dsl", method = RequestMethod.POST)
@@ -124,8 +137,7 @@ public class PublicDslController extends AbstractController {
     }
 
     private Workspace fromDsl(String dsl) throws StructurizrDslParserException, WorkspaceScopeValidationException {
-        StructurizrDslParser parser = new StructurizrDslParser();
-        parser.setRestricted(true);
+        StructurizrDslParser parser = Configuration.getInstance().createStructurizrDslParser();
         parser.parse(dsl);
 
         Workspace workspace = parser.getWorkspace();
@@ -139,25 +151,6 @@ public class PublicDslController extends AbstractController {
         WorkspaceValidationUtils.validateWorkspaceScope(workspace);
 
         return workspace;
-    }
-
-    private String getContentFromUrl(String url, ModelMap model) {
-        try {
-            CloseableHttpClient httpClient = HttpClients.createSystem();
-            HttpGet httpGet = new HttpGet(url);
-
-            CloseableHttpResponse response = httpClient.execute(httpGet);
-            if (response.getCode() == HTTP_OK_STATUS) {
-                return EntityUtils.toString(response.getEntity());
-            } else {
-                model.addAttribute("errorMessage", EntityUtils.toString(response.getEntity()));
-            }
-            httpClient.close();
-        } catch (Exception e) {
-            model.addAttribute("errorMessage", e.getMessage());
-        }
-
-        return "";
     }
 
 }

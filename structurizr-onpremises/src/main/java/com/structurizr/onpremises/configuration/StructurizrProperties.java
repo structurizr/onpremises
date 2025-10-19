@@ -17,6 +17,7 @@ public class StructurizrProperties {
     public static final String MAX_WORKSPACE_VERSIONS = "structurizr.maxworkspaceversions";
     public static final String DSL_EDITOR = "structurizr.dsleditor";
     public static final String INTERNET_CONNECTION = "structurizr.internetconnection";
+    public static final String URLS_ALLOWED = "structurizr.urls.allowed";
 
     public static final String AUTHENTICATION_IMPLEMENTATION = "structurizr.authentication";
     public static final String AUTHENTICATION_VARIANT_FILE = "file";
