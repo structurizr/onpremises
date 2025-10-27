@@ -346,21 +346,17 @@
                 if (count <= maxNumberOfViews) {
                     html += '<div class="centered" style="display: inline-block; margin: 10px 10px 40px 10px; width: ' + thumbnailSize + 'px;">';
 
-                    if (view.type === structurizr.constants.IMAGE_VIEW_TYPE) {
-                        html += '  <a href="' + url + '"><img src="' + view.content + '" class="img-thumbnail viewThumbnail" style="margin-bottom: 10px; max-height: ' + thumbnailSize + 'px" /></a>';
-                    } else {
-                        <c:choose>
-                        <c:when test="${not empty workspace.branch or not empty param.version}">
-                        html += '  <a href="' + url + '"><img src="/static/img/thumbnail-not-available.png" class="img-thumbnail" style="margin-bottom: 10px" /></a>';
-                        </c:when>
-                        <c:otherwise>
-                        html += '  <a href="' + url + '">';
-                        html += '<img src="${thumbnailUrl}' + structurizr.util.escapeHtml(view.key) + '-thumbnail.png" class="img-light img-thumbnail viewThumbnail" style="margin-bottom: 10px; max-height: ' + thumbnailSize + 'px" />';
-                        html += '<img src="${thumbnailUrl}' + structurizr.util.escapeHtml(view.key) + '-thumbnail-dark.png" class="img-dark img-thumbnail viewThumbnail" style="margin-bottom: 10px; max-height: ' + thumbnailSize + 'px" />';
-                        html += '</a>';
-                        </c:otherwise>
-                        </c:choose>
-                    }
+                    <c:choose>
+                    <c:when test="${not empty workspace.branch or not empty param.version}">
+                    html += '  <a href="' + url + '"><img src="/static/img/thumbnail-not-available.png" class="img-thumbnail" style="margin-bottom: 10px" /></a>';
+                    </c:when>
+                    <c:otherwise>
+                    html += '  <a href="' + url + '">';
+                    html += '<img src="${thumbnailUrl}' + structurizr.util.escapeHtml(view.key) + '-thumbnail.png" class="img-light img-thumbnail viewThumbnail" style="margin-bottom: 10px; max-height: ' + thumbnailSize + 'px" />';
+                    html += '<img src="${thumbnailUrl}' + structurizr.util.escapeHtml(view.key) + '-thumbnail-dark.png" class="img-dark img-thumbnail viewThumbnail" style="margin-bottom: 10px; max-height: ' + thumbnailSize + 'px" />';
+                    html += '</a>';
+                    </c:otherwise>
+                    </c:choose>
 
                     html += '  <div class="smaller">';
                     html += '    <a href="' + url + '">' + title + '</a><br />';
