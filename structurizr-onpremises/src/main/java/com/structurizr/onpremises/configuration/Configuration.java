@@ -60,7 +60,7 @@ public final class Configuration {
 
         // for backwards compatibility - don't configure any allowed URLs
         if (!Boolean.parseBoolean(getProperty(INTERNET_CONNECTION))) {
-            properties.setProperty(URLS_ALLOWED, "");
+            properties.setProperty(NETWORK_URLS_ALLOWED, "");
         }
 
         configurePlugins();
@@ -310,13 +310,16 @@ public final class Configuration {
     }
 
     private void configure(HttpClient httpClient) {
-        String urlsAllowed = getProperty(URLS_ALLOWED);
+        String urlsAllowed = getProperty(NETWORK_URLS_ALLOWED);
         if (!StringUtils.isNullOrEmpty(urlsAllowed)) {
             String[] regexes = urlsAllowed.split(",");
             for (String regex : regexes) {
                 httpClient.allow(regex.trim());
             }
         }
+
+        int timeoutInMilliseconds = Integer.parseInt(getProperty(NETWORK_TIMEOUT));
+        httpClient.setTimeout(timeoutInMilliseconds);
     }
 
 }
