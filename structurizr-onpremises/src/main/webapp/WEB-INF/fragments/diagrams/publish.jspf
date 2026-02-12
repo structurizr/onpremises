@@ -19,12 +19,13 @@
 
             changeView(view, function () {
                 structurizr.diagram.exportCurrentDiagramToPNG(true, false, function(diagramAsPNG) {
-                    publishImage(view.key, view.key + '.png', diagramAsPNG, function() {
+                    const colorScheme = structurizr.ui.isDarkMode() ? '-dark' : '';
+                    publishImage(view.key, view.key + colorScheme + '.png', diagramAsPNG, function() {
                         numberOfPublishedImages++;
 
                         if (view.type !== structurizr.constants.IMAGE_VIEW_TYPE) {
                             structurizr.diagram.exportCurrentDiagramKeyToPNG(function (diagramKeyAsPNG) {
-                                publishImage(view.key, view.key + '-key.png', diagramKeyAsPNG, function () {
+                                publishImage(view.key, view.key + colorScheme + '-key.png', diagramKeyAsPNG, function () {
                                     viewsToExport.splice(0, 1);
                                     publishImages(viewsToExport);
                                 })

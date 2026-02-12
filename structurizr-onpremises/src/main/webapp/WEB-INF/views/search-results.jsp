@@ -39,7 +39,8 @@
                         <tr>
                             <td width="90px">
                                 <div>
-                                    <img src="${result.workspace.urlPrefix}/${result.workspaceId}/images/thumbnail.png" width="70px" alt="<c:out value='${result.workspace.name}' escapeXml='true' />" class="thumbnail workspaceThumbnail" />
+                                    <img src="${result.workspace.urlPrefix}/${result.workspaceId}/images/thumbnail.png" width="70px" alt="<c:out value='${result.workspace.name}' escapeXml='true' />" class="img-light thumbnail workspaceThumbnail" />
+                                    <img src="${result.workspace.urlPrefix}/${result.workspaceId}/images/thumbnail-dark.png" width="70px" alt="<c:out value='${result.workspace.name}' escapeXml='true' />" class="img-dark thumbnail workspaceThumbnail" />
                                 </div>
                             </td>
                             <td>

@@ -66,6 +66,7 @@ public class DiagramViewerController extends AbstractWorkspaceController {
         model.addAttribute("createReviews", Configuration.getInstance().isFeatureEnabled(Features.DIAGRAM_REVIEWS));
         model.addAttribute("quickNavigationPath", "diagrams");
         model.addAttribute("perspective", HtmlUtils.filterHtml(perspective));
+        model.addAttribute("inspectionSummary", true);
 
         boolean editable = workspaceMetaData.hasNoUsersConfigured() || workspaceMetaData.isWriteUser(getUser());
         model.addAttribute("includeEditButton", editable);

@@ -237,12 +237,16 @@ public class AzureBlobStorageWorkspaceDao extends AbstractWorkspaceDao {
         String blobName = WORKSPACES_VIRTUAL_DIRECTORY + workspaceId + "/" + filename;
         BlobClient blobClient = blobContainerClient.getBlobClient(blobName);
 
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            blobClient.downloadStream(outputStream);
+        if (blobClient.exists()) {
+            try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+                blobClient.downloadStream(outputStream);
 
-            return new InputStreamAndContentLength(new ByteArrayInputStream(outputStream.toByteArray()), outputStream.size());
-        } catch (IOException e) {
-            e.printStackTrace();
+                return new InputStreamAndContentLength(new ByteArrayInputStream(outputStream.toByteArray()), outputStream.size());
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        } else {
             return null;
         }
     }

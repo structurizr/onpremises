@@ -1,5 +1,7 @@
 package com.structurizr.onpremises.configuration;
 
+import com.structurizr.dsl.StructurizrDslParser;
+import com.structurizr.http.HttpClient;
 import com.structurizr.onpremises.component.workspace.WorkspaceEventListener;
 import com.structurizr.onpremises.util.Version;
 import com.structurizr.util.StringUtils;
@@ -55,6 +57,11 @@ public final class Configuration {
         System.setProperty(AUTHENTICATION_IMPLEMENTATION, getProperty(AUTHENTICATION_IMPLEMENTATION));
         // applicationContext-security.xml: <import resource="applicationContext-security-${structurizr.authentication}.xml" />
         System.setProperty(SESSION_IMPLEMENTATION, getProperty(SESSION_IMPLEMENTATION));
+
+        // for backwards compatibility - don't configure any allowed URLs
+        if (!Boolean.parseBoolean(getProperty(INTERNET_CONNECTION))) {
+            properties.setProperty(NETWORK_URLS_ALLOWED, "");
+        }
 
         configurePlugins();
         configureFeatures();
@@ -204,10 +211,6 @@ public final class Configuration {
         return false;
     }
     
-    public boolean hasInternetConnection() {
-        return Boolean.parseBoolean(getProperty(INTERNET_CONNECTION));
-    }
-
     public File getDataDirectory() {
         return new File(getProperty(DATA_DIRECTORY));
     }
@@ -275,6 +278,48 @@ public final class Configuration {
         }
 
         return value;
+    }
+
+    public StructurizrDslParser createStructurizrDslParser() {
+        StructurizrDslParser parser = new StructurizrDslParser();
+
+        parser.getFeatures().configure(com.structurizr.dsl.Features.ENVIRONMENT, false);
+        parser.getFeatures().configure(com.structurizr.dsl.Features.FILE_SYSTEM, false);
+        parser.getFeatures().configure(com.structurizr.dsl.Features.PLUGINS, false);
+        parser.getFeatures().configure(com.structurizr.dsl.Features.SCRIPTS, false);
+        parser.getFeatures().configure(com.structurizr.dsl.Features.COMPONENT_FINDER, false);
+        parser.getFeatures().configure(com.structurizr.dsl.Features.DOCUMENTATION, false);
+        parser.getFeatures().configure(com.structurizr.dsl.Features.DECISIONS, false);
+
+        for (String name : properties.stringPropertyNames()) {
+            if (name.startsWith("structurizr.feature.dsl.")) {
+                parser.getFeatures().configure(name, Boolean.parseBoolean(getProperty(name)));
+            }
+        }
+
+        configure(parser.getHttpClient());
+
+        return parser;
+    }
+
+    public HttpClient createHttpClient() {
+        HttpClient httpClient = new HttpClient();
+        configure(httpClient);
+
+        return httpClient;
+    }
+
+    private void configure(HttpClient httpClient) {
+        String urlsAllowed = getProperty(NETWORK_URLS_ALLOWED);
+        if (!StringUtils.isNullOrEmpty(urlsAllowed)) {
+            String[] regexes = urlsAllowed.split(",");
+            for (String regex : regexes) {
+                httpClient.allow(regex.trim());
+            }
+        }
+
+        int timeoutInMilliseconds = Integer.parseInt(getProperty(NETWORK_TIMEOUT));
+        httpClient.setTimeout(timeoutInMilliseconds);
     }
 
 }

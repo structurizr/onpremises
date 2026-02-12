@@ -16,6 +16,8 @@ class DefaultsConfigurer extends Configurer {
         setDefault(SESSION_IMPLEMENTATION, SESSION_VARIANT_LOCAL);
         setDefault(URL, "");
         setDefault(INTERNET_CONNECTION, "true");
+        setDefault(NETWORK_URLS_ALLOWED, ".*");
+        setDefault(NETWORK_TIMEOUT, DEFAULT_NETWORK_TIMEOUT_OF_SIXTY_SECONDS);
         setDefault(API_KEY, "");
         setDefault(DATA_STORAGE_IMPLEMENTATION, DATA_STORAGE_VARIANT_FILE);
         setDefault(MAX_WORKSPACE_VERSIONS, DEFAULT_MAX_WORKSPACE_VERSIONS);

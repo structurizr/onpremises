@@ -4,6 +4,7 @@ import com.structurizr.Workspace;
 import com.structurizr.dsl.DslUtils;
 import com.structurizr.dsl.StructurizrDslParser;
 import com.structurizr.dsl.StructurizrDslParserException;
+import com.structurizr.inspection.DefaultInspector;
 import com.structurizr.onpremises.component.workspace.WorkspaceMetaData;
 import com.structurizr.onpremises.domain.User;
 import com.structurizr.onpremises.configuration.Configuration;
@@ -118,8 +119,7 @@ public class DslEditorController extends AbstractWorkspaceEditorController {
     }
 
     private Workspace fromDsl(String dsl) throws StructurizrDslParserException, WorkspaceScopeValidationException {
-        StructurizrDslParser parser = new StructurizrDslParser();
-        parser.setRestricted(true);
+        StructurizrDslParser parser = Configuration.getInstance().createStructurizrDslParser();
         parser.parse(dsl);
 
         Workspace workspace = parser.getWorkspace();
@@ -130,7 +130,11 @@ public class DslEditorController extends AbstractWorkspaceEditorController {
             workspace.getViews().createDefaultViews();
         }
 
+        // validate workspace scope
         WorkspaceValidationUtils.validateWorkspaceScope(workspace);
+
+        // run default inspections
+        new DefaultInspector(workspace);
 
         return workspace;
     }

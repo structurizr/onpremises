@@ -17,6 +17,8 @@ public class StructurizrProperties {
     public static final String MAX_WORKSPACE_VERSIONS = "structurizr.maxworkspaceversions";
     public static final String DSL_EDITOR = "structurizr.dsleditor";
     public static final String INTERNET_CONNECTION = "structurizr.internetconnection";
+    public static final String NETWORK_URLS_ALLOWED = "structurizr.network.urls.allowed";
+    public static final String NETWORK_TIMEOUT = "structurizr.network.timeout";
 
     public static final String AUTHENTICATION_IMPLEMENTATION = "structurizr.authentication";
     public static final String AUTHENTICATION_VARIANT_FILE = "file";
@@ -36,6 +38,8 @@ public class StructurizrProperties {
 
     public static final String DEFAULT_MAX_WORKSPACE_VERSIONS = "30";
     public static final String DEFAULT_NUMBER_OF_THREADS = "50";
+
+    public static final String DEFAULT_NETWORK_TIMEOUT_OF_SIXTY_SECONDS = "" + (1000 * 60);
 
     public static final String DATA_STORAGE_IMPLEMENTATION = "structurizr.data";
     public static final String DATA_STORAGE_VARIANT_FILE = "file";
